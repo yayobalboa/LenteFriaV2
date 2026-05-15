@@ -1,150 +1,95 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LenteFría | Sistema Maestro</title>
+    <meta charset="UTF-8"><title>LenteFría Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .bg-cyan-lf { background-color: #00B7F1; }
-        .text-cyan-lf { color: #00B7F1; }
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        .vault-card { transition: all 0.3s ease; border-radius: 2.5rem; border: 1px solid #f1f5f9; }
-        .vault-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,183,241,0.1); border-color: #00B7F1; }
     </style>
 </head>
-<body>
-
-    <nav class="sticky top-0 z-50 glass border-b border-slate-100 px-8 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <img src="logo.png" alt="LenteFría" class="h-10"> <!-- TU LOGO AQUÍ -->
-            <div class="flex items-center gap-8">
-                <button onclick="showSection('admin')" class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-cyan-lf">Administración</button>
-                <button onclick="showSection('galleries')" class="text-[10px] font-black uppercase tracking-[0.2em] text-black">Galerías</button>
-                <div class="w-10 h-10 bg-cyan-lf rounded-full flex items-center justify-center text-white font-bold">YB</div>
-            </div>
+<body class="bg-white">
+    <nav class="p-6 border-b flex justify-between items-center">
+        <img src="logo.png" class="h-10">
+        <div class="flex gap-6">
+            <button onclick="show('admin')" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-cyan-lf">Staff</button>
+            <button onclick="show('galleries')" class="text-[10px] font-bold uppercase tracking-widest text-black">Galerías</button>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-8 py-12">
-        
-        <!-- PANEL ADMIN -->
-        <section id="section-admin" class="hidden animate-in fade-in duration-500">
-            <div class="bg-slate-900 rounded-[3rem] p-12 text-white mb-10 shadow-2xl shadow-cyan-900/20">
-                <div class="flex justify-between items-center mb-10">
-                    <h2 class="text-3xl font-black italic">Gestión de Staff</h2>
-                    <button onclick="openUserModal()" class="bg-cyan-lf text-white px-6 py-3 rounded-2xl font-bold text-[10px] tracking-widest uppercase"> + Alta Fotógrafo</button>
-                </div>
-                <div id="staff-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    <main class="max-w-6xl mx-auto p-10">
+        <section id="section-admin" class="hidden">
+            <div class="bg-slate-900 p-10 rounded-[3rem] text-white flex justify-between items-center mb-10">
+                <h2 class="text-2xl font-bold italic">Staff LenteFría</h2>
+                <button onclick="document.getElementById('m-u').classList.remove('hidden')" class="bg-cyan-lf px-6 py-2 rounded-xl text-xs font-bold"> + NUEVO</button>
             </div>
+            <div id="staff-list" class="grid grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- PANEL GALERÍAS -->
         <section id="section-galleries">
-            <div class="flex justify-between items-end mb-12">
-                <div>
-                    <h2 class="text-6xl font-black tracking-tighter mb-2">Entregas</h2>
-                    <p class="text-slate-400 font-medium italic">Depósito seguro de activos digitales</p>
-                </div>
-                <button onclick="toggleModal(true)" class="bg-black text-white px-10 py-5 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.2em] shadow-xl hover:bg-cyan-lf transition-all">Nueva Bóveda</button>
+            <div class="flex justify-between items-end mb-10">
+                <h2 class="text-5xl font-black tracking-tighter">Entregas</h2>
+                <button onclick="document.getElementById('m-g').classList.remove('hidden')" class="bg-black text-white px-8 py-4 rounded-3xl text-xs font-bold uppercase tracking-widest hover:bg-cyan-lf transition-all">Nueva Bóveda</button>
             </div>
-            <div id="galleries-grid" class="grid grid-cols-1 md:grid-cols-3 gap-10"></div>
+            <div id="galleries-grid" class="grid grid-cols-3 gap-8"></div>
         </section>
     </main>
 
-    <!-- MODAL USUARIO -->
-    <div id="user-modal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md">
-        <div class="bg-white w-full max-w-md rounded-[3rem] p-12 shadow-2xl">
-            <h3 class="text-2xl font-black mb-6 text-cyan-lf tracking-tight">Nuevo Miembro de Staff</h3>
-            <div class="space-y-4">
-                <input type="text" id="staffName" placeholder="Nombre completo" class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-cyan-lf">
-                <input type="email" id="staffEmail" placeholder="Correo electrónico" class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-cyan-lf">
-                <button onclick="apiCreateStaff()" class="w-full bg-black text-white py-5 rounded-2xl font-bold tracking-[0.2em] uppercase text-[10px]">Autorizar Acceso</button>
-                <button onclick="closeUserModal()" class="w-full text-slate-400 text-[10px] font-bold mt-4">CERRAR</button>
-            </div>
+    <!-- MODAL STAFF -->
+    <div id="m-u" class="hidden fixed inset-0 bg-black/50 backdrop-blur-md z-[100] flex items-center justify-center">
+        <div class="bg-white p-10 rounded-[3rem] w-80">
+            <input type="text" id="sN" placeholder="Nombre" class="w-full mb-4 p-4 bg-slate-100 rounded-2xl outline-none">
+            <input type="email" id="sE" placeholder="Email" class="w-full mb-6 p-4 bg-slate-100 rounded-2xl outline-none">
+            <button onclick="apiS()" class="w-full bg-black text-white py-4 rounded-2xl font-bold">CREAR</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full text-xs mt-4 font-bold text-slate-400">CERRAR</button>
         </div>
     </div>
 
     <!-- MODAL GALERIA -->
-    <div id="modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-lg rounded-[3.5rem] p-12 shadow-2xl">
-            <h3 class="text-4xl font-black mb-2 tracking-tighter">Nueva Entrega</h3>
-            <p class="text-slate-400 mb-10 font-medium">Configuración de bóveda de seguridad.</p>
-            <div class="space-y-5">
-                <input type="text" id="clientName" placeholder="Nombre del Cliente" class="w-full bg-slate-50 rounded-2xl px-8 py-5 outline-none focus:ring-2 focus:ring-black">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="slug" placeholder="link-galeria" class="w-full bg-slate-50 rounded-2xl px-8 py-5 outline-none focus:ring-2 focus:ring-black">
-                    <input type="text" id="password" placeholder="Contraseña" class="w-full bg-slate-50 rounded-2xl px-8 py-5 outline-none focus:ring-2 focus:ring-black">
-                </div>
-                <button onclick="apiCreateVault()" id="btnVault" class="w-full bg-cyan-lf text-white py-6 rounded-[2rem] font-black text-xs tracking-widest uppercase shadow-lg shadow-cyan-500/20">Generar Bóveda</button>
-                <button onclick="toggleModal(false)" class="w-full text-slate-400 font-bold text-[10px]">CANCELAR</button>
-            </div>
+    <div id="m-g" class="hidden fixed inset-0 bg-black/50 backdrop-blur-md z-[100] flex items-center justify-center">
+        <div class="bg-white p-10 rounded-[3rem] w-96">
+            <input type="text" id="cN" placeholder="Cliente" class="w-full mb-4 p-4 bg-slate-100 rounded-2xl outline-none">
+            <input type="text" id="sl" placeholder="Slug" class="w-full mb-4 p-4 bg-slate-100 rounded-2xl outline-none">
+            <input type="text" id="ps" placeholder="Pass" class="w-full mb-6 p-4 bg-slate-100 rounded-2xl outline-none">
+            <button onclick="apiG()" class="w-full bg-cyan-lf text-white py-4 rounded-2xl font-bold">INICIALIZAR</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full text-xs mt-4 font-bold text-slate-400">CERRAR</button>
         </div>
     </div>
 
     <script>
-        const BASE_URL = "https://shiny-engine-p79vw5gqp9gc96w-8000.app.github.dev";
+        const BASE = "https://shiny-engine-p79vw5gqp9gc96w-8000.app.github.dev";
 
-        function showSection(name) {
-            document.getElementById('section-admin').classList.add('hidden');
-            document.getElementById('section-galleries').classList.add('hidden');
-            document.getElementById(`section-${name}`).classList.remove('hidden');
-            if(name === 'admin') fetchStaff();
+        function show(n) {
+            document.getElementById('section-admin').classList.toggle('hidden', n!=='admin');
+            document.getElementById('section-galleries').classList.toggle('hidden', n!=='galleries');
+            if(n==='admin') fetchS();
         }
 
-        async function fetchStaff() {
-            try {
-                const res = await fetch(`${BASE_URL}/admin/staff`);
-                const staff = await res.json();
-                if(!Array.isArray(staff)) return;
-                document.getElementById('staff-list').innerHTML = staff.map(s => `
-                    <div class="bg-white/10 p-6 rounded-[2rem] border border-white/10">
-                        <p class="text-cyan-lf font-black uppercase text-[10px] tracking-widest">Fotógrafo Staff</p>
-                        <h4 class="text-xl font-bold mt-1">${s.full_name}</h4>
-                        <p class="text-slate-400 text-xs">${s.email}</p>
-                    </div>
-                `).join('');
-            } catch (e) { console.error(e); }
+        async function fetchS() {
+            const r = await fetch(`${BASE}/admin/staff`);
+            const d = await r.json();
+            document.getElementById('staff-list').innerHTML = d.map(s => `<div class="bg-slate-50 p-6 rounded-3xl border"><p class="text-cyan-lf font-bold text-[10px] uppercase">Staff</p><h4 class="font-bold">${s.full_name}</h4></div>`).join('');
         }
 
-        async function fetchGalleries() {
-            try {
-                const res = await fetch(`${BASE_URL}/photographer/galleries`);
-                const data = await res.json();
-                if(!Array.isArray(data)) return;
-                document.getElementById('galleries-grid').innerHTML = data.map(g => `
-                    <div class="vault-card bg-slate-50 p-6">
-                        <div class="h-56 bg-white rounded-[2rem] mb-6 flex items-center justify-center shadow-inner">
-                            <i class="fa-solid fa-cube text-4xl text-slate-100 group-hover:text-cyan-lf transition-colors"></i>
-                        </div>
-                        <h3 class="text-2xl font-black tracking-tight mb-1 uppercase">${g.client_name}</h3>
-                        <p class="text-slate-400 text-[10px] font-bold tracking-[0.2em] mb-6 uppercase">ID: LF-00${g.id}</p>
-                        <button class="w-full bg-black text-white text-[10px] font-black uppercase tracking-widest py-4 rounded-2xl hover:bg-cyan-lf transition-all">Gestionar Activos</button>
-                    </div>
-                `).join('');
-            } catch (e) { console.error(e); }
+        async function fetchG() {
+            const r = await fetch(`${BASE}/photographer/galleries`);
+            const d = await r.json();
+            document.getElementById('galleries-grid').innerHTML = d.map(g => `<div class="border p-6 rounded-[2.5rem] hover:border-cyan-lf transition-all"><div class="h-40 bg-slate-50 rounded-3xl mb-4 flex items-center justify-center"><i class="fa-solid fa-box text-slate-200"></i></div><h3 class="font-bold uppercase text-sm">${g.client_name}</h3><button onclick="alert('Iniciando carga de activos para: ${g.client_name}')" class="w-full bg-black text-white py-3 rounded-xl text-[10px] font-bold uppercase mt-4 hover:bg-cyan-lf transition-all tracking-widest">Gestionar Activos</button></div>`).join('');
         }
 
-        async function apiCreateStaff() {
-            const payload = { full_name: document.getElementById('staffName').value, email: document.getElementById('staffEmail').value };
-            await fetch(`${BASE_URL}/admin/staff/create`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)});
-            closeUserModal(); fetchStaff();
+        async function apiS() {
+            await fetch(`${BASE}/admin/staff/create`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({full_name:document.getElementById('sN').value, email:document.getElementById('sE').value})});
+            document.getElementById('m-u').classList.add('hidden'); fetchS();
         }
 
-        async function apiCreateVault() {
-            const payload = { client_name: document.getElementById('clientName').value, slug: document.getElementById('slug').value, password: document.getElementById('password').value, can_download: true };
-            await fetch(`${BASE_URL}/photographer/vault/create`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)});
-            toggleModal(false); fetchGalleries();
+        async function apiG() {
+            await fetch(`${BASE}/photographer/vault/create`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({client_name:document.getElementById('cN').value, slug:document.getElementById('sl').value, password:document.getElementById('ps').value, can_download:true})});
+            document.getElementById('m-g').classList.add('hidden'); fetchG();
         }
 
-        function toggleModal(s) { document.getElementById('modal').classList.toggle('hidden', !s); }
-        function openUserModal() { document.getElementById('user-modal').classList.remove('hidden'); }
-        function closeUserModal() { document.getElementById('user-modal').classList.add('hidden'); }
-
-        fetchGalleries();
+        fetchG();
     </script>
 </body>
 </html>
