@@ -34,9 +34,18 @@
         /* PREVENT RIGHT CLICK / SELECT */
         .protect-img { -webkit-user-select: none; user-select: none; pointer-events: none; }
         .masonry-item-client { cursor: pointer; }
+
+        /* NOTIFICACIÓN FLOTANTE */
+        #toast { transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
     </style>
 </head>
 <body onload="initApp()">
+
+    <!-- NOTIFICACIÓN FLOTANTE (TOAST) -->
+    <div id="toast" class="fixed -bottom-24 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-3 rounded-full font-bold tracking-widest text-sm shadow-2xl z-[200] flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-cyan-lf"></i>
+        <span id="toast-msg">Mensaje</span>
+    </div>
 
     <!-- PANTALLA DE LOGIN -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center transition-all duration-500">
@@ -162,12 +171,15 @@
                 <label class="text-xs font-bold text-slate-400 ml-2">Asignar a Fotógrafo:</label>
                 <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm"></select>
             </div>
+            
+            <input id="cN" placeholder="Nombre de la Galería / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <input id="sl" placeholder="Slug (Ruta web. Ej: boda-ana)" onkeyup="toggleClientFields()" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            
             <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
                 <input type="checkbox" id="chk-portfolio" class="w-5 h-5 accent-cyan-lf" onchange="toggleClientFields()">
                 <span class="font-bold text-sm">Es un Portafolio Público</span>
             </label>
-            <input id="cN" placeholder="Nombre de la Galería / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <input id="sl" placeholder="Slug (Ruta web. Ej: boda-ana)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+
             <div id="client-credentials-box">
                 <h4 class="text-xs font-bold text-slate-400 ml-2 mb-2 uppercase">Credenciales del Cliente</h4>
                 <input id="cU" placeholder="Usuario (Ej: FamiliaPerez)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
@@ -208,18 +220,34 @@
         let sessionUser = null;
         let sessionRole = null;
         let allStaffCache = [];
-        let currentGallery = null; // Usado en workspace
+        let currentGallery = null; 
         let currentPhotoId = null;
-        let favoritesCache = []; // IDs de fotos favoritas
-        let photosCache = []; // Cache de fotos para descargar en zip
+        let favoritesCache = []; 
+        let photosCache = []; 
 
         // PROTECCIÓN ANTI CLIC DERECHO
         document.addEventListener('contextmenu', event => event.preventDefault());
 
         // ==========================================
-        // 🛡️ SISTEMA DE SESIÓN
+        // 🛡️ SISTEMA DE SESIÓN MAGICA Y NORMAL
         // ==========================================
         function initApp() {
+            // 1. Detectar si llegó a través de un Magic Link
+            const urlParams = new URLSearchParams(window.location.search);
+            const magicU = urlParams.get('u');
+            const magicP = urlParams.get('p');
+
+            if(magicU && magicP) {
+                // Auto-rellenar y auto-loguear
+                document.getElementById('l-user').value = magicU;
+                document.getElementById('l-pass').value = magicP;
+                // Limpiar la URL para que se vea elegante y no comparta contraseñas en pantalla
+                window.history.replaceState({}, document.title, window.location.pathname);
+                login();
+                return;
+            }
+
+            // 2. Si no hay Magic Link, revisar si ya tenía sesión guardada (F5)
             const savedSession = localStorage.getItem('lf_session');
             if (savedSession) {
                 const data = JSON.parse(savedSession);
@@ -264,7 +292,6 @@
             const isClient = sessionRole === 'client';
             document.getElementById('user-greeting').innerText = `HOLA, ${isClient ? sessionUser.client_name.toUpperCase() : sessionUser.full_name.toUpperCase()}`;
             
-            // Si es cliente, ocultamos el header por diseño cinemático
             if(isClient) {
                 document.getElementById('main-nav').classList.add('hidden');
                 show('client-view');
@@ -311,6 +338,25 @@
         }
 
         // ==========================================
+        // 🔗 COMPARTIR ENLACE MÁGICO (NUEVO)
+        // ==========================================
+        function copyShareLink(u, p) {
+            const link = window.location.origin + window.location.pathname + `?u=${u}&p=${p}`;
+            navigator.clipboard.writeText(link).then(() => {
+                showToast("¡ENLACE MÁGICO COPIADO!");
+            }).catch(err => {
+                alert("Tu navegador bloqueó el portapapeles. Copia esto manualmente:\n\n" + link);
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.style.bottom = "2rem"; // Sube el toast
+            setTimeout(() => { toast.style.bottom = "-6rem"; }, 3000); // Lo baja después de 3s
+        }
+
+        // ==========================================
         // 👥 LÓGICA STAFF & GALERÍAS
         // ==========================================
         async function fetchS() {
@@ -327,17 +373,22 @@
                 if(!Array.isArray(d) || d.length === 0) { document.getElementById('galleries-grid').innerHTML = `<p class="text-slate-400 font-bold">No hay bóvedas creadas.</p>`; return; }
 
                 document.getElementById('galleries-grid').innerHTML = d.map(g => {
-                    const badge = g.is_portfolio ? `<span class="bg-black text-white text-[10px] px-2 py-1 rounded-full absolute top-4 right-4 font-bold">PORTAFOLIO</span>` : '';
+                    const badge = g.is_portfolio ? `<span class="bg-black text-white text-[10px] px-2 py-1 rounded-full absolute top-4 right-4 font-bold tracking-widest">PORTAFOLIO</span>` : '';
                     return `
-                    <div class="border p-8 rounded-3xl flex flex-col justify-between shadow-sm bg-white relative">
+                    <div class="border p-8 rounded-3xl flex flex-col justify-between shadow-sm bg-white relative hover:shadow-xl transition-shadow">
                         ${badge}
                         <div class="mb-6">
-                            <h3 class="font-black text-2xl pr-10">${g.client_name}</h3>
+                            <h3 class="font-black text-2xl pr-10 leading-tight">${g.client_name}</h3>
                             <p class="text-xs font-bold text-cyan-lf mt-1">/${g.slug}</p>
                         </div>
-                        <button onclick='openWorkspace(${JSON.stringify(g)})' class="w-full bg-black text-white p-4 rounded-xl hover:bg-cyan-lf transition-colors font-bold tracking-widest text-xs">
-                            <i class="fa-solid fa-folder-open mr-2"></i> GESTIONAR
-                        </button>
+                        <div class="flex gap-2">
+                            <button onclick='openWorkspace(${JSON.stringify(g)})' class="flex-1 bg-black text-white p-4 rounded-xl hover:bg-cyan-lf transition-colors font-bold tracking-widest text-xs">
+                                <i class="fa-solid fa-folder-open mr-2"></i> GESTIONAR
+                            </button>
+                            <button onclick="copyShareLink('${g.client_username}', '${g.password_hash}')" class="bg-slate-100 text-black px-6 py-4 rounded-xl hover:bg-cyan-lf hover:text-white transition-colors" title="Copiar Enlace Mágico">
+                                <i class="fa-solid fa-link"></i>
+                            </button>
+                        </div>
                     </div>`;
                 }).join('');
             } catch(e) {}
@@ -368,14 +419,12 @@
             document.getElementById('ws-title').innerText = currentGallery.client_name;
             document.getElementById('ws-photos').innerHTML = `<p class="animate-pulse font-bold text-slate-400">Cargando Studio...</p>`;
             
-            // Configurar botón de subida
             const btnUpload = document.getElementById('btn-ws-upload');
             btnUpload.onclick = () => triggerUpload(currentGallery.id);
 
             show('workspace');
 
             try {
-                // Traer fotos y favoritos simultáneamente
                 const [photos, favs] = await Promise.all([
                     gasRequest("getPhotos", null, currentGallery.drive_folder_id),
                     gasRequest("getFavorites", null, currentGallery.id)
@@ -407,8 +456,8 @@
         async function setCover(fileId) {
             if(!confirm("¿Establecer como foto de portada principal?")) return;
             await gasRequest("setCover", { gallery_id: currentGallery.id, file_id: fileId });
-            currentGallery.cover_photo_id = fileId; // Update local state
-            openWorkspace(currentGallery); // Reload workspace
+            currentGallery.cover_photo_id = fileId; 
+            openWorkspace(currentGallery); 
         }
 
         async function deletePhoto(fileId) {
@@ -426,7 +475,6 @@
             container.innerHTML = `<p class="text-center font-bold text-slate-400 col-span-full mt-10 animate-pulse">Revelando fotografías...</p>`;
             
             try {
-                // Setup Hero Background si hay portada
                 const hero = document.getElementById('client-hero');
                 if (sessionUser.cover_photo_id) {
                     hero.style.backgroundImage = `url('https://drive.google.com/thumbnail?id=${sessionUser.cover_photo_id}&sz=w2000')`;
@@ -472,7 +520,6 @@
 
         async function toggleFavorite(fileId) {
             const icon = document.getElementById(`fav-${fileId}`);
-            // Optimistic UI Update
             if (favoritesCache.includes(fileId)) {
                 favoritesCache = favoritesCache.filter(id => id !== fileId);
                 icon.className = "fa-regular text-white fa-heart";
@@ -480,7 +527,6 @@
                 favoritesCache.push(fileId);
                 icon.className = "fa-solid text-red-500 fa-heart";
             }
-            // Background request
             await gasRequest("toggleFavorite", { gallery_id: sessionUser.id, file_id: fileId });
         }
 
@@ -504,9 +550,9 @@
             } catch(e) { btn.innerHTML = `ENVIAR`; btn.disabled = false; }
         }
 
-        // --- DESCARGA MASIVA ZIP (El Empaquetador) ---
+        // --- DESCARGA MASIVA ZIP ---
         async function downloadAllZip() {
-            if (photosCache.length === 0) return alert("No hay fotos para descargar.");
+            if (photosCache.length === 0) return alert("No hay fotos.");
             const btn = document.getElementById('btn-download-zip');
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PREPARANDO ZIP...`;
@@ -516,12 +562,9 @@
                 const zip = new JSZip();
                 const folder = zip.folder(sessionUser.client_name.replace(/[^a-z0-9]/gi, '_'));
                 
-                // Descargar cada foto y agregarla al zip (usamos el thumbnail gigante para evadir CORS y dar buena calidad)
                 for (let i = 0; i < photosCache.length; i++) {
                     const photo = photosCache[i];
                     btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PROCESANDO ${i+1}/${photosCache.length}`;
-                    
-                    // Fetch como blob
                     const highResUrl = `https://drive.google.com/thumbnail?id=${photo.id}&sz=w3000`; 
                     const response = await fetch(highResUrl);
                     const blob = await response.blob();
@@ -530,12 +573,11 @@
 
                 btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> EMPAQUETANDO...`;
                 const content = await zip.generateAsync({ type: "blob" });
-                saveAs(content, `LenteFria_${sessionUser.slug}.zip`); // Usa FileSaver.js
+                saveAs(content, `LenteFria_${sessionUser.slug}.zip`);
 
                 btn.innerHTML = `<i class="fa-solid fa-check"></i> DESCARGA INICIADA`;
             } catch (error) {
-                console.error(error);
-                alert("Hubo un error al generar el ZIP. Puede deberse a restricciones del navegador.");
+                alert("Error al generar el ZIP.");
             }
             
             setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 3000);
@@ -561,15 +603,15 @@
             }; input.click();
         }
 
-        async function apiS() { /* Crear Staff */ 
+        async function apiS() { 
             const n = document.getElementById('sN').value; const e = document.getElementById('sE').value; const p = document.getElementById('sP').value;
             if(!n || !e || !p) return alert("Llena todos los campos");
             const btn = document.getElementById('btn-create-staff'); btn.innerText = "CREANDO..."; btn.disabled = true;
             await gasRequest("createStaff", { full_name: n, email: e, password: p });
-            document.getElementById('m-u').classList.add('hidden'); fetchS(); btn.innerText = "CREAR"; btn.disabled = false;
+            document.getElementById('m-u').classList.add('hidden'); fetchS(); btn.innerText = "CREAR STAFF"; btn.disabled = false;
         }
 
-        async function apiG() { /* Crear Bóveda */
+        async function apiG() { 
             let s_id = sessionRole === 'admin' ? document.getElementById('sel-staff').value : sessionUser.id;
             const cN = document.getElementById('cN').value; const sl = document.getElementById('sl').value; 
             const cU = document.getElementById('cU').value; const ps = document.getElementById('ps').value;
@@ -577,7 +619,7 @@
             if(!s_id || !cN || !sl || !cU || !ps) return alert("Llena todos los campos");
             const btn = document.getElementById('btn-create-vault'); btn.innerText = "CREANDO..."; btn.disabled = true;
             await gasRequest("createGallery", { photographer_id: s_id, client_name: cN, client_username: cU, slug: sl, password: ps, is_portfolio: isPort, can_download: true });
-            document.getElementById('m-g').classList.add('hidden'); fetchG(); btn.innerText = "CREAR"; btn.disabled = false;
+            document.getElementById('m-g').classList.add('hidden'); fetchG(); btn.innerText = "CREAR BÓVEDA"; btn.disabled = false;
         }
 
         function openGalleryModal() {
@@ -588,10 +630,21 @@
             document.getElementById('m-g').classList.remove('hidden');
         }
 
+        // Lógica corregida para Portafolios: Usuario Único
         function toggleClientFields() {
-            const isPort = document.getElementById('chk-portfolio').checked; const box = document.getElementById('client-credentials-box');
-            if(isPort) { box.classList.add('opacity-50', 'pointer-events-none'); document.getElementById('cU').value = 'Publico'; document.getElementById('ps').value = '0000'; } 
-            else { box.classList.remove('opacity-50', 'pointer-events-none'); document.getElementById('cU').value = ''; document.getElementById('ps').value = ''; }
+            const isPort = document.getElementById('chk-portfolio').checked; 
+            const box = document.getElementById('client-credentials-box');
+            const slugVal = document.getElementById('sl').value || 'publico';
+            
+            if(isPort) { 
+                box.classList.add('opacity-50', 'pointer-events-none'); 
+                document.getElementById('cU').value = 'portafolio_' + slugVal; // Garantiza que no choquen 
+                document.getElementById('ps').value = '0000'; 
+            } else { 
+                box.classList.remove('opacity-50', 'pointer-events-none'); 
+                document.getElementById('cU').value = ''; 
+                document.getElementById('ps').value = ''; 
+            }
         }
 
         function togglePass(inputId, iconId) {
@@ -600,6 +653,6 @@
             else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
         }
     </script>
-    <div class="hidden text-white fa-solid fa-heart fa-regular fa-eye fa-eye-slash"></div> <!-- Precarga fontawesome -->
+    <div class="hidden text-white fa-solid fa-heart fa-regular fa-eye fa-eye-slash"></div>
 </body>
 </html>
