@@ -29,7 +29,7 @@
         @media (min-width: 640px) { .masonry { column-count: 2; } }
         @media (min-width: 1024px) { .masonry { column-count: 3; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
-        .hero-cover { height: 100vh; width: 100%; object-fit: cover; background-color: #0f172a; background-position: center; background-size: cover; position: relative; }
+        .hero-cover { height: 100vh; width: 100%; object-fit: cover; background-color: #0f172a; background-position: center; background-size: cover; relative; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%); }
         .protect-img { -webkit-user-select: none; user-select: none; pointer-events: none; position: relative; }
         .masonry-item-client { cursor: pointer; }
@@ -109,13 +109,14 @@
             <button id="nav-gal-btn" onclick="show('galleries')" class="text-xs font-bold uppercase text-black hidden transition-colors">Galerías</button>
             <button id="nav-inbox-btn" onclick="show('inbox')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden transition-colors">Inbox</button>
             <div class="h-6 w-px bg-slate-200"></div>
-            <button onclick="document.getElementById('m-profile').classList.remove('hidden')" class="text-slate-400 hover:text-black transition-colors" title="Configuración"><i class="fa-solid fa-gear text-lg"></i></button>
+            <button onclick="openProfileModal()" class="text-slate-400 hover:text-black transition-colors" title="Configuración de Perfil"><i class="fa-solid fa-gear text-lg"></i></button>
             <button onclick="logout()" class="text-xs font-bold uppercase text-red-500 hover:scale-110 transition-transform bg-red-50 p-2 rounded-full"><i class="fa-solid fa-power-off"></i></button>
         </div>
     </nav>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <main id="main-content" class="hidden">
+        
         <!-- SECCIÓN STAFF (Admin) -->
         <section id="section-admin" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 shadow-xl">
@@ -148,7 +149,8 @@
                 </div>
             </div>
 
-            <div class="border-2 border-red-200 bg-red-50 p-8 rounded-3xl">
+            <!-- ZONA DE PELIGRO -->
+            <div class="border-2 border-red-200 bg-red-50 p-8 rounded-3xl animate-fade-in">
                 <h3 class="text-red-600 font-black text-2xl mb-2"><i class="fa-solid fa-triangle-exclamation mr-2 animate-pulse"></i> ZONA DE PELIGRO</h3>
                 <p class="text-red-400 font-bold text-sm mb-6">Esta acción borrará absolutamente TODAS las fotos, sesiones y comentarios. Tu cuenta de Admin NO será afectada.</p>
                 <button onclick="document.getElementById('m-reset').classList.remove('hidden')" class="bg-red-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-red-700 transition-colors shadow-lg">REINICIAR SISTEMA A CERO</button>
@@ -183,7 +185,7 @@
             <div class="mb-6 bg-slate-50 p-6 rounded-2xl border flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
                     <span class="text-xs font-bold text-slate-400 uppercase">Subir a categoría:</span>
-                    <select id="ws-sel-folder" class="p-3 bg-white border rounded-xl font-bold text-sm outline-none"></select>
+                    <select id="ws-sel-folder" class="p-3 bg-white border rounded-xl font-bold text-sm outline-none focus:ring-2 focus:ring-cyan-lf"></select>
                 </div>
             </div>
             <div id="ws-photos" class="masonry"></div>
@@ -222,13 +224,24 @@
                     </div>
                 </div>
 
-                <div id="client-tabs" class="flex gap-4 overflow-x-auto pb-6 mb-8 border-b scrollbar-none"></div>
+                <div id="client-tabs" class="flex gap-4 overflow-x-auto pb-6 mb-8 border-b scrollbar-none animate-fade-in"></div>
                 <div id="client-photos" class="masonry"></div>
+
+                <!-- BIOGRAFÍA FOTÓGRAFO -->
+                <div id="client-photographer-card" class="mt-24 border-t pt-16 max-w-4xl mx-auto hidden fade-in">
+                    <h4 class="text-xs font-black tracking-widest text-slate-400 uppercase mb-8 text-center">El autor detrás de la lente</h4>
+                    <div class="bg-slate-50 p-8 sm:p-12 rounded-3xl text-center shadow-sm border border-slate-100">
+                        <h3 id="c-photo-name" class="font-black text-3xl mb-4">Fotógrafo</h3>
+                        <p id="c-photo-bio" class="text-slate-500 font-light italic leading-relaxed text-sm md:text-base mb-8 max-w-xl mx-auto">Sin biografía disponible.</p>
+                        <div id="c-photo-socials" class="flex justify-center items-center gap-6 text-xl text-slate-400"></div>
+                    </div>
+                </div>
+
             </div>
         </section>
     </main>
 
-    <!-- CARRUSEL CINEMÁTICO (LIGHTBOX) -->
+    <!-- CARRUSEL LIGHTBOX -->
     <div id="m-carousel" class="hidden fixed inset-0 bg-black/95 z-[500] flex flex-col md:flex-row backdrop-blur-xl transition-opacity fade-in">
         <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white/50 hover:text-white z-[510] text-3xl transition-colors"><i class="fa-solid fa-xmark"></i></button>
         <div id="carousel-img-container" class="w-full md:w-2/3 h-[60vh] md:h-full flex items-center justify-center relative protect-img p-4 sm:p-10">
@@ -249,15 +262,25 @@
 
     <!-- CONFIGURACIÓN PERFIL -->
     <div id="m-profile" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
-        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
-            <h3 class="font-black text-2xl mb-2">Configuración</h3>
-            <p class="text-slate-400 text-sm font-bold mb-6">Actualiza tu contraseña de acceso.</p>
-            <div class="relative mb-6">
-                <input id="p-new-pass" type="password" placeholder="Ingresa Nueva Contraseña" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-                <button onclick="togglePass('p-new-pass', 'eye-prof')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-prof" class="fa-solid fa-eye"></i></button>
+        <div class="bg-white p-10 rounded-3xl w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
+            <h3 class="font-black text-2xl mb-2">Mi Perfil Profesional</h3>
+            <p class="text-slate-400 text-sm font-bold mb-6">Administra tus datos, biografía y canales de venta.</p>
+            <div class="flex flex-col gap-4">
+                <textarea id="p-bio" rows="3" placeholder="Biografía corta..." class="p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf"></textarea>
+                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Redes</h4>
+                <input id="p-ig" placeholder="Enlace de Instagram" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="p-tt" placeholder="Enlace de TikTok" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="p-fb" placeholder="Enlace de Facebook" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="p-wa" placeholder="WhatsApp (Con lada, solo números. Ej: 52199923485)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="p-ap" placeholder="Enlace Adobe Portfolio" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Seguridad</h4>
+                <div class="relative mb-4">
+                    <input id="p-new-pass" type="password" placeholder="Nueva Contraseña (Opcional)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                    <button onclick="togglePass('p-new-pass', 'eye-prof')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-prof" class="fa-solid fa-eye"></i></button>
+                </div>
             </div>
-            <button id="btn-change-pass" onclick="changePassword()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all shadow-lg tracking-widest">GUARDAR CAMBIOS</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CERRAR</button>
+            <button id="btn-change-pass" onclick="saveProfileChanges()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all tracking-widest mt-4">GUARDAR CAMBIOS</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black">CERRAR</button>
         </div>
     </div>
 
@@ -266,10 +289,10 @@
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-2">Editar Entrega</h3>
             <p class="text-slate-400 text-sm font-bold mb-6">Modifica el nombre público y descripción.</p>
-            <input id="edit-cN" placeholder="Nombre de la Galería / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
-            <textarea id="edit-gDesc" rows="3" placeholder="Descripción poética (Opcional)" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf resize-none"></textarea>
+            <input id="edit-cN" placeholder="Nombre de la Galería" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <textarea id="edit-gDesc" rows="3" placeholder="Descripción poética (Opcional)" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none"></textarea>
             <button id="btn-update-vault" onclick="updateGallery()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest">GUARDAR CAMBIOS</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black">CANCELAR</button>
         </div>
     </div>
 
@@ -278,9 +301,9 @@
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-2">Nueva Categoría (Set)</h3>
             <p class="text-slate-400 text-sm font-bold mb-6">Ejemplo: Ceremonia, Recepción, Retratos.</p>
-            <input id="set-name" placeholder="Nombre de la categoría" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
+            <input id="set-name" placeholder="Nombre de la categoría" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <button id="btn-save-set" onclick="createSet()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest">CREAR CATEGORÍA</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black">CANCELAR</button>
         </div>
     </div>
 
@@ -288,10 +311,10 @@
     <div id="m-u" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-6">Nuevo Staff</h3>
-            <input id="sN" placeholder="Nombre completo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-            <input id="sE" placeholder="Email del fotógrafo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+            <input id="sN" placeholder="Nombre completo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <input id="sE" placeholder="Email del fotógrafo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <div class="relative mb-8">
-                <input id="sP" placeholder="Contraseña de acceso" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="sP" placeholder="Contraseña de acceso" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
                 <button onclick="togglePass('sP', 'eye-staff')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-staff" class="fa-solid fa-eye"></i></button>
             </div>
             <button id="btn-create-staff" onclick="apiS()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all shadow-lg">CREAR STAFF</button>
@@ -307,7 +330,7 @@
                 <label class="text-xs font-bold text-slate-400 ml-2">Asignar a Fotógrafo:</label>
                 <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm"></select>
             </div>
-            <input id="cN" placeholder="Nombre de la Sesión / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <input id="cN" placeholder="Nombre de la Sesión" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <textarea id="gDesc" rows="2" placeholder="Dedicatoria o descripción de la sesión (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none"></textarea>
             <input id="sl" placeholder="Slug (Ruta web. Ej: boda-ana)" onkeyup="toggleClientFields()" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
@@ -336,7 +359,7 @@
                 <input id="reset-pass" placeholder="Contraseña de Admin" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none border border-red-200 focus:ring-2 focus:ring-red-500">
             </div>
             <button id="btn-execute-reset" onclick="executeHardReset()" class="w-full bg-red-600 text-white p-4 rounded-xl font-bold hover:bg-red-800 transition-colors">EJECUTAR PURGA</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full text-slate-400 font-bold hover:text-black">CANCELAR</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
         </div>
     </div>
 
@@ -362,7 +385,7 @@
         function getInboxSkeleton() { return Array(2).fill(`<div class="bg-white p-6 rounded-2xl border flex gap-6 items-start animate-pulse"><div class="w-24 h-24 bg-slate-200 rounded-xl"></div><div class="flex-1"><div class="h-4 bg-slate-200 rounded w-1/4 mb-4"></div><div class="h-4 bg-slate-200 rounded w-3/4"></div></div></div>`).join(''); }
 
         // ==========================================
-        // 🛡️ SISTEMA DE SESIÓN (LOGIN SILENCIOSO)
+        // 🛡️ SISTEMA DE SESIÓN
         // ==========================================
         async function initApp() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -376,7 +399,7 @@
                         jpeg_quality: parseInt(settings[0].jpeg_quality)
                     };
                 }
-            } catch(e) { console.error("Error leyendo configuración, usando defaults", e); }
+            } catch(e) { console.error("Error", e); }
 
             if(magicU && magicP) {
                 sessionStorage.setItem('lf_magic_login', 'true');
@@ -540,6 +563,49 @@
             btn.innerHTML = `ACTUALIZAR CONTRASEÑA`; btn.disabled = false;
         }
 
+        // ==========================================
+        // ⚙️ GESTIÓN PERFIL FOTÓGRAFO
+        // ==========================================
+        function openProfileModal() {
+            document.getElementById('p-bio').value = sessionUser.bio || '';
+            document.getElementById('p-ig').value = sessionUser.instagram || '';
+            document.getElementById('p-tt').value = sessionUser.tiktok || '';
+            document.getElementById('p-fb').value = sessionUser.facebook || '';
+            document.getElementById('p-wa').value = sessionUser.whatsapp || '';
+            document.getElementById('p-ap').value = sessionUser.adobe_portfolio || '';
+            document.getElementById('p-new-pass').value = '';
+            document.getElementById('m-profile').classList.remove('hidden');
+        }
+
+        async function saveProfileChanges() {
+            const btn = document.getElementById('btn-change-pass');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true;
+
+            const payload = {
+                user_id: sessionUser.id,
+                bio: document.getElementById('p-bio').value,
+                instagram: document.getElementById('p-ig').value,
+                tiktok: document.getElementById('p-tt').value,
+                facebook: document.getElementById('p-fb').value,
+                whatsapp: document.getElementById('p-wa').value,
+                adobe_portfolio: document.getElementById('p-ap').value
+            };
+
+            try {
+                await gasRequest("updateProfile", payload);
+                const newP = document.getElementById('p-new-pass').value;
+                if (newP) {
+                    await gasRequest("changePassword", { user_id: sessionUser.id, role: sessionRole, new_password: newP });
+                    sessionUser.password = newP;
+                }
+                Object.assign(sessionUser, payload);
+                localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
+                showToast("Perfil de fotógrafo actualizado con éxito");
+                document.getElementById('m-profile').classList.add('hidden');
+            } catch(e) { alert("Error al guardar cambios de perfil"); }
+            btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
+        }
+
         async function changePassword() {
             const newP = document.getElementById('p-new-pass').value;
             if(!newP) return alert("Ingresa la nueva contraseña");
@@ -595,7 +661,7 @@
                         ${badge}
                         <div class="absolute top-4 left-4 flex gap-3 z-10">
                             <button onclick='openEditModal(${JSON.stringify(g)})' class="text-slate-400 hover:text-black transition-colors" title="Editar Nombre/Descripción"><i class="fa-solid fa-pen text-sm"></i></button>
-                            <button onclick="deleteGallery(${g.id})" class="text-red-300 hover:text-red-500 transition-colors" title="Eliminar de Drive y BD"><i class="fa-solid fa-trash text-sm"></i></button>
+                            <button onclick="deleteGallery(${g.id})" class="text-red-300 hover:text-red-600 transition-colors" title="Eliminar de Drive y BD"><i class="fa-solid fa-trash text-sm"></i></button>
                         </div>
                         <div class="mb-6 mt-4">
                             <h3 class="font-black text-2xl pr-10 leading-tight">${g.client_name}</h3>
@@ -630,9 +696,8 @@
         async function openWorkspace(galleryObj) {
             currentGallery = galleryObj; document.getElementById('ws-title').innerText = currentGallery.client_name;
             document.getElementById('ws-photos').innerHTML = getPhotoSkeleton();
-            
+            document.getElementById('btn-ws-upload').onclick = () => triggerUpload(currentGallery.id);
             show('workspace');
-
             try {
                 const [structure, favs] = await Promise.all([
                     gasRequest("getPhotos", null, currentGallery.drive_folder_id),
@@ -725,7 +790,7 @@
         async function deletePhoto(fileId) { if(!confirm("¿Borrar esta foto de Google Drive definitivamente?")) return; document.getElementById(`card-${fileId}`).style.opacity = '0.3'; await gasRequest("deletePhoto", { file_id: fileId, actor: sessionUser.email }); document.getElementById(`card-${fileId}`).remove(); showToast("Foto Eliminada"); }
 
         // ==========================================
-        // 📸 PORTAL DEL CLIENTE (SETS, MARCA DE AGUA, CORAZONES, ZIP)
+        // 📸 PORTAL DEL CLIENTE (SETS, MARCA DE AGUA, BIO)
         // ==========================================
         async function fetchClientPhotos() {
             document.getElementById('client-photos').innerHTML = getPhotoSkeleton();
@@ -768,7 +833,30 @@
                     }).join('');
                 }
                 renderClientGrid(isPort);
+                
+                fetchPhotographerDetails(sessionUser.photographer_id);
             } catch(error) { document.getElementById('client-photos').innerHTML = `<p class="text-center text-red-500 font-bold">Error de red.</p>`; }
+        }
+
+        async function fetchPhotographerDetails(photoId) {
+            try {
+                const d = await gasRequest("getPhotographer", null, photoId);
+                if (d && d.length > 0) {
+                    const p = d[0];
+                    document.getElementById('c-photo-name').innerText = p.full_name;
+                    document.getElementById('c-photo-bio').innerText = p.bio || "Persiguiendo momentos honestos y capturando fragmentos de vida a través de la lente.";
+                    
+                    let socialsHtml = "";
+                    if(p.whatsapp) socialsHtml += `<a href="https://wa.me/${p.whatsapp}?text=Hola%20${p.full_name.replace(/ /g, '%20')}!%20Vi%20tu%20trabajo%20en%20LenteFr%C3%ADa%20y%20me%20encant%C3%B3..." target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-whatsapp text-2xl"></i></a>`;
+                    if(p.instagram) socialsHtml += `<a href="${p.instagram}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-instagram text-2xl"></i></a>`;
+                    if(p.tiktok) socialsHtml += `<a href="${p.tiktok}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-tiktok text-2xl"></i></a>`;
+                    if(p.facebook) socialsHtml += `<a href="${p.facebook}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-facebook-f text-2xl"></i></a>`;
+                    if(p.adobe_portfolio) socialsHtml += `<a href="${p.adobe_portfolio}" target="_blank" class="bg-black text-white text-[10px] font-black px-4 py-2 rounded-full tracking-widest hover:bg-cyan-lf transition-colors"><i class="fa-solid fa-globe mr-2"></i>PORTAFOLIO</a>`;
+                    
+                    document.getElementById('c-photo-socials').innerHTML = socialsHtml;
+                    document.getElementById('client-photographer-card').classList.remove('hidden');
+                }
+            } catch(e) { console.error("Error", e); }
         }
 
         function filterClientTab(setId, btnObj) {
@@ -881,20 +969,15 @@
         }
 
         // ==========================================
-        // 🔄 COMPRESIÓN MULTI-RESOLUCIÓN EN VIVO (SaaS CORE)
+        // 🔄 COMPRESIÓN MULTI-RESOLUCIÓN EN VIVO
         // ==========================================
         function compressFile(file) {
             const targetWidth = window.systemSettings ? window.systemSettings.max_resolution : 3000;
             const targetQuality = window.systemSettings ? (window.systemSettings.jpeg_quality / 100) : 0.82;
-
             return new Promise((resolve, reject) => {
                 new Compressor(file, {
-                    quality: targetQuality,
-                    maxWidth: targetWidth,
-                    maxHeight: targetWidth,
-                    mimeType: 'image/jpeg',
-                    success(result) { resolve(result); },
-                    error(err) { reject(err); }
+                    quality: targetQuality, maxWidth: targetWidth, maxHeight: targetWidth, mimeType: 'image/jpeg',
+                    success(result) { resolve(result); }, error(err) { reject(err); }
                 });
             });
         }
@@ -903,22 +986,11 @@
             const resVal = parseInt(document.getElementById('cfg-res').value);
             const qualVal = parseInt(document.getElementById('cfg-qual').value);
             const btn = document.getElementById('btn-save-settings');
-
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true;
-
             try {
-                const res = await gasRequest("updateSettings", { 
-                    max_resolution: resVal, 
-                    jpeg_quality: qualVal, 
-                    actor: sessionUser.email 
-                });
-                
-                if (res.error) {
-                    alert("Error: " + res.error);
-                } else {
-                    window.systemSettings = { max_resolution: resVal, jpeg_quality: qualVal };
-                    showToast("Configuración Global de Compresión Actualizada");
-                }
+                const res = await gasRequest("updateSettings", { max_resolution: resVal, jpeg_quality: qualVal, actor: sessionUser.email });
+                if (res.error) { alert("Error: " + res.error); } 
+                else { window.systemSettings = { max_resolution: resVal, jpeg_quality: qualVal }; showToast("Configuración Global de Compresión Actualizada"); }
             } catch(e) { alert("Error de red"); }
             btn.innerHTML = "GUARDAR AJUSTES"; btn.disabled = false;
         }
@@ -943,7 +1015,7 @@
                     }
                 }
                 btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> EMPAQUETANDO...`;
-                const content = await zip.generateAsync({ type: "blob" }); saveAs(content, `LenteFria_${sessionUser.slug}.zip`);
+                saveAs(await zip.generateAsync({ type: "blob" }), `LenteFria_${sessionUser.slug}.zip`);
                 btn.innerHTML = `<i class="fa-solid fa-check"></i> DESCARGA INICIADA`; showToast("Descarga completada");
                 if (typeof trackEvent === "function") { trackEvent('download_zip', 'Gallery', sessionUser.slug); }
             } catch (error) { alert("Error al generar ZIP."); }
@@ -969,7 +1041,6 @@
                     const b64 = await new Promise(res => { reader.onload = () => res(reader.result.split(',')[1]); reader.readAsDataURL(file); });
                     const cleanName = files[i].name.replace(/\.[^/.]+$/, "") + ".jpg";
 
-                    // Robustez: Enviamos tanto 'folder_id' para el set como 'gallery_id' para compatibilidad total con cualquier versión de backend.
                     await gasRequest("uploadPhoto", { folder_id: setFolderId, gallery_id: galleryId, filename: cleanName, mimeType: "image/jpeg", base64Data: b64, actor: sessionUser.email });
                 }
                 btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ¡LISTO!`; showToast("Fotografías publicadas");
@@ -1011,7 +1082,7 @@
             try {
                 const res = await gasRequest("updateGallery", { gallery_id: activeEditGalleryId, client_name: newName, description: newDesc, actor: sessionUser.email });
                 if (res.error) { alert("Error: " + res.error); } else { showToast("Bóveda Actualizada"); document.getElementById('m-edit-g').classList.add('hidden'); fetchG(); }
-            } catch(e) { alert("Error de red al actualizar"); }
+            } catch(e) { alert("Error"); }
             btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
         }
 
@@ -1044,6 +1115,6 @@
             else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
         }
     </script>
-    <div class="hidden text-white fa-solid fa-heart fa-regular fa-eye fa-eye-slash fa-triangle-exclamation fa-radiation fa-spinner fa-check fa-circle-check fa-chevron-left fa-chevron-right fa-folder-open fa-plus fa-arrow-left fa-image fa-trash fa-gear fa-pen fa-folder-plus fa-images fa-lock fa-sliders"></div>
+    <div class="hidden text-white fa-solid fa-heart fa-regular fa-eye fa-eye-slash fa-triangle-exclamation fa-radiation fa-spinner fa-check fa-circle-check fa-chevron-left fa-chevron-right fa-folder-open fa-plus fa-arrow-left fa-image fa-trash fa-gear fa-pen fa-folder-plus fa-images fa-lock fa-sliders fa-lock fa-circle-check fa-brands fa-whatsapp fa-instagram fa-tiktok fa-facebook-f fa-globe"></div>
 </body>
 </html>
