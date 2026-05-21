@@ -2,177 +2,313 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>LenteFría DAM</title>
+    <title>LenteFría DAM - High End Delivery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&display=swap'); 
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; } 
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; color: #0f172a; } 
         .text-cyan-lf { color: #00B7F1; } 
         .bg-cyan-lf { background-color: #00B7F1; }
+        .masonry { column-count: 1; column-gap: 1.5rem; }
+        @media (min-width: 640px) { .masonry { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry { column-count: 3; } }
+        .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
     </style>
 </head>
-<body>
+<body onload="initApp()">
 
-    <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center">
-        <div class="bg-white p-12 rounded-3xl w-96 shadow-2xl">
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center transition-all duration-500">
+        <div class="bg-white p-12 rounded-3xl w-full max-w-md shadow-2xl mx-4">
             <h1 class="font-black text-4xl tracking-tighter text-center mb-8">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
             <p id="login-error" class="text-red-500 text-sm font-bold text-center mb-4 hidden"></p>
-            <input id="l-user" placeholder="Email o Usuario" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-            <input id="l-pass" type="password" placeholder="Contraseña" class="mb-8 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-            <button onclick="login()" id="btn-login" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all">INICIAR SESIÓN</button>
+            <input id="l-user" placeholder="Usuario o Email" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+            <div class="relative mb-8">
+                <input id="l-pass" type="password" placeholder="Contraseña" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <button onclick="togglePass('l-pass', 'eye-login')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-login" class="fa-solid fa-eye"></i></button>
+            </div>
+            <button onclick="login()" id="btn-login" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all tracking-widest">INICIAR SESIÓN</button>
         </div>
     </div>
 
-    <nav id="main-nav" class="p-6 border-b flex justify-between items-center hidden">
+    <!-- NAVEGACIÓN PRINCIPAL -->
+    <nav id="main-nav" class="p-6 border-b flex justify-between items-center hidden bg-white sticky top-0 z-40">
         <h1 class="font-black text-2xl tracking-tighter">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
         <div class="flex items-center gap-6">
-            <span id="user-greeting" class="text-xs font-bold text-slate-400"></span>
-            <button id="nav-staff-btn" onclick="show('admin')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden">Staff</button>
-            <button onclick="show('galleries')" class="text-xs font-bold uppercase text-black">Galerías</button>
-            <button onclick="logout()" class="text-xs font-bold uppercase text-red-500 ml-4"><i class="fa-solid fa-power-off"></i></button>
+            <span id="user-greeting" class="text-xs font-bold text-slate-400 hidden sm:block"></span>
+            <button id="nav-staff-btn" onclick="show('admin')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden transition-colors">Staff</button>
+            <button id="nav-gal-btn" onclick="show('galleries')" class="text-xs font-bold uppercase text-black hidden transition-colors">Galerías</button>
+            <button id="nav-inbox-btn" onclick="show('inbox')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden transition-colors">Inbox <span id="inbox-badge" class="bg-red-500 text-white rounded-full px-2 py-0.5 ml-1 hidden">!</span></button>
+            <button onclick="logout()" class="text-xs font-bold uppercase text-red-500 ml-4 hover:scale-110 transition-transform"><i class="fa-solid fa-power-off text-lg"></i></button>
         </div>
     </nav>
 
-    <main id="main-content" class="max-w-6xl mx-auto p-10 hidden">
-        <section id="section-admin" class="hidden">
-            <div class="bg-slate-900 p-10 rounded-3xl text-white flex justify-between items-center mb-10">
-                <h2 class="text-2xl font-bold">Staff LenteFría</h2>
-                <button onclick="document.getElementById('m-u').classList.remove('hidden')" class="bg-cyan-lf px-6 py-2 rounded-xl font-bold">+ NUEVO</button>
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main id="main-content" class="max-w-7xl mx-auto p-6 sm:p-10 hidden">
+        
+        <!-- SECCIÓN STAFF (Solo Admin) -->
+        <section id="section-admin" class="hidden animate-fade-in">
+            <div class="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
+                <div>
+                    <h2 class="text-3xl font-black">Equipo LenteFría</h2>
+                    <p class="text-slate-400 text-sm mt-1">Gestión de fotógrafos y accesos</p>
+                </div>
+                <button onclick="document.getElementById('m-u').classList.remove('hidden')" class="bg-cyan-lf px-8 py-3 rounded-xl font-bold hover:bg-white hover:text-cyan-lf transition-colors w-full sm:w-auto">+ NUEVO FOTÓGRAFO</button>
             </div>
-            <div id="staff-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            <div id="staff-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <section id="section-galleries">
-            <div class="flex justify-between items-end mb-10">
-                <h2 class="text-5xl font-black">Entregas</h2>
-                <!-- El botón ahora es visible para todos -->
-                <button id="btn-new-vault" onclick="openGalleryModal()" class="bg-black text-white px-8 py-4 rounded-3xl font-bold hover:bg-cyan-lf transition-all">NUEVA BÓVEDA</button>
+        <!-- SECCIÓN GALERÍAS (Admin y Fotógrafo) -->
+        <section id="section-galleries" class="hidden animate-fade-in">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
+                <div>
+                    <h2 class="text-5xl font-black">Entregas</h2>
+                    <p class="text-slate-400 mt-2 font-bold">Tus bóvedas y portafolios</p>
+                </div>
+                <button id="btn-new-vault" onclick="openGalleryModal()" class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:bg-cyan-lf transition-all shadow-xl w-full sm:w-auto">+ NUEVA BÓVEDA</button>
             </div>
-            <div id="galleries-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+            <div id="galleries-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </section>
+
+        <!-- SECCIÓN INBOX (Solo Fotógrafo) -->
+        <section id="section-inbox" class="hidden animate-fade-in">
+            <h2 class="text-4xl font-black mb-8">Bandeja de Entrada</h2>
+            <div class="bg-slate-50 border rounded-3xl p-6 sm:p-10 min-h-[50vh]">
+                <div id="inbox-list" class="flex flex-col gap-4">
+                    <p class="text-slate-400 font-bold text-center mt-10">Cargando comentarios...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN CLIENTE (Solo Cliente) -->
+        <section id="section-client-view" class="hidden animate-fade-in">
+            <div class="text-center mb-12">
+                <h2 id="client-title" class="text-5xl font-black mb-4">Tu Galería</h2>
+                <p class="text-slate-400 font-bold">Selecciona una foto para descargarla o dejar un comentario al fotógrafo.</p>
+            </div>
+            <div id="client-photos" class="masonry">
+                <!-- Fotos inyectadas por JS -->
+            </div>
         </section>
     </main>
 
-    <div id="m-u" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-        <div class="bg-white p-10 rounded-3xl w-96 shadow-2xl">
-            <h3 class="font-bold text-xl mb-4">Nuevo Staff</h3>
-            <input id="sN" placeholder="Nombre completo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <input id="sE" placeholder="Email del fotógrafo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <input id="sP" placeholder="Contraseña de acceso" type="password" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <button id="btn-create-staff" onclick="apiS()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf">CREAR STAFF</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold">CANCELAR</button>
+    <!-- MODAL NUEVO STAFF -->
+    <div id="m-u" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
+            <h3 class="font-black text-2xl mb-6">Nuevo Staff</h3>
+            <input id="sN" placeholder="Nombre completo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf transition-all">
+            <input id="sE" placeholder="Email del fotógrafo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf transition-all">
+            <div class="relative mb-8">
+                <input id="sP" placeholder="Contraseña de acceso" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf transition-all">
+                <button onclick="togglePass('sP', 'eye-staff')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-staff" class="fa-solid fa-eye"></i></button>
+            </div>
+            <button id="btn-create-staff" onclick="apiS()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest">CREAR STAFF</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
         </div>
     </div>
 
-    <div id="m-g" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-        <div class="bg-white p-10 rounded-3xl w-96 shadow-2xl">
-            <h3 class="font-bold text-xl mb-4">Nueva Bóveda</h3>
-            <!-- Contenedor del selector, se oculta si es Fotógrafo -->
+    <!-- MODAL NUEVA BÓVEDA / PORTAFOLIO -->
+    <div id="m-g" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-screen">
+            <h3 class="font-black text-2xl mb-6">Nueva Entrega</h3>
+            
             <div id="staff-select-container" class="hidden mb-4">
-                <select id="sel-staff" class="p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm">
-                    <option value="">Selecciona Fotógrafo...</option>
-                </select>
+                <label class="text-xs font-bold text-slate-400 ml-2">Asignar a Fotógrafo:</label>
+                <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm focus:ring-2 focus:ring-cyan-lf"></select>
             </div>
-            <input id="cN" placeholder="Nombre del Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <input id="sl" placeholder="Slug (Ej: boda-carlos)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <input id="ps" placeholder="Contraseña de acceso cliente" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold hover:bg-black">CREAR BÓVEDA</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold">CANCELAR</button>
+
+            <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
+                <input type="checkbox" id="chk-portfolio" class="w-5 h-5 accent-cyan-lf" onchange="toggleClientFields()">
+                <span class="font-bold text-sm">Es un Portafolio Público</span>
+            </label>
+
+            <input id="cN" placeholder="Nombre de la Galería / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
+            <input id="sl" placeholder="Slug (Ruta web. Ej: boda-ana)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
+            
+            <div id="client-credentials-box">
+                <h4 class="text-xs font-bold text-slate-400 ml-2 mb-2 uppercase">Credenciales para el Cliente</h4>
+                <input id="cU" placeholder="Usuario (Ej: FamiliaPerez)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
+                <div class="relative mb-8">
+                    <input id="ps" placeholder="Contraseña del cliente" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
+                    <button onclick="togglePass('ps', 'eye-vault')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-vault" class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+
+            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold hover:bg-black transition-colors tracking-widest">CREAR BÓVEDA</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+        </div>
+    </div>
+
+    <!-- MODAL COMENTAR FOTO (Cliente) -->
+    <div id="m-comment" class="hidden fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-white rounded-3xl w-full max-w-4xl shadow-2xl flex flex-col md:flex-row overflow-hidden">
+            <div class="md:w-1/2 bg-slate-100 flex items-center justify-center p-4">
+                <img id="comment-img-preview" src="" class="max-h-[50vh] md:max-h-[70vh] object-contain rounded-xl shadow-lg">
+            </div>
+            <div class="md:w-1/2 p-8 sm:p-12 flex flex-col justify-center">
+                <h3 class="font-black text-3xl mb-2">Detalle de Foto</h3>
+                <p class="text-slate-400 text-sm font-bold mb-8">Escribe un comentario al fotógrafo sobre esta imagen.</p>
+                <textarea id="comment-text" rows="4" placeholder="Ej: Me encanta, ¿puedes retocar la luz del fondo?" class="p-4 bg-slate-50 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf resize-none mb-6"></textarea>
+                
+                <div class="flex flex-col gap-3">
+                    <button id="btn-send-comment" onclick="sendComment()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest"><i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO</button>
+                    <a id="btn-download-single" href="#" target="_blank" class="w-full bg-slate-200 text-black p-4 rounded-xl font-bold hover:bg-slate-300 transition-colors tracking-widest text-center"><i class="fa-solid fa-download mr-2"></i> DESCARGAR ORIGINAL</a>
+                    <button onclick="closeCommentModal()" class="w-full text-slate-400 font-bold mt-2 hover:text-black">CERRAR</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // PEGA TU URL DE APPS SCRIPT AQUÍ:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzAEygb5pHlQ08emz8KqvEnYFl9uMv_4WhzYTEk8tqxdxfIxc8IYKq9c5iFv7EicfO4/exec";
+        // ==========================================
+        // ⚙️ CONFIGURACIÓN CORE
+        // ==========================================
+        const GAS_URL = "AQUI_PONES_TU_ENLACE_DE_APPS_SCRIPT";
 
         let sessionUser = null;
         let sessionRole = null;
         let allStaffCache = [];
+        let currentPhotoId = null;
 
-        async function gasRequest(action, payload = null, extra = null) {
-            let url = `${GAS_URL}?action=${action}`;
-            if (extra) url += `&extra=${extra}`;
-
-            if (payload === null) {
-                const r = await fetch(url);
-                return await r.json();
-            } else {
-                const r = await fetch(GAS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify({ action: action, payload: payload })
-                });
-                return await r.json();
+        // ==========================================
+        // 🛡️ SISTEMA DE SESIÓN Y PERSISTENCIA
+        // ==========================================
+        function initApp() {
+            const savedSession = localStorage.getItem('lf_session');
+            if (savedSession) {
+                const data = JSON.parse(savedSession);
+                sessionUser = data.user;
+                sessionRole = data.role;
+                applyRoleUI();
             }
         }
 
         async function login() {
-            const userIn = document.getElementById('l-user').value;
-            const passIn = document.getElementById('l-pass').value;
+            const u = document.getElementById('l-user').value;
+            const p = document.getElementById('l-pass').value;
             const btn = document.getElementById('btn-login');
             const err = document.getElementById('login-error');
 
-            if(!userIn || !passIn) return;
+            if(!u || !p) return;
             
             btn.innerText = "VERIFICANDO...";
             err.classList.add('hidden');
 
             try {
-                const res = await gasRequest("login", { email: userIn, password: passIn });
-                
+                const res = await gasRequest("login", { email: u, password: p });
                 if(res.success) {
                     sessionUser = res.user;
                     sessionRole = res.role;
-                    
-                    document.getElementById('login-screen').classList.add('hidden');
-                    document.getElementById('main-nav').classList.remove('hidden');
-                    document.getElementById('main-content').classList.remove('hidden');
-                    document.getElementById('user-greeting').innerText = `HOLA, ${sessionUser.full_name.toUpperCase()}`;
-
-                    if(sessionRole === 'admin') {
-                        document.getElementById('nav-staff-btn').classList.remove('hidden');
-                        show('admin');
-                    } else {
-                        document.getElementById('nav-staff-btn').classList.add('hidden');
-                        show('galleries');
-                    }
+                    // Guardar en LocalStorage para resistir F5
+                    localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
+                    applyRoleUI();
                 } else {
                     err.innerText = res.message;
                     err.classList.remove('hidden');
                 }
             } catch (error) {
-                err.innerText = "Error de conexión";
+                err.innerText = "Error de conexión con el servidor.";
                 err.classList.remove('hidden');
             }
             btn.innerText = "INICIAR SESIÓN";
         }
 
         function logout() {
+            localStorage.removeItem('lf_session');
             sessionUser = null;
             sessionRole = null;
             document.getElementById('l-user').value = '';
             document.getElementById('l-pass').value = '';
-            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('login-screen').classList.remove('hidden', 'opacity-0');
             document.getElementById('main-nav').classList.add('hidden');
             document.getElementById('main-content').classList.add('hidden');
+            
+            // Limpiar UI
+            ['section-admin', 'section-galleries', 'section-inbox', 'section-client-view'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
         }
 
+        function applyRoleUI() {
+            document.getElementById('login-screen').classList.add('opacity-0');
+            setTimeout(() => document.getElementById('login-screen').classList.add('hidden'), 500);
+            
+            document.getElementById('main-nav').classList.remove('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+            
+            const greeting = sessionRole === 'client' ? sessionUser.client_name : sessionUser.full_name;
+            document.getElementById('user-greeting').innerText = `HOLA, ${greeting.toUpperCase()}`;
+
+            // Resetear botones nav
+            document.getElementById('nav-staff-btn').classList.add('hidden');
+            document.getElementById('nav-gal-btn').classList.add('hidden');
+            document.getElementById('nav-inbox-btn').classList.add('hidden');
+            document.getElementById('nav-staff-btn').classList.remove('text-black');
+            document.getElementById('nav-gal-btn').classList.remove('text-black');
+            document.getElementById('nav-inbox-btn').classList.remove('text-black');
+
+            if (sessionRole === 'admin') {
+                document.getElementById('nav-staff-btn').classList.remove('hidden');
+                document.getElementById('nav-gal-btn').classList.remove('hidden');
+                show('admin');
+            } else if (sessionRole === 'photographer') {
+                document.getElementById('nav-gal-btn').classList.remove('hidden');
+                document.getElementById('nav-inbox-btn').classList.remove('hidden');
+                show('galleries');
+            } else if (sessionRole === 'client') {
+                show('client-view');
+            }
+        }
+
+        // ==========================================
+        // 🔄 NAVEGACIÓN Y PETICIONES HTTP
+        // ==========================================
         function show(n) { 
-            document.getElementById('section-admin').classList.toggle('hidden', n!=='admin'); 
-            document.getElementById('section-galleries').classList.toggle('hidden', n!=='galleries'); 
-            if(n==='admin') fetchS(); 
-            if(n==='galleries') fetchG();
+            ['section-admin', 'section-galleries', 'section-inbox', 'section-client-view'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+
+            // Resaltar menú
+            if(n!=='client-view') {
+                ['nav-staff-btn', 'nav-gal-btn', 'nav-inbox-btn'].forEach(id => document.getElementById(id).classList.replace('text-black', 'text-slate-400'));
+                if(n==='admin') document.getElementById('nav-staff-btn').classList.replace('text-slate-400', 'text-black');
+                if(n==='galleries') document.getElementById('nav-gal-btn').classList.replace('text-slate-400', 'text-black');
+                if(n==='inbox') document.getElementById('nav-inbox-btn').classList.replace('text-slate-400', 'text-black');
+            }
+
+            if(n === 'admin') { document.getElementById('section-admin').classList.remove('hidden'); fetchS(); }
+            if(n === 'galleries') { document.getElementById('section-galleries').classList.remove('hidden'); fetchG(); }
+            if(n === 'inbox') { document.getElementById('section-inbox').classList.remove('hidden'); fetchInbox(); }
+            if(n === 'client-view') { 
+                document.getElementById('section-client-view').classList.remove('hidden'); 
+                document.getElementById('client-title').innerText = sessionUser.client_name;
+                fetchClientPhotos(); 
+            }
         }
 
+        async function gasRequest(action, payload = null, extra = null) {
+            let url = `${GAS_URL}?action=${action}`;
+            if (extra) url += `&extra=${extra}`;
+            if (payload === null) {
+                const r = await fetch(url); return await r.json();
+            } else {
+                const r = await fetch(GAS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: action, payload: payload }) });
+                return await r.json();
+            }
+        }
+
+        // ==========================================
+        // 👥 LÓGICA STAFF & GALERÍAS (Admin/Fotógrafo)
+        // ==========================================
         async function fetchS() {
             try {
                 const d = await gasRequest("getStaff");
-                if(!Array.isArray(d)) throw new Error("Datos no válidos");
-                allStaffCache = d; 
+                allStaffCache = Array.isArray(d) ? d : [];
                 document.getElementById('staff-list').innerHTML = d.map(s => 
-                    `<div class="bg-slate-50 p-6 rounded-3xl border"><h4 class="font-bold text-lg">${s.full_name}</h4><p class="text-xs text-slate-400 font-bold mt-1">${s.email}</p></div>`
+                    `<div class="bg-slate-50 p-6 rounded-3xl border shadow-sm"><h4 class="font-black text-xl">${s.full_name}</h4><p class="text-xs text-slate-400 font-bold mt-1"><i class="fa-solid fa-envelope mr-1"></i> ${s.email}</p></div>`
                 ).join('');
-            } catch(e) { document.getElementById('staff-list').innerHTML = `<p class="text-red-500 font-bold">Error: ${e.message}</p>`; }
+            } catch(e) { console.error(e); }
         }
 
         async function fetchG() {
@@ -180,109 +316,193 @@
                 const extra = sessionRole === 'admin' ? null : sessionUser.id;
                 const d = await gasRequest("getGalleries", null, extra);
                 
-                if(!Array.isArray(d)) throw new Error("Datos no válidos");
-                
-                if(d.length === 0) {
-                    document.getElementById('galleries-grid').innerHTML = `<p class="text-slate-400 font-bold col-span-3">No hay bóvedas creadas.</p>`;
+                if(!Array.isArray(d) || d.length === 0) {
+                    document.getElementById('galleries-grid').innerHTML = `<p class="text-slate-400 font-bold col-span-full">No hay bóvedas creadas aún.</p>`;
                     return;
                 }
 
-                document.getElementById('galleries-grid').innerHTML = d.map(g => 
-                    `<div class="border p-6 rounded-3xl flex flex-col justify-between shadow-sm hover:shadow-lg transition-all bg-white">
-                        <div>
-                            <h3 class="font-bold text-xl">${g.client_name}</h3>
-                            <p class="text-xs text-slate-400 mb-6 bg-slate-100 inline-block px-3 py-1 rounded-full mt-2">/${g.slug}</p>
+                document.getElementById('galleries-grid').innerHTML = d.map(g => {
+                    const isPort = g.is_portfolio;
+                    const badge = isPort ? `<span class="bg-black text-white text-[10px] px-2 py-1 rounded-full absolute top-4 right-4 tracking-widest font-bold">PORTAFOLIO</span>` : '';
+                    const creds = isPort ? '' : `<p class="text-[10px] text-slate-400 font-bold mt-2"><i class="fa-solid fa-user mr-1"></i> ${g.client_username || 'Sin usuario'}</p>`;
+                    
+                    return `
+                    <div class="border p-8 rounded-3xl flex flex-col justify-between shadow-sm hover:shadow-xl transition-all bg-white relative group">
+                        ${badge}
+                        <div class="mb-6">
+                            <h3 class="font-black text-2xl pr-20 leading-tight">${g.client_name}</h3>
+                            <p class="text-xs font-bold text-cyan-lf mt-1">/${g.slug}</p>
+                            ${creds}
                         </div>
-                        <button onclick="up(${g.id})" id="b-${g.id}" class="w-full bg-black text-white p-4 rounded-xl hover:bg-cyan-lf transition-all text-xs font-bold tracking-widest">
-                            SUBIR FOTOS
+                        <button onclick="up(${g.id})" id="b-${g.id}" class="w-full bg-slate-100 text-black p-4 rounded-xl group-hover:bg-cyan-lf group-hover:text-white transition-all text-xs font-bold tracking-widest">
+                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR FOTOS
                         </button>
-                    </div>`
-                ).join('');
-            } catch(e) { document.getElementById('galleries-grid').innerHTML = `<p class="text-red-500 font-bold">Error: ${e.message}</p>`; }
+                    </div>`;
+                }).join('');
+            } catch(e) { console.error(e); }
         }
 
+        async function fetchInbox() {
+            try {
+                const d = await gasRequest("getComments", null, sessionUser.id);
+                const list = document.getElementById('inbox-list');
+                
+                if(!Array.isArray(d) || d.length === 0) {
+                    list.innerHTML = `<p class="text-slate-400 font-bold text-center mt-10">Tu bandeja está limpia. No hay comentarios.</p>`;
+                    return;
+                }
+
+                list.innerHTML = d.map(c => `
+                    <div class="bg-white p-6 rounded-2xl border shadow-sm flex flex-col sm:flex-row gap-6 items-start">
+                        <img src="https://drive.google.com/thumbnail?id=${c.file_id}&sz=w200" class="w-24 h-24 object-cover rounded-xl bg-slate-100">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="bg-cyan-lf text-white text-[10px] px-2 py-1 rounded-full font-bold tracking-widest">${c.galleries.client_name}</span>
+                                <span class="text-xs text-slate-400 font-bold">${new Date(c.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <p class="text-lg font-bold text-slate-800">"${c.comment_text}"</p>
+                        </div>
+                        <a href="https://drive.google.com/uc?export=download&id=${c.file_id}" target="_blank" class="text-slate-400 hover:text-black transition-colors" title="Descargar Foto"><i class="fa-solid fa-download text-xl"></i></a>
+                    </div>
+                `).join('');
+            } catch(e) { console.error(e); }
+        }
+
+        // ==========================================
+        // 📸 PORTAL DEL CLIENTE
+        // ==========================================
+        async function fetchClientPhotos() {
+            const container = document.getElementById('client-photos');
+            container.innerHTML = `<p class="text-center font-bold text-slate-400 col-span-full mt-10 animate-pulse">Obteniendo fotos en alta calidad...</p>`;
+            
+            try {
+                const photos = await gasRequest("getPhotos", null, sessionUser.drive_folder_id);
+                if(!photos || photos.length === 0) {
+                    container.innerHTML = `<p class="text-center font-bold text-slate-400 col-span-full mt-10">Aún no hay fotos en esta galería.</p>`;
+                    return;
+                }
+
+                container.innerHTML = photos.map(p => `
+                    <div class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all bg-slate-100 cursor-pointer" onclick="openCommentModal('${p.id}', '${p.thumb}', '${p.download}')">
+                        <img src="${p.thumb}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+                            <div class="flex justify-between items-center text-white">
+                                <span class="font-bold text-sm tracking-widest">VER / COMENTAR</span>
+                                <i class="fa-solid fa-expand text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch(error) {
+                container.innerHTML = `<p class="text-center font-bold text-red-500 col-span-full mt-10">Error al cargar las fotos.</p>`;
+            }
+        }
+
+        function openCommentModal(id, thumbUrl, downloadUrl) {
+            currentPhotoId = id;
+            document.getElementById('comment-img-preview').src = thumbUrl;
+            document.getElementById('btn-download-single').href = downloadUrl;
+            document.getElementById('comment-text').value = '';
+            document.getElementById('m-comment').classList.remove('hidden');
+        }
+
+        function closeCommentModal() {
+            document.getElementById('m-comment').classList.add('hidden');
+            currentPhotoId = null;
+        }
+
+        async function sendComment() {
+            const txt = document.getElementById('comment-text').value;
+            if(!txt.trim()) return alert("Escribe un comentario antes de enviar.");
+            
+            const btn = document.getElementById('btn-send-comment');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`;
+            btn.disabled = true;
+
+            try {
+                await gasRequest("addComment", { gallery_id: sessionUser.id, file_id: currentPhotoId, comment: txt });
+                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ENVIADO`;
+                btn.classList.replace('bg-black', 'bg-green-500');
+                setTimeout(() => {
+                    closeCommentModal();
+                    btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO`;
+                    btn.classList.replace('bg-green-500', 'bg-black');
+                    btn.disabled = false;
+                }, 1500);
+            } catch(e) {
+                alert("Error al enviar comentario");
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO`;
+                btn.disabled = false;
+            }
+        }
+
+        // ==========================================
+        // ➕ CREADORES Y SUBIDAS
+        // ==========================================
         async function apiS() { 
-            const n = document.getElementById('sN').value; 
-            const e = document.getElementById('sE').value; 
-            const p = document.getElementById('sP').value;
+            const n = document.getElementById('sN').value; const e = document.getElementById('sE').value; const p = document.getElementById('sP').value;
             if(!n || !e || !p) return alert("Llena todos los campos");
 
             const btn = document.getElementById('btn-create-staff');
-            btn.innerText = "CREANDO...";
-            btn.disabled = true;
+            btn.innerText = "CREANDO..."; btn.disabled = true;
 
             const res = await gasRequest("createStaff", { full_name: n, email: e, password: p });
-            
-            if (res.error) {
-                alert("Error de Base de Datos: " + res.error);
-                btn.innerText = "CREAR STAFF";
-                btn.disabled = false;
-                return;
-            }
+            if (res.error) { alert("Error: " + res.error); btn.innerText = "CREAR STAFF"; btn.disabled = false; return; }
 
             document.getElementById('m-u').classList.add('hidden'); 
-            document.getElementById('sN').value = ''; 
-            document.getElementById('sE').value = ''; 
-            document.getElementById('sP').value = '';
-            btn.innerText = "CREAR STAFF";
-            btn.disabled = false;
+            ['sN','sE','sP'].forEach(id => document.getElementById(id).value = '');
+            btn.innerText = "CREAR STAFF"; btn.disabled = false;
             fetchS(); 
         }
 
         async function openGalleryModal() {
-            // Logica Inteligente para el Modal de Galería
             if (sessionRole === 'admin') {
-                // Si es admin, mostramos la lista para que asigne
                 document.getElementById('staff-select-container').classList.remove('hidden');
-                
-                // Si la cache está vacía (por ej. si no ha entrado a la pestaña staff), la descargamos
                 if (allStaffCache.length === 0) {
                     const d = await gasRequest("getStaff");
                     allStaffCache = Array.isArray(d) ? d : [];
                 }
-                const sel = document.getElementById('sel-staff');
-                sel.innerHTML = '<option value="">Selecciona Fotógrafo...</option>' + allStaffCache.map(s => `<option value="${s.id}">${s.full_name}</option>`).join('');
-            } else {
-                // Si es fotógrafo, ocultamos la lista (se le asignará automáticamente a él)
-                document.getElementById('staff-select-container').classList.add('hidden');
+                document.getElementById('sel-staff').innerHTML = '<option value="">Selecciona Fotógrafo...</option>' + allStaffCache.map(s => `<option value="${s.id}">${s.full_name}</option>`).join('');
             }
-            
             document.getElementById('m-g').classList.remove('hidden');
         }
 
-        async function apiG() { 
-            // Definir de quién es la galería
-            let s_id;
-            if (sessionRole === 'admin') {
-                s_id = document.getElementById('sel-staff').value;
-                if (!s_id) return alert("Por favor, selecciona un fotógrafo de la lista.");
+        function toggleClientFields() {
+            const isPort = document.getElementById('chk-portfolio').checked;
+            const box = document.getElementById('client-credentials-box');
+            if(isPort) {
+                box.classList.add('opacity-50', 'pointer-events-none');
+                document.getElementById('cU').value = 'Publico';
+                document.getElementById('ps').value = '0000';
             } else {
-                // Fotógrafo: Asignación automática con su propio ID
-                s_id = sessionUser.id;
+                box.classList.remove('opacity-50', 'pointer-events-none');
+                document.getElementById('cU').value = '';
+                document.getElementById('ps').value = '';
             }
+        }
 
-            const c = document.getElementById('cN').value; 
-            const sl = document.getElementById('sl').value; 
-            const p = document.getElementById('ps').value;
-            if(!c || !sl || !p) return alert("Llena todos los campos");
+        async function apiG() { 
+            let s_id = sessionRole === 'admin' ? document.getElementById('sel-staff').value : sessionUser.id;
+            if (!s_id) return alert("Por favor, selecciona un fotógrafo.");
+
+            const cN = document.getElementById('cN').value; const sl = document.getElementById('sl').value; 
+            const cU = document.getElementById('cU').value; const ps = document.getElementById('ps').value;
+            const isPort = document.getElementById('chk-portfolio').checked;
+
+            if(!cN || !sl || !cU || !ps) return alert("Llena todos los campos");
             
             const btn = document.getElementById('btn-create-vault');
-            btn.innerText = "CREANDO...";
-            btn.disabled = true;
+            btn.innerText = "CREANDO..."; btn.disabled = true;
 
-            const res = await gasRequest("createGallery", { photographer_id: s_id, client_name: c, slug: sl, password: p, can_download: true });
-            
-            if (res.error) {
-                alert("Error de Base de Datos: " + res.error);
-                btn.innerText = "CREAR BÓVEDA";
-                btn.disabled = false;
-                return;
-            }
+            const res = await gasRequest("createGallery", { photographer_id: s_id, client_name: cN, client_username: cU, slug: sl, password: ps, is_portfolio: isPort, can_download: true });
+            if (res.error) { alert("Error: " + res.error); btn.innerText = "CREAR BÓVEDA"; btn.disabled = false; return; }
 
             document.getElementById('m-g').classList.add('hidden'); 
-            document.getElementById('cN').value = ''; document.getElementById('sl').value = ''; document.getElementById('ps').value = '';
-            btn.innerText = "CREAR BÓVEDA";
-            btn.disabled = false;
+            ['cN','sl','cU','ps'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('chk-portfolio').checked = false;
+            toggleClientFields();
+            
+            btn.innerText = "CREAR BÓVEDA"; btn.disabled = false;
             fetchG(); 
         }
 
@@ -294,8 +514,8 @@
                 const files = e.target.files;
                 if(files.length === 0) return;
 
-                btn.innerText = `Subiendo 0/${files.length}...`;
-                btn.disabled = true; btn.classList.add("opacity-50");
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> 0/${files.length}`;
+                btn.disabled = true; btn.classList.replace('bg-slate-100', 'bg-black'); btn.classList.replace('text-black', 'text-white');
 
                 for(let i=0; i<files.length; i++) {
                     const file = files[i];
@@ -304,16 +524,34 @@
                     reader.readAsDataURL(file);
                     const base64Data = await base64Promise;
 
-                    btn.innerText = `Enviando ${i+1}/${files.length}...`;
-                    try {
-                        await gasRequest("uploadPhoto", { gallery_id: galleryId, filename: file.name, mimeType: file.type, base64Data: base64Data });
-                    } catch (error) { console.error("Error", error); }
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ${i+1}/${files.length}`;
+                    try { await gasRequest("uploadPhoto", { gallery_id: galleryId, filename: file.name, mimeType: file.type, base64Data: base64Data }); } 
+                    catch (error) { console.error("Error", error); }
                 }
 
-                btn.innerText = "¡LISTO!"; btn.classList.remove("opacity-50");
-                setTimeout(() => { btn.innerText = "SUBIR FOTOS"; btn.disabled = false; }, 3000);
+                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ¡LISTO!`; btn.classList.replace('bg-black', 'bg-green-500');
+                setTimeout(() => { 
+                    btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR FOTOS`; 
+                    btn.classList.replace('bg-green-500', 'bg-slate-100'); btn.classList.replace('text-white', 'text-black');
+                    btn.disabled = false; 
+                }, 3000);
             }; 
             input.click();
+        }
+
+        // ==========================================
+        // 👁️ UTILIDADES UI
+        // ==========================================
+        function togglePass(inputId, iconId) {
+            const inp = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if(inp.type === "password") {
+                inp.type = "text";
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                inp.type = "password";
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
         }
     </script>
 </body>
