@@ -21,7 +21,7 @@
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;800;900&display=swap'); 
+        @import url('https://fonts.googleapis.com/css2 family=Plus+Jakarta+Sans:wght@300;400;800;900&display=swap'); 
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; color: #0f172a; scroll-behavior: smooth; overflow-x: hidden; } 
         .text-cyan-lf { color: #00B7F1; } 
         .bg-cyan-lf { background-color: #00B7F1; }
@@ -29,7 +29,7 @@
         @media (min-width: 640px) { .masonry { column-count: 2; } }
         @media (min-width: 1024px) { .masonry { column-count: 3; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
-        .hero-cover { height: 100vh; width: 100%; object-fit: cover; background-color: #0f172a; background-position: center; background-size: cover; relative; }
+        .hero-cover { height: 100vh; width: 100%; object-fit: cover; background-color: #0f172a; background-position: center; background-size: cover; position: relative; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%); }
         .protect-img { -webkit-user-select: none; user-select: none; pointer-events: none; position: relative; }
         .masonry-item-client { cursor: pointer; }
@@ -131,10 +131,10 @@
                     <h3 class="font-black text-2xl mb-1"><i class="fa-solid fa-sliders text-cyan-lf mr-2"></i> Parámetros Globales de Compresión</h3>
                     <p class="text-slate-400 font-bold text-sm">Determina la resolución y el peso con el que se subirán todas las fotos del sistema.</p>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto font-bold text-sm">
                     <div>
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Resolución Máxima:</label>
-                        <select id="cfg-res" class="p-3 bg-slate-100 rounded-xl font-bold text-sm outline-none w-full sm:w-40">
+                        <select id="cfg-res" class="p-3 bg-slate-100 rounded-xl outline-none w-full sm:w-40 focus:ring-2 focus:ring-cyan-lf">
                             <option value="4000">4K (4000px)</option>
                             <option value="3000">Impresión Carta (3000px)</option>
                             <option value="2048">Optimizado Web (2048px)</option>
@@ -236,12 +236,11 @@
                         <div id="c-photo-socials" class="flex justify-center items-center gap-6 text-xl text-slate-400"></div>
                     </div>
                 </div>
-
             </div>
         </section>
     </main>
 
-    <!-- CARRUSEL LIGHTBOX -->
+    <!-- CARRUSEL CINEMÁTICO (LIGHTBOX) -->
     <div id="m-carousel" class="hidden fixed inset-0 bg-black/95 z-[500] flex flex-col md:flex-row backdrop-blur-xl transition-opacity fade-in">
         <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white/50 hover:text-white z-[510] text-3xl transition-colors"><i class="fa-solid fa-xmark"></i></button>
         <div id="carousel-img-container" class="w-full md:w-2/3 h-[60vh] md:h-full flex items-center justify-center relative protect-img p-4 sm:p-10">
@@ -328,7 +327,7 @@
             <h3 class="font-black text-2xl mb-6">Nueva Sesión / Portafolio</h3>
             <div id="staff-select-container" class="hidden mb-4">
                 <label class="text-xs font-bold text-slate-400 ml-2">Asignar a Fotógrafo:</label>
-                <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm"></select>
+                <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none"></select>
             </div>
             <input id="cN" placeholder="Nombre de la Sesión" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <textarea id="gDesc" rows="2" placeholder="Dedicatoria o descripción de la sesión (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none"></textarea>
@@ -359,7 +358,7 @@
                 <input id="reset-pass" placeholder="Contraseña de Admin" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none border border-red-200 focus:ring-2 focus:ring-red-500">
             </div>
             <button id="btn-execute-reset" onclick="executeHardReset()" class="w-full bg-red-600 text-white p-4 rounded-xl font-bold hover:bg-red-800 transition-colors">EJECUTAR PURGA</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full text-slate-400 font-bold hover:text-black">CANCELAR</button>
         </div>
     </div>
 
@@ -385,21 +384,11 @@
         function getInboxSkeleton() { return Array(2).fill(`<div class="bg-white p-6 rounded-2xl border flex gap-6 items-start animate-pulse"><div class="w-24 h-24 bg-slate-200 rounded-xl"></div><div class="flex-1"><div class="h-4 bg-slate-200 rounded w-1/4 mb-4"></div><div class="h-4 bg-slate-200 rounded w-3/4"></div></div></div>`).join(''); }
 
         // ==========================================
-        // 🛡️ SISTEMA DE SESIÓN
+        // 🛡️ SISTEMA DE SESIÓN (LOGIN SILENCIOSO)
         // ==========================================
-        async function initApp() {
+        function initApp() {
             const urlParams = new URLSearchParams(window.location.search);
             const magicU = urlParams.get('u'); const magicP = urlParams.get('p');
-
-            try {
-                const settings = await gasRequest("getSettings");
-                if (settings && settings.length > 0) {
-                    window.systemSettings = {
-                        max_resolution: parseInt(settings[0].max_resolution),
-                        jpeg_quality: parseInt(settings[0].jpeg_quality)
-                    };
-                }
-            } catch(e) { console.error("Error", e); }
 
             if(magicU && magicP) {
                 sessionStorage.setItem('lf_magic_login', 'true');
@@ -691,13 +680,14 @@
         }
 
         // ==========================================
-        // 🛠️ WORKSPACE (CON SETS Y FILTROS)
+        // 🛠️ WORKSPACE
         // ==========================================
         async function openWorkspace(galleryObj) {
             currentGallery = galleryObj; document.getElementById('ws-title').innerText = currentGallery.client_name;
             document.getElementById('ws-photos').innerHTML = getPhotoSkeleton();
-            document.getElementById('btn-ws-upload').onclick = () => triggerUpload(currentGallery.id);
+            
             show('workspace');
+
             try {
                 const [structure, favs] = await Promise.all([
                     gasRequest("getPhotos", null, currentGallery.drive_folder_id),
@@ -790,7 +780,7 @@
         async function deletePhoto(fileId) { if(!confirm("¿Borrar esta foto de Google Drive definitivamente?")) return; document.getElementById(`card-${fileId}`).style.opacity = '0.3'; await gasRequest("deletePhoto", { file_id: fileId, actor: sessionUser.email }); document.getElementById(`card-${fileId}`).remove(); showToast("Foto Eliminada"); }
 
         // ==========================================
-        // 📸 PORTAL DEL CLIENTE (SETS, MARCA DE AGUA, BIO)
+        // 📸 PORTAL DEL CLIENTE
         // ==========================================
         async function fetchClientPhotos() {
             document.getElementById('client-photos').innerHTML = getPhotoSkeleton();
@@ -856,7 +846,7 @@
                     document.getElementById('c-photo-socials').innerHTML = socialsHtml;
                     document.getElementById('client-photographer-card').classList.remove('hidden');
                 }
-            } catch(e) { console.error("Error", e); }
+            } catch(e) {}
         }
 
         function filterClientTab(setId, btnObj) {
@@ -932,7 +922,7 @@
             
             document.getElementById('carousel-img').src = `https://drive.google.com/thumbnail?id=${photo.id}&sz=w2000`;
             document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
-            document.getElementById('btn-next').style.visibility = index === activeSet.photos.length - 1 ? 'hidden' : 'visible';
+            document.getElementById('btn-next').style.visibility = index === photosCache.length - 1 ? 'hidden' : 'visible';
 
             const wm = document.getElementById('carousel-watermark');
             if (sessionRole === 'client') wm.classList.remove('hidden'); else wm.classList.add('hidden');
@@ -1015,7 +1005,7 @@
                     }
                 }
                 btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> EMPAQUETANDO...`;
-                saveAs(await zip.generateAsync({ type: "blob" }), `LenteFria_${sessionUser.slug}.zip`);
+                const content = await zip.generateAsync({ type: "blob" }); saveAs(content, `LenteFria_${sessionUser.slug}.zip`);
                 btn.innerHTML = `<i class="fa-solid fa-check"></i> DESCARGA INICIADA`; showToast("Descarga completada");
                 if (typeof trackEvent === "function") { trackEvent('download_zip', 'Gallery', sessionUser.slug); }
             } catch (error) { alert("Error al generar ZIP."); }
