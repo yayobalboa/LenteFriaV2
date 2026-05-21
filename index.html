@@ -14,8 +14,7 @@
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-R7CD1BCMB0');
+      gtag('js', new Date()); gtag('config', 'G-R7CD1BCMB0');
       function trackEvent(eventName, eventCategory, eventLabel) {
           gtag('event', eventName, { 'event_category': eventCategory, 'event_label': eventLabel });
       }
@@ -26,31 +25,24 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; color: #0f172a; scroll-behavior: smooth; overflow-x: hidden; } 
         .text-cyan-lf { color: #00B7F1; } 
         .bg-cyan-lf { background-color: #00B7F1; }
-        
         .masonry { column-count: 1; column-gap: 1.5rem; }
         @media (min-width: 640px) { .masonry { column-count: 2; } }
         @media (min-width: 1024px) { .masonry { column-count: 3; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
-        
         .hero-cover { height: 100vh; width: 100%; object-fit: cover; background-color: #0f172a; background-position: center; background-size: cover; position: relative; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%); }
         .protect-img { -webkit-user-select: none; user-select: none; pointer-events: none; position: relative; }
         .masonry-item-client { cursor: pointer; }
-        
         .watermark-overlay {
             position: absolute; inset: 0;
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 150 150'><text x='10' y='100' fill='rgba(255, 255, 255, 0.15)' font-family='Plus Jakarta Sans' font-size='11' font-weight='bold' transform='rotate(-45 75 75)'>LENTE FRÍA</text></svg>");
-            background-repeat: repeat;
-            pointer-events: none;
-            z-index: 10;
+            background-repeat: repeat; pointer-events: none; z-index: 10;
         }
-
         #toast { transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .splash-exit { animation: splashExit 0.8s ease-in-out forwards; pointer-events: none; }
         @keyframes splashExit { 0% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
-
         .carousel-btn { transition: transform 0.2s, background 0.2s; }
         .carousel-btn:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
     </style>
@@ -100,7 +92,6 @@
                 <button onclick="verifyReset()" id="btn-verify-reset" class="w-full bg-green-500 text-white p-4 rounded-xl font-bold hover:bg-green-600 transition-all tracking-widest shadow-lg mb-3">ACTUALIZAR CONTRASEÑA</button>
                 <button onclick="switchForm('login')" class="w-full text-slate-400 font-bold text-xs hover:text-black">CANCELAR</button>
             </div>
-
         </div>
     </div>
 
@@ -125,16 +116,39 @@
 
     <!-- CONTENEDOR PRINCIPAL -->
     <main id="main-content" class="hidden">
-        
         <!-- SECCIÓN STAFF (Admin) -->
         <section id="section-admin" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 shadow-xl">
                 <div><h2 class="text-3xl font-black">Equipo LenteFría</h2><p class="text-slate-400 text-sm mt-1">Gestión de fotógrafos y accesos</p></div>
                 <button onclick="document.getElementById('m-u').classList.remove('hidden')" class="bg-cyan-lf text-black px-8 py-4 rounded-xl font-bold hover:bg-white transition-colors w-full sm:w-auto">+ NUEVO FOTÓGRAFO</button>
             </div>
-            <div id="staff-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20"></div>
+            <div id="staff-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
 
-            <div class="border-2 border-red-200 bg-red-50 p-8 rounded-3xl mt-20 fade-in">
+            <!-- CONFIGURACIÓN GLOBAL DE COMPRESIÓN -->
+            <div class="bg-white border p-8 rounded-3xl shadow-sm mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <h3 class="font-black text-2xl mb-1"><i class="fa-solid fa-sliders text-cyan-lf mr-2"></i> Parámetros Globales de Compresión</h3>
+                    <p class="text-slate-400 font-bold text-sm">Determina la resolución y el peso con el que se subirán todas las fotos del sistema.</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Resolución Máxima:</label>
+                        <select id="cfg-res" class="p-3 bg-slate-100 rounded-xl font-bold text-sm outline-none w-full sm:w-40">
+                            <option value="4000">4K (4000px)</option>
+                            <option value="3000">Impresión Carta (3000px)</option>
+                            <option value="2048">Optimizado Web (2048px)</option>
+                            <option value="1600">Liviano Redes (1600px)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Calidad JPEG (<span id="cfg-qual-lbl">82</span>%):</label>
+                        <input type="range" id="cfg-qual" min="50" max="100" value="82" class="accent-cyan-lf w-full sm:w-40 mt-3" oninput="document.getElementById('cfg-qual-lbl').innerText = this.value">
+                    </div>
+                    <button id="btn-save-settings" onclick="saveSystemSettings()" class="bg-black text-white font-bold px-6 py-3 rounded-xl hover:bg-cyan-lf transition-all text-xs tracking-widest sm:mt-5">GUARDAR AJUSTES</button>
+                </div>
+            </div>
+
+            <div class="border-2 border-red-200 bg-red-50 p-8 rounded-3xl">
                 <h3 class="text-red-600 font-black text-2xl mb-2"><i class="fa-solid fa-triangle-exclamation mr-2 animate-pulse"></i> ZONA DE PELIGRO</h3>
                 <p class="text-red-400 font-bold text-sm mb-6">Esta acción borrará absolutamente TODAS las fotos, sesiones y comentarios. Tu cuenta de Admin NO será afectada.</p>
                 <button onclick="document.getElementById('m-reset').classList.remove('hidden')" class="bg-red-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-red-700 transition-colors shadow-lg">REINICIAR SISTEMA A CERO</button>
@@ -155,13 +169,11 @@
             <div class="flex items-center gap-4 mb-6">
                 <button onclick="show('galleries')" class="text-slate-400 hover:text-black font-bold bg-slate-100 px-4 py-2 rounded-full transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> VOLVER</button>
             </div>
-            
             <div class="bg-slate-50 border p-8 rounded-3xl flex flex-col md:flex-row justify-between items-center mb-8 gap-6 shadow-sm">
                 <div>
                     <h2 id="ws-title" class="text-4xl font-black mb-1">Nombre Galería</h2>
                     <p class="text-slate-500 font-bold text-sm">Workspace • <span id="ws-fav-count" class="text-red-500"><i class="fa-solid fa-heart"></i> 0 Favoritos</span></p>
                 </div>
-                
                 <div class="flex flex-wrap gap-4 w-full md:w-auto justify-end">
                     <button onclick="openSetModal()" class="border-2 border-black text-black px-6 py-4 rounded-xl font-bold hover:bg-black hover:text-white transition-all text-xs tracking-widest"><i class="fa-solid fa-folder-plus mr-2"></i> CREAR SET (CATEGORÍA)</button>
                     <button id="btn-ws-upload" class="bg-black text-white px-6 py-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors text-xs tracking-widest shadow-md"><i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR FOTOS</button>
@@ -171,15 +183,13 @@
             <div class="mb-6 bg-slate-50 p-6 rounded-2xl border flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
                     <span class="text-xs font-bold text-slate-400 uppercase">Subir a categoría:</span>
-                    <select id="ws-sel-folder" class="p-3 bg-white border rounded-xl font-bold text-sm outline-none focus:ring-2 focus:ring-cyan-lf"></select>
+                    <select id="ws-sel-folder" class="p-3 bg-white border rounded-xl font-bold text-sm outline-none"></select>
                 </div>
-                <span class="text-xs text-slate-400 font-bold italic">Crea carpetas/sets arriba para segmentar tus entregas.</span>
             </div>
-
             <div id="ws-photos" class="masonry"></div>
         </section>
 
-        <!-- INBOX (Fotógrafo) -->
+        <!-- INBOX -->
         <section id="section-inbox" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <h2 class="text-4xl font-black mb-8 tracking-tight">Bandeja de Entrada</h2>
             <div class="bg-slate-50 border rounded-3xl p-6 sm:p-10 min-h-[50vh] shadow-inner">
@@ -205,25 +215,14 @@
                         <h3 class="text-3xl font-black tracking-tight">Colección</h3>
                         <p id="client-instruction" class="text-slate-400 font-bold">Haz clic en una foto para verla en pantalla completa.</p>
                     </div>
-                    
                     <div class="flex items-center gap-4">
-                        <button id="btn-lock-selection" onclick="lockFavorites()" class="hidden bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl flex items-center gap-3">
-                            <i class="fa-solid fa-lock"></i> ENVIAR SELECCIÓN FINAL
-                        </button>
-                        <span id="badge-selection-locked" class="hidden bg-green-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-3 shadow-md">
-                            <i class="fa-solid fa-circle-check"></i> SELECCIÓN FINALIZADA (CONGELADA)
-                        </span>
-                        
-                        <button id="btn-download-zip" onclick="downloadAllZip()" class="bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-cyan-lf transition-all shadow-xl flex items-center gap-3">
-                            <i class="fa-solid fa-download"></i> DESCARGAR COLECCIÓN
-                        </button>
+                        <button id="btn-lock-selection" onclick="lockFavorites()" class="hidden bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl flex items-center gap-3"><i class="fa-solid fa-lock"></i> ENVIAR SELECCIÓN FINAL</button>
+                        <span id="badge-selection-locked" class="hidden bg-green-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-3 shadow-md"><i class="fa-solid fa-circle-check"></i> SELECCIÓN FINALIZADA</span>
+                        <button id="btn-download-zip" onclick="downloadAllZip()" class="bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-cyan-lf transition-all shadow-xl flex items-center gap-3"><i class="fa-solid fa-download"></i> DESCARGAR COLECCIÓN</button>
                     </div>
                 </div>
 
-                <!-- TABS/PESTAÑAS DE SUB-GALERÍAS (SETS) -->
-                <div id="client-tabs" class="flex gap-4 overflow-x-auto pb-6 mb-8 border-b scrollbar-none animate-fade-in"></div>
-
-                <!-- FOTOS FILTRADAS -->
+                <div id="client-tabs" class="flex gap-4 overflow-x-auto pb-6 mb-8 border-b scrollbar-none"></div>
                 <div id="client-photos" class="masonry"></div>
             </div>
         </section>
@@ -235,7 +234,6 @@
         <div id="carousel-img-container" class="w-full md:w-2/3 h-[60vh] md:h-full flex items-center justify-center relative protect-img p-4 sm:p-10">
             <button id="btn-prev" onclick="prevPhoto()" class="carousel-btn absolute left-4 sm:left-10 text-white/50 hover:text-white text-4xl bg-black/20 w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-left"></i></button>
             <img id="carousel-img" src="" class="max-w-full max-h-full object-contain drop-shadow-2xl">
-            <!-- MARCA DE AGUA VECTORIAL INTERNA EN EL LIGHTBOX -->
             <div id="carousel-watermark" class="watermark-overlay rounded-2xl hidden opacity-50"></div>
             <button id="btn-next" onclick="nextPhoto()" class="carousel-btn absolute right-4 sm:right-10 text-white/50 hover:text-white text-4xl bg-black/20 w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
@@ -249,7 +247,7 @@
         </div>
     </div>
 
-    <!-- MODAL PERFIL / CAMBIAR CLAVE -->
+    <!-- CONFIGURACIÓN PERFIL -->
     <div id="m-profile" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-2">Configuración</h3>
@@ -268,8 +266,8 @@
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-2">Editar Entrega</h3>
             <p class="text-slate-400 text-sm font-bold mb-6">Modifica el nombre público y descripción.</p>
-            <input id="edit-cN" placeholder="Nombre de la Galería / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf transition-all">
-            <textarea id="edit-gDesc" rows="3" placeholder="Descripción poética o dedicatoria para el cliente (Opcional)" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf resize-none transition-all"></textarea>
+            <input id="edit-cN" placeholder="Nombre de la Galería / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
+            <textarea id="edit-gDesc" rows="3" placeholder="Descripción poética (Opcional)" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf resize-none"></textarea>
             <button id="btn-update-vault" onclick="updateGallery()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest">GUARDAR CAMBIOS</button>
             <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
         </div>
@@ -280,7 +278,7 @@
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-2">Nueva Categoría (Set)</h3>
             <p class="text-slate-400 text-sm font-bold mb-6">Ejemplo: Ceremonia, Recepción, Retratos.</p>
-            <input id="set-name" placeholder="Nombre de la categoría" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf transition-all">
+            <input id="set-name" placeholder="Nombre de la categoría" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
             <button id="btn-save-set" onclick="createSet()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest">CREAR CATEGORÍA</button>
             <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
         </div>
@@ -296,36 +294,36 @@
                 <input id="sP" placeholder="Contraseña de acceso" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
                 <button onclick="togglePass('sP', 'eye-staff')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-staff" class="fa-solid fa-eye"></i></button>
             </div>
-            <button id="btn-create-staff" onclick="apiS()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all shadow-lg tracking-widest">CREAR STAFF</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+            <button id="btn-create-staff" onclick="apiS()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all shadow-lg">CREAR STAFF</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black">CANCELAR</button>
         </div>
     </div>
 
-    <!-- Modal Nueva Bóveda -->
+    <!-- Modal Nueva Sesión -->
     <div id="m-g" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-2xl mb-6">Nueva Sesión / Portafolio</h3>
             <div id="staff-select-container" class="hidden mb-4">
                 <label class="text-xs font-bold text-slate-400 ml-2">Asignar a Fotógrafo:</label>
-                <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm focus:ring-2 focus:ring-cyan-lf"></select>
+                <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm"></select>
             </div>
-            <input id="cN" placeholder="Nombre de la Sesión / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-            <textarea id="gDesc" rows="2" placeholder="Dedicatoria o descripción de la sesión (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf resize-none"></textarea>
-            <input id="sl" placeholder="Slug (Ruta web. Ej: boda-ana)" onkeyup="toggleClientFields()" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+            <input id="cN" placeholder="Nombre de la Sesión / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <textarea id="gDesc" rows="2" placeholder="Dedicatoria o descripción de la sesión (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none"></textarea>
+            <input id="sl" placeholder="Slug (Ruta web. Ej: boda-ana)" onkeyup="toggleClientFields()" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
                 <input type="checkbox" id="chk-portfolio" class="w-5 h-5 accent-cyan-lf" onchange="toggleClientFields()">
                 <span class="font-bold text-sm">Es un Portafolio Público</span>
             </label>
             <div id="client-credentials-box" class="transition-opacity duration-300">
                 <h4 class="text-xs font-bold text-slate-400 ml-2 mb-2 uppercase tracking-widest">Credenciales del Cliente</h4>
-                <input id="cU" placeholder="Usuario (Ej: familia, o un email)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="cU" placeholder="Usuario (Ej: familia, o un email)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
                 <div class="relative mb-8">
-                    <input id="ps" placeholder="Contraseña del cliente" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                    <input id="ps" placeholder="Contraseña del cliente" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
                     <button onclick="togglePass('ps', 'eye-vault')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-vault" class="fa-solid fa-eye"></i></button>
                 </div>
             </div>
-            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold hover:bg-black transition-colors tracking-widest shadow-lg">CREAR</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold hover:bg-black transition-colors">CREAR</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black">CANCELAR</button>
         </div>
     </div>
 
@@ -337,8 +335,8 @@
             <div class="relative mb-8">
                 <input id="reset-pass" placeholder="Contraseña de Admin" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none border border-red-200 focus:ring-2 focus:ring-red-500">
             </div>
-            <button id="btn-execute-reset" onclick="executeHardReset()" class="w-full bg-red-600 text-white p-4 rounded-xl font-bold hover:bg-red-800 transition-colors tracking-widest mb-3 shadow-lg">EJECUTAR PURGA</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+            <button id="btn-execute-reset" onclick="executeHardReset()" class="w-full bg-red-600 text-white p-4 rounded-xl font-bold hover:bg-red-800 transition-colors">EJECUTAR PURGA</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full text-slate-400 font-bold hover:text-black">CANCELAR</button>
         </div>
     </div>
 
@@ -352,6 +350,8 @@
         let currentPhotoId = null; let favoritesCache = []; let photosCache = []; 
         let currentCarouselIndex = 0; let resetEmailStore = ""; let activeEditGalleryId = null;
         let activeClientTabId = null;
+        
+        window.systemSettings = { max_resolution: 3000, jpeg_quality: 82 };
 
         document.addEventListener('contextmenu', event => event.preventDefault());
 
@@ -364,9 +364,19 @@
         // ==========================================
         // 🛡️ SISTEMA DE SESIÓN (LOGIN SILENCIOSO)
         // ==========================================
-        function initApp() {
+        async function initApp() {
             const urlParams = new URLSearchParams(window.location.search);
             const magicU = urlParams.get('u'); const magicP = urlParams.get('p');
+
+            try {
+                const settings = await gasRequest("getSettings");
+                if (settings && settings.length > 0) {
+                    window.systemSettings = {
+                        max_resolution: parseInt(settings[0].max_resolution),
+                        jpeg_quality: parseInt(settings[0].jpeg_quality)
+                    };
+                }
+            } catch(e) { console.error("Error leyendo configuración, usando defaults", e); }
 
             if(magicU && magicP) {
                 sessionStorage.setItem('lf_magic_login', 'true');
@@ -565,6 +575,10 @@
             try {
                 const d = await gasRequest("getStaff"); allStaffCache = Array.isArray(d) ? d : [];
                 document.getElementById('staff-list').innerHTML = d.map(s => `<div class="bg-slate-50 p-6 rounded-3xl border shadow-sm fade-in"><h4 class="font-black text-xl">${s.full_name}</h4><p class="text-xs text-slate-400 font-bold mt-1">${s.email}</p><span class="text-[10px] bg-slate-200 px-2 py-1 rounded mt-2 inline-block uppercase">${s.role}</span></div>`).join('');
+                
+                document.getElementById('cfg-res').value = window.systemSettings.max_resolution.toString();
+                document.getElementById('cfg-qual').value = window.systemSettings.jpeg_quality;
+                document.getElementById('cfg-qual-lbl').innerText = window.systemSettings.jpeg_quality;
             } catch(e) {}
         }
 
@@ -581,7 +595,7 @@
                         ${badge}
                         <div class="absolute top-4 left-4 flex gap-3 z-10">
                             <button onclick='openEditModal(${JSON.stringify(g)})' class="text-slate-400 hover:text-black transition-colors" title="Editar Nombre/Descripción"><i class="fa-solid fa-pen text-sm"></i></button>
-                            <button onclick="deleteGallery(${g.id})" class="text-red-300 hover:text-red-600 transition-colors" title="Eliminar de Drive y BD"><i class="fa-solid fa-trash text-sm"></i></button>
+                            <button onclick="deleteGallery(${g.id})" class="text-red-300 hover:text-red-500 transition-colors" title="Eliminar de Drive y BD"><i class="fa-solid fa-trash text-sm"></i></button>
                         </div>
                         <div class="mb-6 mt-4">
                             <h3 class="font-black text-2xl pr-10 leading-tight">${g.client_name}</h3>
@@ -611,13 +625,14 @@
         }
 
         // ==========================================
-        // 🛠️ WORKSPACE (CON FILTROS Y EDICIÓN/ELIMINACIÓN DE SETS)
+        // 🛠️ WORKSPACE (CON SETS Y FILTROS)
         // ==========================================
         async function openWorkspace(galleryObj) {
             currentGallery = galleryObj; document.getElementById('ws-title').innerText = currentGallery.client_name;
             document.getElementById('ws-photos').innerHTML = getPhotoSkeleton();
-            document.getElementById('btn-ws-upload').onclick = () => triggerUpload(currentGallery.id);
+            
             show('workspace');
+
             try {
                 const [structure, favs] = await Promise.all([
                     gasRequest("getPhotos", null, currentGallery.drive_folder_id),
@@ -628,14 +643,11 @@
                 const favSet = new Set(Array.isArray(favs) ? favs.map(f => f.file_id) : []);
                 document.getElementById('ws-fav-count').innerHTML = `<i class="fa-solid fa-heart"></i> ${favSet.size} Favoritos`;
 
-                // Rellenar selectores
                 const sel = document.getElementById('ws-sel-folder');
                 sel.innerHTML = photosCache.map(set => `<option value="${set.id}">${set.name}</option>`).join('');
 
-                // Renderizado con Botones de Edición para los Sets
                 let html = "";
                 photosCache.forEach(set => {
-                    // Si el set se llama "General", ocultamos los botones de control (carpeta raíz)
                     const controls = set.name === "General" ? "" : `
                         <div class="flex gap-3">
                             <button onclick="renameSet('${set.id}', '${set.name}')" class="text-slate-400 hover:text-black transition-colors" title="Renombrar Categoría"><i class="fa-solid fa-pen text-sm"></i></button>
@@ -709,11 +721,11 @@
             } catch(e) { alert("Error."); }
         }
 
-        async function setCover(fileId) { if(!confirm("¿Fijar portada?")) return; await gasRequest("setCover", { gallery_id: currentGallery.id, file_id: fileId, actor: sessionUser.email }); currentGallery.cover_photo_id = fileId; showToast("Portada Actualizada"); openWorkspace(currentGallery); }
-        async function deletePhoto(fileId) { if(!confirm("¿Borrar de Drive?")) return; document.getElementById(`card-${fileId}`).style.opacity = '0.3'; await gasRequest("deletePhoto", { file_id: fileId, actor: sessionUser.email }); document.getElementById(`card-${fileId}`).remove(); showToast("Foto Eliminada"); }
+        async function setCover(fileId) { if(!confirm("¿Establecer como foto de portada principal?")) return; await gasRequest("setCover", { gallery_id: currentGallery.id, file_id: fileId, actor: sessionUser.email }); currentGallery.cover_photo_id = fileId; showToast("Portada Actualizada"); openWorkspace(currentGallery); }
+        async function deletePhoto(fileId) { if(!confirm("¿Borrar esta foto de Google Drive definitivamente?")) return; document.getElementById(`card-${fileId}`).style.opacity = '0.3'; await gasRequest("deletePhoto", { file_id: fileId, actor: sessionUser.email }); document.getElementById(`card-${fileId}`).remove(); showToast("Foto Eliminada"); }
 
         // ==========================================
-        // 📸 PORTAL DEL CLIENTE
+        // 📸 PORTAL DEL CLIENTE (SETS, MARCA DE AGUA, CORAZONES, ZIP)
         // ==========================================
         async function fetchClientPhotos() {
             document.getElementById('client-photos').innerHTML = getPhotoSkeleton();
@@ -722,7 +734,7 @@
             if(isPort) {
                 document.getElementById('client-hero-subtitle').innerText = "Portafolio Oficial";
                 document.getElementById('client-instruction').innerText = "Haz clic en una foto para verla en pantalla completa.";
-                document.getElementById('btn-download-zip').classList.add('hidden'); // ELIMINAR DESCARGA EN PORTAFOLIO
+                document.getElementById('btn-download-zip').classList.add('hidden'); 
             } else { 
                 document.getElementById('client-instruction').innerText = "Selecciona tus favoritas (❤️) o deja un comentario.";
                 document.getElementById('btn-download-zip').classList.remove('hidden');
@@ -779,7 +791,6 @@
                 const heartClass = isFav ? "fa-solid text-red-500" : "fa-regular text-white drop-shadow-md";
                 const lockedClass = sessionUser.favorites_locked ? "pointer-events-none opacity-40" : "pointer-events-auto";
 
-                // Si es portafolio, se desactiva por completo la interactividad de likes/comentarios
                 const interactiveLayer = isPort ? 
                     `<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-auto" onclick="openCarousel(${index})">
                         <span class="text-white font-bold tracking-widest border border-white/50 px-6 py-2 rounded-full backdrop-blur-sm">VER FOTO</span>
@@ -797,9 +808,11 @@
             if (sessionUser.favorites_locked) return;
             const icon = document.getElementById(`fav-${fileId}`);
             if (favoritesCache.includes(fileId)) {
-                favoritesCache = favoritesCache.filter(id => id !== fileId); icon.className = "fa-regular text-white drop-shadow-md fa-heart";
+                favoritesCache = favoritesCache.filter(id => id !== fileId);
+                icon.className = "fa-regular text-white drop-shadow-md fa-heart";
             } else {
-                favoritesCache.push(fileId); icon.className = "fa-solid text-red-500 fa-heart animate-bounce"; setTimeout(()=> icon.classList.remove('animate-bounce'), 1000);
+                favoritesCache.push(fileId);
+                icon.className = "fa-solid text-red-500 fa-heart animate-bounce"; setTimeout(()=> icon.classList.remove('animate-bounce'), 1000);
             }
             await gasRequest("toggleFavorite", { gallery_id: sessionUser.id, file_id: fileId });
         }
@@ -821,7 +834,7 @@
         }
 
         // ==========================================
-        // 🎠 CARRUSEL (LIGHTBOX CON MARCA DE AGUA)
+        // 🎠 CARRUSEL (LIGHTBOX)
         // ==========================================
         function openCarousel(index) {
             currentCarouselIndex = index;
@@ -868,16 +881,57 @@
         }
 
         // ==========================================
-        // ➕ UTILIDADES Y ZIP PROTEGIDO
+        // 🔄 COMPRESIÓN MULTI-RESOLUCIÓN EN VIVO (SaaS CORE)
         // ==========================================
+        function compressFile(file) {
+            const targetWidth = window.systemSettings ? window.systemSettings.max_resolution : 3000;
+            const targetQuality = window.systemSettings ? (window.systemSettings.jpeg_quality / 100) : 0.82;
+
+            return new Promise((resolve, reject) => {
+                new Compressor(file, {
+                    quality: targetQuality,
+                    maxWidth: targetWidth,
+                    maxHeight: targetWidth,
+                    mimeType: 'image/jpeg',
+                    success(result) { resolve(result); },
+                    error(err) { reject(err); }
+                });
+            });
+        }
+
+        async function saveSystemSettings() {
+            const resVal = parseInt(document.getElementById('cfg-res').value);
+            const qualVal = parseInt(document.getElementById('cfg-qual').value);
+            const btn = document.getElementById('btn-save-settings');
+
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true;
+
+            try {
+                const res = await gasRequest("updateSettings", { 
+                    max_resolution: resVal, 
+                    jpeg_quality: qualVal, 
+                    actor: sessionUser.email 
+                });
+                
+                if (res.error) {
+                    alert("Error: " + res.error);
+                } else {
+                    window.systemSettings = { max_resolution: resVal, jpeg_quality: qualVal };
+                    showToast("Configuración Global de Compresión Actualizada");
+                }
+            } catch(e) { alert("Error de red"); }
+            btn.innerHTML = "GUARDAR AJUSTES"; btn.disabled = false;
+        }
+
         async function downloadAllZip() {
-            if (photosCache.length === 0) return;
+            if (photosCache.length === 0) return alert("No hay fotos.");
             const pin = prompt("Por favor ingresa tu PIN de descarga de 4 dígitos para autorizar el paquete ZIP:");
             if (pin === null) return;
             if (pin !== sessionUser.password_hash) return alert("PIN de acceso incorrecto. Descarga bloqueada.");
 
             const btn = document.getElementById('btn-download-zip'); const originalText = btn.innerHTML;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> COMPRIMIENDO...`; btn.disabled = true;
+
             try {
                 const zip = new JSZip(); const folder = zip.folder(sessionUser.client_name.replace(/[^a-z0-9]/gi, '_'));
                 for (let s = 0; s < photosCache.length; s++) {
@@ -888,8 +942,8 @@
                         setFolder.file(set.photos[i].name, await response.blob());
                     }
                 }
-                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> FINALIZANDO...`;
-                saveAs(await zip.generateAsync({ type: "blob" }), `LenteFria_${sessionUser.slug}.zip`);
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> EMPAQUETANDO...`;
+                const content = await zip.generateAsync({ type: "blob" }); saveAs(content, `LenteFria_${sessionUser.slug}.zip`);
                 btn.innerHTML = `<i class="fa-solid fa-check"></i> DESCARGA INICIADA`; showToast("Descarga completada");
                 if (typeof trackEvent === "function") { trackEvent('download_zip', 'Gallery', sessionUser.slug); }
             } catch (error) { alert("Error al generar ZIP."); }
@@ -915,8 +969,8 @@
                     const b64 = await new Promise(res => { reader.onload = () => res(reader.result.split(',')[1]); reader.readAsDataURL(file); });
                     const cleanName = files[i].name.replace(/\.[^/.]+$/, "") + ".jpg";
 
-                    // Sube direccionadamente a la carpeta del set seleccionada
-                    await gasRequest("uploadPhoto", { folder_id: setFolderId, filename: cleanName, mimeType: "image/jpeg", base64Data: b64, actor: sessionUser.email });
+                    // Robustez: Enviamos tanto 'folder_id' para el set como 'gallery_id' para compatibilidad total con cualquier versión de backend.
+                    await gasRequest("uploadPhoto", { folder_id: setFolderId, gallery_id: galleryId, filename: cleanName, mimeType: "image/jpeg", base64Data: b64, actor: sessionUser.email });
                 }
                 btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ¡LISTO!`; showToast("Fotografías publicadas");
                 setTimeout(() => { btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR FOTOS`; btn.disabled = false; openWorkspace(currentGallery); }, 2000);
@@ -957,7 +1011,7 @@
             try {
                 const res = await gasRequest("updateGallery", { gallery_id: activeEditGalleryId, client_name: newName, description: newDesc, actor: sessionUser.email });
                 if (res.error) { alert("Error: " + res.error); } else { showToast("Bóveda Actualizada"); document.getElementById('m-edit-g').classList.add('hidden'); fetchG(); }
-            } catch(e) { alert("Error"); }
+            } catch(e) { alert("Error de red al actualizar"); }
             btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
         }
 
@@ -990,6 +1044,6 @@
             else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
         }
     </script>
-    <div class="hidden text-white fa-solid fa-heart fa-regular fa-eye fa-eye-slash fa-triangle-exclamation fa-radiation fa-spinner fa-check fa-circle-check fa-chevron-left fa-chevron-right fa-folder-open fa-plus fa-arrow-left fa-image fa-trash fa-gear fa-pen fa-folder-plus fa-images fa-lock"></div>
+    <div class="hidden text-white fa-solid fa-heart fa-regular fa-eye fa-eye-slash fa-triangle-exclamation fa-radiation fa-spinner fa-check fa-circle-check fa-chevron-left fa-chevron-right fa-folder-open fa-plus fa-arrow-left fa-image fa-trash fa-gear fa-pen fa-folder-plus fa-images fa-lock fa-sliders"></div>
 </body>
 </html>
