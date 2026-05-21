@@ -14,37 +14,27 @@
         .text-cyan-lf { color: #00B7F1; } 
         .bg-cyan-lf { background-color: #00B7F1; }
         
-        /* MASONRY GRID */
         .masonry { column-count: 1; column-gap: 1.5rem; }
         @media (min-width: 640px) { .masonry { column-count: 2; } }
         @media (min-width: 1024px) { .masonry { column-count: 3; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
         
-        /* CINEMATIC COVER */
         .hero-cover { 
             height: 100vh; width: 100%; object-fit: cover; 
             background-color: #0f172a; background-position: center; background-size: cover;
             position: relative;
         }
-        .hero-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
-        }
-        
-        /* PREVENT RIGHT CLICK / SELECT */
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%); }
         .protect-img { -webkit-user-select: none; user-select: none; pointer-events: none; }
         .masonry-item-client { cursor: pointer; }
-
-        /* NOTIFICACIÓN FLOTANTE */
         #toast { transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
     </style>
 </head>
 <body onload="initApp()">
 
-    <!-- NOTIFICACIÓN FLOTANTE (TOAST) -->
+    <!-- NOTIFICACIÓN FLOTANTE -->
     <div id="toast" class="fixed -bottom-24 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-3 rounded-full font-bold tracking-widest text-sm shadow-2xl z-[200] flex items-center gap-3">
-        <i class="fa-solid fa-circle-check text-cyan-lf"></i>
-        <span id="toast-msg">Mensaje</span>
+        <i class="fa-solid fa-circle-check text-cyan-lf"></i><span id="toast-msg">Mensaje</span>
     </div>
 
     <!-- PANTALLA DE LOGIN -->
@@ -61,7 +51,7 @@
         </div>
     </div>
 
-    <!-- NAVEGACIÓN PRINCIPAL -->
+    <!-- NAVEGACIÓN -->
     <nav id="main-nav" class="p-6 border-b flex justify-between items-center hidden bg-white sticky top-0 z-40 shadow-sm transition-all">
         <h1 class="font-black text-2xl tracking-tighter">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
         <div class="flex items-center gap-6">
@@ -78,14 +68,22 @@
         
         <!-- SECCIÓN STAFF (Admin) -->
         <section id="section-admin" class="max-w-7xl mx-auto p-6 sm:p-10 hidden animate-fade-in">
-            <div class="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
+            <div class="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 shadow-xl">
                 <div><h2 class="text-3xl font-black">Equipo LenteFría</h2><p class="text-slate-400 text-sm mt-1">Gestión de fotógrafos y accesos</p></div>
                 <button onclick="document.getElementById('m-u').classList.remove('hidden')" class="bg-cyan-lf px-8 py-3 rounded-xl font-bold hover:bg-white hover:text-cyan-lf transition-colors w-full sm:w-auto">+ NUEVO FOTÓGRAFO</button>
             </div>
-            <div id="staff-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            
+            <div id="staff-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20"></div>
+
+            <!-- ZONA DE PELIGRO -->
+            <div class="border-2 border-red-200 bg-red-50 p-8 rounded-3xl mt-20">
+                <h3 class="text-red-600 font-black text-2xl mb-2"><i class="fa-solid fa-triangle-exclamation mr-2"></i> ZONA DE PELIGRO</h3>
+                <p class="text-red-400 font-bold text-sm mb-6">Esta acción borrará absolutamente TODAS las fotos, bóvedas, comentarios y fotógrafos de la base de datos, y mandará las carpetas a la papelera en Drive. No se puede deshacer.</p>
+                <button onclick="document.getElementById('m-reset').classList.remove('hidden')" class="bg-red-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-red-700 transition-colors">REINICIAR SISTEMA A CERO</button>
+            </div>
         </section>
 
-        <!-- SECCIÓN GALERÍAS (Admin / Fotógrafo) -->
+        <!-- SECCIÓN GALERÍAS -->
         <section id="section-galleries" class="max-w-7xl mx-auto p-6 sm:p-10 hidden animate-fade-in">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
                 <div><h2 class="text-5xl font-black">Entregas</h2><p class="text-slate-400 mt-2 font-bold">Tus bóvedas y portafolios</p></div>
@@ -94,7 +92,7 @@
             <div id="galleries-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </section>
 
-        <!-- STUDIO WORKSPACE (Solo Fotógrafo - Gestionar Galería) -->
+        <!-- WORKSPACE (Fotógrafo) -->
         <section id="section-workspace" class="max-w-7xl mx-auto p-6 sm:p-10 hidden animate-fade-in">
             <div class="flex items-center gap-4 mb-6">
                 <button onclick="show('galleries')" class="text-slate-400 hover:text-black font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> VOLVER</button>
@@ -111,7 +109,7 @@
             <div id="ws-photos" class="masonry"></div>
         </section>
 
-        <!-- SECCIÓN INBOX (Fotógrafo) -->
+        <!-- INBOX (Fotógrafo) -->
         <section id="section-inbox" class="max-w-7xl mx-auto p-6 sm:p-10 hidden animate-fade-in">
             <h2 class="text-4xl font-black mb-8">Bandeja de Entrada</h2>
             <div class="bg-slate-50 border rounded-3xl p-6 sm:p-10 min-h-[50vh]">
@@ -119,9 +117,8 @@
             </div>
         </section>
 
-        <!-- VISTA CINEMÁTICA DEL CLIENTE (Client View) -->
+        <!-- PORTAL DEL CLIENTE -->
         <section id="section-client-view" class="hidden animate-fade-in">
-            <!-- HERO COVER -->
             <div id="client-hero" class="hero-cover flex items-center justify-center text-center">
                 <div class="hero-overlay"></div>
                 <div class="relative z-10 p-6 flex flex-col items-center">
@@ -131,7 +128,6 @@
                 </div>
             </div>
 
-            <!-- CONTENIDO DE LA GALERÍA -->
             <div id="client-gallery-start" class="max-w-7xl mx-auto p-6 sm:p-10 mt-10">
                 <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 border-b pb-8">
                     <div>
@@ -148,6 +144,7 @@
     </main>
 
     <!-- MODALES -->
+    
     <!-- Modal Nuevo Staff -->
     <div id="m-u" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
@@ -211,48 +208,49 @@
         </div>
     </div>
 
+    <!-- Modal Botón Nuclear -->
+    <div id="m-reset" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl border-4 border-red-500">
+            <h3 class="font-black text-3xl mb-4 text-red-600"><i class="fa-solid fa-radiation mr-2"></i> Factory Reset</h3>
+            <p class="text-slate-500 font-bold mb-6 text-sm">Para confirmar la purga total del sistema, ingresa tu contraseña de Administrador maestro:</p>
+            
+            <div class="relative mb-8">
+                <input id="reset-pass" placeholder="Contraseña de Admin" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none border border-red-200 focus:ring-2 focus:ring-red-500">
+            </div>
+            
+            <button id="btn-execute-reset" onclick="executeHardReset()" class="w-full bg-red-600 text-white p-4 rounded-xl font-bold hover:bg-red-800 transition-colors tracking-widest mb-3">EJECUTAR PURGA</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full text-slate-400 font-bold hover:text-black">CANCELAR</button>
+        </div>
+    </div>
+
     <script>
         // ==========================================
         // ⚙️ CONFIGURACIÓN CORE
         // ==========================================
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzAEygb5pHlQ08emz8KqvEnYFl9uMv_4WhzYTEk8tqxdxfIxc8IYKq9c5iFv7EicfO4/exec";
 
-        let sessionUser = null;
-        let sessionRole = null;
-        let allStaffCache = [];
-        let currentGallery = null; 
-        let currentPhotoId = null;
-        let favoritesCache = []; 
-        let photosCache = []; 
+        let sessionUser = null; let sessionRole = null; let allStaffCache = []; let currentGallery = null; 
+        let currentPhotoId = null; let favoritesCache = []; let photosCache = []; 
 
-        // PROTECCIÓN ANTI CLIC DERECHO
         document.addEventListener('contextmenu', event => event.preventDefault());
 
         // ==========================================
-        // 🛡️ SISTEMA DE SESIÓN MAGICA Y NORMAL
+        // 🛡️ SISTEMA DE SESIÓN
         // ==========================================
         function initApp() {
-            // 1. Detectar si llegó a través de un Magic Link
             const urlParams = new URLSearchParams(window.location.search);
-            const magicU = urlParams.get('u');
-            const magicP = urlParams.get('p');
+            const magicU = urlParams.get('u'); const magicP = urlParams.get('p');
 
             if(magicU && magicP) {
-                // Auto-rellenar y auto-loguear
-                document.getElementById('l-user').value = magicU;
-                document.getElementById('l-pass').value = magicP;
-                // Limpiar la URL para que se vea elegante y no comparta contraseñas en pantalla
+                document.getElementById('l-user').value = magicU; document.getElementById('l-pass').value = magicP;
                 window.history.replaceState({}, document.title, window.location.pathname);
-                login();
-                return;
+                login(); return;
             }
 
-            // 2. Si no hay Magic Link, revisar si ya tenía sesión guardada (F5)
             const savedSession = localStorage.getItem('lf_session');
             if (savedSession) {
                 const data = JSON.parse(savedSession);
-                sessionUser = data.user;
-                sessionRole = data.role;
+                sessionUser = data.user; sessionRole = data.role;
                 applyRoleUI();
             }
         }
@@ -337,24 +335,46 @@
             else { const r = await fetch(GAS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: action, payload: payload }) }); return await r.json(); }
         }
 
-        // ==========================================
-        // 🔗 COMPARTIR ENLACE MÁGICO (NUEVO)
-        // ==========================================
         function copyShareLink(u, p) {
             const link = window.location.origin + window.location.pathname + `?u=${u}&p=${p}`;
-            navigator.clipboard.writeText(link).then(() => {
-                showToast("¡ENLACE MÁGICO COPIADO!");
-            }).catch(err => {
-                alert("Tu navegador bloqueó el portapapeles. Copia esto manualmente:\n\n" + link);
-            });
+            navigator.clipboard.writeText(link).then(() => { showToast("¡ENLACE MÁGICO COPIADO!"); }).catch(err => { alert("Copia esto:\n\n" + link); });
+        }
+        function showToast(msg) {
+            const toast = document.getElementById('toast'); document.getElementById('toast-msg').innerText = msg;
+            toast.style.bottom = "2rem"; setTimeout(() => { toast.style.bottom = "-6rem"; }, 3000);
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').innerText = msg;
-            toast.style.bottom = "2rem"; // Sube el toast
-            setTimeout(() => { toast.style.bottom = "-6rem"; }, 3000); // Lo baja después de 3s
+        // ==========================================
+        // ☢️ FACTORY RESET LÓGICA
+        // ==========================================
+        async function executeHardReset() {
+            const p = document.getElementById('reset-pass').value;
+            if(!p) return alert("Ingresa la contraseña maestra");
+
+            const btn = document.getElementById('btn-execute-reset');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> PURGANDO SISTEMA...`;
+            btn.disabled = true;
+
+            try {
+                const res = await gasRequest("hardReset", { admin_password: p });
+                if (res.error) {
+                    alert("Error: " + res.error);
+                    btn.innerHTML = "EJECUTAR PURGA"; btn.disabled = false; return;
+                }
+                
+                // Éxito total. Limpiamos y echamos al usuario.
+                alert("SISTEMA REINICIADO A CERO. Se cerrará la sesión.");
+                document.getElementById('m-reset').classList.add('hidden');
+                document.getElementById('reset-pass').value = '';
+                btn.innerHTML = "EJECUTAR PURGA"; btn.disabled = false;
+                logout();
+
+            } catch (error) {
+                alert("Error de conexión al purgar.");
+                btn.innerHTML = "EJECUTAR PURGA"; btn.disabled = false;
+            }
         }
+
 
         // ==========================================
         // 👥 LÓGICA STAFF & GALERÍAS
@@ -412,7 +432,7 @@
         }
 
         // ==========================================
-        // 🛠️ WORKSPACE (FOTÓGRAFO STUDIO)
+        // 🛠️ WORKSPACE
         // ==========================================
         async function openWorkspace(galleryObj) {
             currentGallery = galleryObj;
@@ -468,7 +488,7 @@
         }
 
         // ==========================================
-        // 📸 PORTAL DEL CLIENTE (CINEMATIC)
+        // 📸 PORTAL DEL CLIENTE
         // ==========================================
         async function fetchClientPhotos() {
             const container = document.getElementById('client-photos');
@@ -550,7 +570,6 @@
             } catch(e) { btn.innerHTML = `ENVIAR`; btn.disabled = false; }
         }
 
-        // --- DESCARGA MASIVA ZIP ---
         async function downloadAllZip() {
             if (photosCache.length === 0) return alert("No hay fotos.");
             const btn = document.getElementById('btn-download-zip');
@@ -576,10 +595,7 @@
                 saveAs(content, `LenteFria_${sessionUser.slug}.zip`);
 
                 btn.innerHTML = `<i class="fa-solid fa-check"></i> DESCARGA INICIADA`;
-            } catch (error) {
-                alert("Error al generar el ZIP.");
-            }
-            
+            } catch (error) { alert("Error al generar el ZIP."); }
             setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 3000);
         }
 
@@ -630,21 +646,12 @@
             document.getElementById('m-g').classList.remove('hidden');
         }
 
-        // Lógica corregida para Portafolios: Usuario Único
         function toggleClientFields() {
             const isPort = document.getElementById('chk-portfolio').checked; 
             const box = document.getElementById('client-credentials-box');
             const slugVal = document.getElementById('sl').value || 'publico';
-            
-            if(isPort) { 
-                box.classList.add('opacity-50', 'pointer-events-none'); 
-                document.getElementById('cU').value = 'portafolio_' + slugVal; // Garantiza que no choquen 
-                document.getElementById('ps').value = '0000'; 
-            } else { 
-                box.classList.remove('opacity-50', 'pointer-events-none'); 
-                document.getElementById('cU').value = ''; 
-                document.getElementById('ps').value = ''; 
-            }
+            if(isPort) { box.classList.add('opacity-50', 'pointer-events-none'); document.getElementById('cU').value = 'portafolio_' + slugVal; document.getElementById('ps').value = '0000'; } 
+            else { box.classList.remove('opacity-50', 'pointer-events-none'); document.getElementById('cU').value = ''; document.getElementById('ps').value = ''; }
         }
 
         function togglePass(inputId, iconId) {
@@ -653,6 +660,6 @@
             else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
         }
     </script>
-    <div class="hidden text-white fa-solid fa-heart fa-regular fa-eye fa-eye-slash"></div>
+    <div class="hidden text-white fa-solid fa-heart fa-regular fa-eye fa-eye-slash fa-triangle-exclamation fa-radiation"></div>
 </body>
 </html>
