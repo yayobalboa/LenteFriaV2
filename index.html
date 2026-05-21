@@ -5,15 +5,35 @@
     <title>LenteFría DAM - High End Delivery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Librerías para empaquetado ZIP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&display=swap'); 
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; color: #0f172a; } 
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;800;900&display=swap'); 
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; color: #0f172a; scroll-behavior: smooth; } 
         .text-cyan-lf { color: #00B7F1; } 
         .bg-cyan-lf { background-color: #00B7F1; }
+        
+        /* MASONRY GRID */
         .masonry { column-count: 1; column-gap: 1.5rem; }
         @media (min-width: 640px) { .masonry { column-count: 2; } }
         @media (min-width: 1024px) { .masonry { column-count: 3; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
+        
+        /* CINEMATIC COVER */
+        .hero-cover { 
+            height: 100vh; width: 100%; object-fit: cover; 
+            background-color: #0f172a; background-position: center; background-size: cover;
+            position: relative;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+        }
+        
+        /* PREVENT RIGHT CLICK / SELECT */
+        .protect-img { -webkit-user-select: none; user-select: none; pointer-events: none; }
+        .masonry-item-client { cursor: pointer; }
     </style>
 </head>
 <body onload="initApp()">
@@ -33,128 +53,147 @@
     </div>
 
     <!-- NAVEGACIÓN PRINCIPAL -->
-    <nav id="main-nav" class="p-6 border-b flex justify-between items-center hidden bg-white sticky top-0 z-40">
+    <nav id="main-nav" class="p-6 border-b flex justify-between items-center hidden bg-white sticky top-0 z-40 shadow-sm transition-all">
         <h1 class="font-black text-2xl tracking-tighter">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
         <div class="flex items-center gap-6">
             <span id="user-greeting" class="text-xs font-bold text-slate-400 hidden sm:block"></span>
             <button id="nav-staff-btn" onclick="show('admin')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden transition-colors">Staff</button>
             <button id="nav-gal-btn" onclick="show('galleries')" class="text-xs font-bold uppercase text-black hidden transition-colors">Galerías</button>
-            <button id="nav-inbox-btn" onclick="show('inbox')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden transition-colors">Inbox <span id="inbox-badge" class="bg-red-500 text-white rounded-full px-2 py-0.5 ml-1 hidden">!</span></button>
+            <button id="nav-inbox-btn" onclick="show('inbox')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden transition-colors">Inbox</button>
             <button onclick="logout()" class="text-xs font-bold uppercase text-red-500 ml-4 hover:scale-110 transition-transform"><i class="fa-solid fa-power-off text-lg"></i></button>
         </div>
     </nav>
 
     <!-- CONTENEDOR PRINCIPAL -->
-    <main id="main-content" class="max-w-7xl mx-auto p-6 sm:p-10 hidden">
+    <main id="main-content" class="hidden">
         
-        <!-- SECCIÓN STAFF (Solo Admin) -->
-        <section id="section-admin" class="hidden animate-fade-in">
+        <!-- SECCIÓN STAFF (Admin) -->
+        <section id="section-admin" class="max-w-7xl mx-auto p-6 sm:p-10 hidden animate-fade-in">
             <div class="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
-                <div>
-                    <h2 class="text-3xl font-black">Equipo LenteFría</h2>
-                    <p class="text-slate-400 text-sm mt-1">Gestión de fotógrafos y accesos</p>
-                </div>
+                <div><h2 class="text-3xl font-black">Equipo LenteFría</h2><p class="text-slate-400 text-sm mt-1">Gestión de fotógrafos y accesos</p></div>
                 <button onclick="document.getElementById('m-u').classList.remove('hidden')" class="bg-cyan-lf px-8 py-3 rounded-xl font-bold hover:bg-white hover:text-cyan-lf transition-colors w-full sm:w-auto">+ NUEVO FOTÓGRAFO</button>
             </div>
             <div id="staff-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- SECCIÓN GALERÍAS (Admin y Fotógrafo) -->
-        <section id="section-galleries" class="hidden animate-fade-in">
+        <!-- SECCIÓN GALERÍAS (Admin / Fotógrafo) -->
+        <section id="section-galleries" class="max-w-7xl mx-auto p-6 sm:p-10 hidden animate-fade-in">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
-                <div>
-                    <h2 class="text-5xl font-black">Entregas</h2>
-                    <p class="text-slate-400 mt-2 font-bold">Tus bóvedas y portafolios</p>
-                </div>
+                <div><h2 class="text-5xl font-black">Entregas</h2><p class="text-slate-400 mt-2 font-bold">Tus bóvedas y portafolios</p></div>
                 <button id="btn-new-vault" onclick="openGalleryModal()" class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:bg-cyan-lf transition-all shadow-xl w-full sm:w-auto">+ NUEVA BÓVEDA</button>
             </div>
             <div id="galleries-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </section>
 
-        <!-- SECCIÓN INBOX (Solo Fotógrafo) -->
-        <section id="section-inbox" class="hidden animate-fade-in">
+        <!-- STUDIO WORKSPACE (Solo Fotógrafo - Gestionar Galería) -->
+        <section id="section-workspace" class="max-w-7xl mx-auto p-6 sm:p-10 hidden animate-fade-in">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="show('galleries')" class="text-slate-400 hover:text-black font-bold"><i class="fa-solid fa-arrow-left mr-2"></i> VOLVER</button>
+            </div>
+            <div class="bg-slate-50 border p-8 rounded-3xl flex flex-col sm:flex-row justify-between items-center mb-8 gap-6 shadow-sm">
+                <div>
+                    <h2 id="ws-title" class="text-4xl font-black mb-1">Nombre Galería</h2>
+                    <p class="text-slate-500 font-bold text-sm">Workspace • <span id="ws-fav-count" class="text-red-500"><i class="fa-solid fa-heart"></i> 0 Favoritos</span></p>
+                </div>
+                <div class="flex gap-4 w-full sm:w-auto">
+                    <button id="btn-ws-upload" class="flex-1 sm:flex-none bg-black text-white px-8 py-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors"><i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR FOTOS</button>
+                </div>
+            </div>
+            <div id="ws-photos" class="masonry"></div>
+        </section>
+
+        <!-- SECCIÓN INBOX (Fotógrafo) -->
+        <section id="section-inbox" class="max-w-7xl mx-auto p-6 sm:p-10 hidden animate-fade-in">
             <h2 class="text-4xl font-black mb-8">Bandeja de Entrada</h2>
             <div class="bg-slate-50 border rounded-3xl p-6 sm:p-10 min-h-[50vh]">
-                <div id="inbox-list" class="flex flex-col gap-4">
-                    <p class="text-slate-400 font-bold text-center mt-10">Cargando comentarios...</p>
-                </div>
+                <div id="inbox-list" class="flex flex-col gap-4"></div>
             </div>
         </section>
 
-        <!-- SECCIÓN CLIENTE (Solo Cliente) -->
+        <!-- VISTA CINEMÁTICA DEL CLIENTE (Client View) -->
         <section id="section-client-view" class="hidden animate-fade-in">
-            <div class="text-center mb-12">
-                <h2 id="client-title" class="text-5xl font-black mb-4">Tu Galería</h2>
-                <p class="text-slate-400 font-bold">Selecciona una foto para descargarla o dejar un comentario al fotógrafo.</p>
+            <!-- HERO COVER -->
+            <div id="client-hero" class="hero-cover flex items-center justify-center text-center">
+                <div class="hero-overlay"></div>
+                <div class="relative z-10 p-6 flex flex-col items-center">
+                    <h2 id="client-hero-title" class="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-2xl">Cargando...</h2>
+                    <p class="text-white/80 font-bold tracking-widest uppercase mb-10 text-sm md:text-base">Una experiencia LenteFría</p>
+                    <button onclick="document.getElementById('client-gallery-start').scrollIntoView()" class="text-white hover:text-cyan-lf transition-colors text-4xl animate-bounce"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
             </div>
-            <div id="client-photos" class="masonry">
-                <!-- Fotos inyectadas por JS -->
+
+            <!-- CONTENIDO DE LA GALERÍA -->
+            <div id="client-gallery-start" class="max-w-7xl mx-auto p-6 sm:p-10 mt-10">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 border-b pb-8">
+                    <div>
+                        <h3 class="text-3xl font-black">Tu Colección</h3>
+                        <p class="text-slate-400 font-bold">Selecciona tus favoritas (❤️) o deja un comentario.</p>
+                    </div>
+                    <button id="btn-download-zip" onclick="downloadAllZip()" class="bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-cyan-lf transition-all shadow-xl flex items-center gap-3">
+                        <i class="fa-solid fa-download"></i> DESCARGAR COLECCIÓN
+                    </button>
+                </div>
+                <div id="client-photos" class="masonry"></div>
             </div>
         </section>
     </main>
 
-    <!-- MODAL NUEVO STAFF -->
+    <!-- MODALES -->
+    <!-- Modal Nuevo Staff -->
     <div id="m-u" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-6">Nuevo Staff</h3>
-            <input id="sN" placeholder="Nombre completo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf transition-all">
-            <input id="sE" placeholder="Email del fotógrafo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf transition-all">
+            <input id="sN" placeholder="Nombre completo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <input id="sE" placeholder="Email del fotógrafo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <div class="relative mb-8">
-                <input id="sP" placeholder="Contraseña de acceso" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf transition-all">
+                <input id="sP" placeholder="Contraseña de acceso" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
                 <button onclick="togglePass('sP', 'eye-staff')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-staff" class="fa-solid fa-eye"></i></button>
             </div>
-            <button id="btn-create-staff" onclick="apiS()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest">CREAR STAFF</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+            <button id="btn-create-staff" onclick="apiS()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors">CREAR STAFF</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black">CANCELAR</button>
         </div>
     </div>
 
-    <!-- MODAL NUEVA BÓVEDA / PORTAFOLIO -->
+    <!-- Modal Nueva Bóveda -->
     <div id="m-g" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-screen">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-2xl mb-6">Nueva Entrega</h3>
-            
             <div id="staff-select-container" class="hidden mb-4">
                 <label class="text-xs font-bold text-slate-400 ml-2">Asignar a Fotógrafo:</label>
-                <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm focus:ring-2 focus:ring-cyan-lf"></select>
+                <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm"></select>
             </div>
-
             <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
                 <input type="checkbox" id="chk-portfolio" class="w-5 h-5 accent-cyan-lf" onchange="toggleClientFields()">
                 <span class="font-bold text-sm">Es un Portafolio Público</span>
             </label>
-
-            <input id="cN" placeholder="Nombre de la Galería / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
-            <input id="sl" placeholder="Slug (Ruta web. Ej: boda-ana)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
-            
+            <input id="cN" placeholder="Nombre de la Galería / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <input id="sl" placeholder="Slug (Ruta web. Ej: boda-ana)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <div id="client-credentials-box">
-                <h4 class="text-xs font-bold text-slate-400 ml-2 mb-2 uppercase">Credenciales para el Cliente</h4>
-                <input id="cU" placeholder="Usuario (Ej: FamiliaPerez)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
+                <h4 class="text-xs font-bold text-slate-400 ml-2 mb-2 uppercase">Credenciales del Cliente</h4>
+                <input id="cU" placeholder="Usuario (Ej: FamiliaPerez)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
                 <div class="relative mb-8">
-                    <input id="ps" placeholder="Contraseña del cliente" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf">
+                    <input id="ps" placeholder="Contraseña del cliente" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
                     <button onclick="togglePass('ps', 'eye-vault')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-vault" class="fa-solid fa-eye"></i></button>
                 </div>
             </div>
-
-            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold hover:bg-black transition-colors tracking-widest">CREAR BÓVEDA</button>
-            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold hover:bg-black transition-colors">CREAR BÓVEDA</button>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black">CANCELAR</button>
         </div>
     </div>
 
-    <!-- MODAL COMENTAR FOTO (Cliente) -->
-    <div id="m-comment" class="hidden fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-white rounded-3xl w-full max-w-4xl shadow-2xl flex flex-col md:flex-row overflow-hidden">
-            <div class="md:w-1/2 bg-slate-100 flex items-center justify-center p-4">
+    <!-- Modal Comentar (Cliente) -->
+    <div id="m-comment" class="hidden fixed inset-0 bg-black/90 z-[60] flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-white rounded-3xl w-full max-w-4xl shadow-2xl flex flex-col md:flex-row overflow-hidden relative">
+            <button onclick="closeCommentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-black z-10 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="md:w-1/2 bg-slate-100 flex items-center justify-center p-4 protect-img">
                 <img id="comment-img-preview" src="" class="max-h-[50vh] md:max-h-[70vh] object-contain rounded-xl shadow-lg">
             </div>
             <div class="md:w-1/2 p-8 sm:p-12 flex flex-col justify-center">
                 <h3 class="font-black text-3xl mb-2">Detalle de Foto</h3>
-                <p class="text-slate-400 text-sm font-bold mb-8">Escribe un comentario al fotógrafo sobre esta imagen.</p>
-                <textarea id="comment-text" rows="4" placeholder="Ej: Me encanta, ¿puedes retocar la luz del fondo?" class="p-4 bg-slate-50 rounded-xl w-full outline-none focus:bg-white focus:ring-2 focus:ring-cyan-lf resize-none mb-6"></textarea>
-                
+                <p class="text-slate-400 text-sm font-bold mb-8">Escribe un comentario al fotógrafo.</p>
+                <textarea id="comment-text" rows="4" placeholder="Ej: Me encanta, ¿puedes retocar la luz del fondo?" class="p-4 bg-slate-50 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf resize-none mb-6"></textarea>
                 <div class="flex flex-col gap-3">
-                    <button id="btn-send-comment" onclick="sendComment()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest"><i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO</button>
-                    <a id="btn-download-single" href="#" target="_blank" class="w-full bg-slate-200 text-black p-4 rounded-xl font-bold hover:bg-slate-300 transition-colors tracking-widest text-center"><i class="fa-solid fa-download mr-2"></i> DESCARGAR ORIGINAL</a>
-                    <button onclick="closeCommentModal()" class="w-full text-slate-400 font-bold mt-2 hover:text-black">CERRAR</button>
+                    <button id="btn-send-comment" onclick="sendComment()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors"><i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR</button>
                 </div>
             </div>
         </div>
@@ -169,10 +208,16 @@
         let sessionUser = null;
         let sessionRole = null;
         let allStaffCache = [];
+        let currentGallery = null; // Usado en workspace
         let currentPhotoId = null;
+        let favoritesCache = []; // IDs de fotos favoritas
+        let photosCache = []; // Cache de fotos para descargar en zip
+
+        // PROTECCIÓN ANTI CLIC DERECHO
+        document.addEventListener('contextmenu', event => event.preventDefault());
 
         // ==========================================
-        // 🛡️ SISTEMA DE SESIÓN Y PERSISTENCIA
+        // 🛡️ SISTEMA DE SESIÓN
         // ==========================================
         function initApp() {
             const savedSession = localStorage.getItem('lf_session');
@@ -185,49 +230,28 @@
         }
 
         async function login() {
-            const u = document.getElementById('l-user').value;
-            const p = document.getElementById('l-pass').value;
-            const btn = document.getElementById('btn-login');
-            const err = document.getElementById('login-error');
-
+            const u = document.getElementById('l-user').value; const p = document.getElementById('l-pass').value;
+            const btn = document.getElementById('btn-login'); const err = document.getElementById('login-error');
             if(!u || !p) return;
-            
-            btn.innerText = "VERIFICANDO...";
-            err.classList.add('hidden');
-
+            btn.innerText = "VERIFICANDO..."; err.classList.add('hidden');
             try {
                 const res = await gasRequest("login", { email: u, password: p });
                 if(res.success) {
-                    sessionUser = res.user;
-                    sessionRole = res.role;
-                    // Guardar en LocalStorage para resistir F5
+                    sessionUser = res.user; sessionRole = res.role;
                     localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
                     applyRoleUI();
-                } else {
-                    err.innerText = res.message;
-                    err.classList.remove('hidden');
-                }
-            } catch (error) {
-                err.innerText = "Error de conexión con el servidor.";
-                err.classList.remove('hidden');
-            }
+                } else { err.innerText = res.message; err.classList.remove('hidden'); }
+            } catch (error) { err.innerText = "Error de conexión."; err.classList.remove('hidden'); }
             btn.innerText = "INICIAR SESIÓN";
         }
 
         function logout() {
-            localStorage.removeItem('lf_session');
-            sessionUser = null;
-            sessionRole = null;
-            document.getElementById('l-user').value = '';
-            document.getElementById('l-pass').value = '';
+            localStorage.removeItem('lf_session'); sessionUser = null; sessionRole = null;
+            document.getElementById('l-user').value = ''; document.getElementById('l-pass').value = '';
             document.getElementById('login-screen').classList.remove('hidden', 'opacity-0');
             document.getElementById('main-nav').classList.add('hidden');
             document.getElementById('main-content').classList.add('hidden');
-            
-            // Limpiar UI
-            ['section-admin', 'section-galleries', 'section-inbox', 'section-client-view'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
+            ['section-admin', 'section-galleries', 'section-workspace', 'section-inbox', 'section-client-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
         }
 
         function applyRoleUI() {
@@ -237,27 +261,24 @@
             document.getElementById('main-nav').classList.remove('hidden');
             document.getElementById('main-content').classList.remove('hidden');
             
-            const greeting = sessionRole === 'client' ? sessionUser.client_name : sessionUser.full_name;
-            document.getElementById('user-greeting').innerText = `HOLA, ${greeting.toUpperCase()}`;
-
-            // Resetear botones nav
-            document.getElementById('nav-staff-btn').classList.add('hidden');
-            document.getElementById('nav-gal-btn').classList.add('hidden');
-            document.getElementById('nav-inbox-btn').classList.add('hidden');
-            document.getElementById('nav-staff-btn').classList.remove('text-black');
-            document.getElementById('nav-gal-btn').classList.remove('text-black');
-            document.getElementById('nav-inbox-btn').classList.remove('text-black');
-
-            if (sessionRole === 'admin') {
-                document.getElementById('nav-staff-btn').classList.remove('hidden');
-                document.getElementById('nav-gal-btn').classList.remove('hidden');
-                show('admin');
-            } else if (sessionRole === 'photographer') {
-                document.getElementById('nav-gal-btn').classList.remove('hidden');
-                document.getElementById('nav-inbox-btn').classList.remove('hidden');
-                show('galleries');
-            } else if (sessionRole === 'client') {
+            const isClient = sessionRole === 'client';
+            document.getElementById('user-greeting').innerText = `HOLA, ${isClient ? sessionUser.client_name.toUpperCase() : sessionUser.full_name.toUpperCase()}`;
+            
+            // Si es cliente, ocultamos el header por diseño cinemático
+            if(isClient) {
+                document.getElementById('main-nav').classList.add('hidden');
                 show('client-view');
+            } else {
+                ['nav-staff-btn', 'nav-gal-btn', 'nav-inbox-btn'].forEach(id => document.getElementById(id).classList.add('hidden'));
+                if (sessionRole === 'admin') {
+                    document.getElementById('nav-staff-btn').classList.remove('hidden');
+                    document.getElementById('nav-gal-btn').classList.remove('hidden');
+                    show('admin');
+                } else if (sessionRole === 'photographer') {
+                    document.getElementById('nav-gal-btn').classList.remove('hidden');
+                    document.getElementById('nav-inbox-btn').classList.remove('hidden');
+                    show('galleries');
+                }
             }
         }
 
@@ -265,294 +286,320 @@
         // 🔄 NAVEGACIÓN Y PETICIONES HTTP
         // ==========================================
         function show(n) { 
-            ['section-admin', 'section-galleries', 'section-inbox', 'section-client-view'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-
-            // Resaltar menú
-            if(n!=='client-view') {
+            ['section-admin', 'section-galleries', 'section-workspace', 'section-inbox', 'section-client-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            if(n!=='client-view' && n!=='workspace') {
                 ['nav-staff-btn', 'nav-gal-btn', 'nav-inbox-btn'].forEach(id => document.getElementById(id).classList.replace('text-black', 'text-slate-400'));
                 if(n==='admin') document.getElementById('nav-staff-btn').classList.replace('text-slate-400', 'text-black');
                 if(n==='galleries') document.getElementById('nav-gal-btn').classList.replace('text-slate-400', 'text-black');
                 if(n==='inbox') document.getElementById('nav-inbox-btn').classList.replace('text-slate-400', 'text-black');
             }
-
             if(n === 'admin') { document.getElementById('section-admin').classList.remove('hidden'); fetchS(); }
             if(n === 'galleries') { document.getElementById('section-galleries').classList.remove('hidden'); fetchG(); }
             if(n === 'inbox') { document.getElementById('section-inbox').classList.remove('hidden'); fetchInbox(); }
+            if(n === 'workspace') document.getElementById('section-workspace').classList.remove('hidden');
             if(n === 'client-view') { 
                 document.getElementById('section-client-view').classList.remove('hidden'); 
-                document.getElementById('client-title').innerText = sessionUser.client_name;
+                document.getElementById('client-hero-title').innerText = sessionUser.client_name;
                 fetchClientPhotos(); 
             }
         }
 
         async function gasRequest(action, payload = null, extra = null) {
-            let url = `${GAS_URL}?action=${action}`;
-            if (extra) url += `&extra=${extra}`;
-            if (payload === null) {
-                const r = await fetch(url); return await r.json();
-            } else {
-                const r = await fetch(GAS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: action, payload: payload }) });
-                return await r.json();
-            }
+            let url = `${GAS_URL}?action=${action}`; if (extra) url += `&extra=${extra}`;
+            if (payload === null) { const r = await fetch(url); return await r.json(); } 
+            else { const r = await fetch(GAS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: action, payload: payload }) }); return await r.json(); }
         }
 
         // ==========================================
-        // 👥 LÓGICA STAFF & GALERÍAS (Admin/Fotógrafo)
+        // 👥 LÓGICA STAFF & GALERÍAS
         // ==========================================
         async function fetchS() {
             try {
-                const d = await gasRequest("getStaff");
-                allStaffCache = Array.isArray(d) ? d : [];
-                document.getElementById('staff-list').innerHTML = d.map(s => 
-                    `<div class="bg-slate-50 p-6 rounded-3xl border shadow-sm"><h4 class="font-black text-xl">${s.full_name}</h4><p class="text-xs text-slate-400 font-bold mt-1"><i class="fa-solid fa-envelope mr-1"></i> ${s.email}</p></div>`
-                ).join('');
-            } catch(e) { console.error(e); }
+                const d = await gasRequest("getStaff"); allStaffCache = Array.isArray(d) ? d : [];
+                document.getElementById('staff-list').innerHTML = d.map(s => `<div class="bg-slate-50 p-6 rounded-3xl border shadow-sm"><h4 class="font-black text-xl">${s.full_name}</h4><p class="text-xs text-slate-400 font-bold mt-1">${s.email}</p></div>`).join('');
+            } catch(e) {}
         }
 
         async function fetchG() {
             try {
                 const extra = sessionRole === 'admin' ? null : sessionUser.id;
                 const d = await gasRequest("getGalleries", null, extra);
-                
-                if(!Array.isArray(d) || d.length === 0) {
-                    document.getElementById('galleries-grid').innerHTML = `<p class="text-slate-400 font-bold col-span-full">No hay bóvedas creadas aún.</p>`;
-                    return;
-                }
+                if(!Array.isArray(d) || d.length === 0) { document.getElementById('galleries-grid').innerHTML = `<p class="text-slate-400 font-bold">No hay bóvedas creadas.</p>`; return; }
 
                 document.getElementById('galleries-grid').innerHTML = d.map(g => {
-                    const isPort = g.is_portfolio;
-                    const badge = isPort ? `<span class="bg-black text-white text-[10px] px-2 py-1 rounded-full absolute top-4 right-4 tracking-widest font-bold">PORTAFOLIO</span>` : '';
-                    const creds = isPort ? '' : `<p class="text-[10px] text-slate-400 font-bold mt-2"><i class="fa-solid fa-user mr-1"></i> ${g.client_username || 'Sin usuario'}</p>`;
-                    
+                    const badge = g.is_portfolio ? `<span class="bg-black text-white text-[10px] px-2 py-1 rounded-full absolute top-4 right-4 font-bold">PORTAFOLIO</span>` : '';
                     return `
-                    <div class="border p-8 rounded-3xl flex flex-col justify-between shadow-sm hover:shadow-xl transition-all bg-white relative group">
+                    <div class="border p-8 rounded-3xl flex flex-col justify-between shadow-sm bg-white relative">
                         ${badge}
                         <div class="mb-6">
-                            <h3 class="font-black text-2xl pr-20 leading-tight">${g.client_name}</h3>
+                            <h3 class="font-black text-2xl pr-10">${g.client_name}</h3>
                             <p class="text-xs font-bold text-cyan-lf mt-1">/${g.slug}</p>
-                            ${creds}
                         </div>
-                        <button onclick="up(${g.id})" id="b-${g.id}" class="w-full bg-slate-100 text-black p-4 rounded-xl group-hover:bg-cyan-lf group-hover:text-white transition-all text-xs font-bold tracking-widest">
-                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR FOTOS
+                        <button onclick='openWorkspace(${JSON.stringify(g)})' class="w-full bg-black text-white p-4 rounded-xl hover:bg-cyan-lf transition-colors font-bold tracking-widest text-xs">
+                            <i class="fa-solid fa-folder-open mr-2"></i> GESTIONAR
                         </button>
                     </div>`;
                 }).join('');
-            } catch(e) { console.error(e); }
+            } catch(e) {}
         }
 
         async function fetchInbox() {
             try {
                 const d = await gasRequest("getComments", null, sessionUser.id);
                 const list = document.getElementById('inbox-list');
-                
-                if(!Array.isArray(d) || d.length === 0) {
-                    list.innerHTML = `<p class="text-slate-400 font-bold text-center mt-10">Tu bandeja está limpia. No hay comentarios.</p>`;
-                    return;
-                }
+                if(!Array.isArray(d) || d.length === 0) { list.innerHTML = `<p class="text-slate-400 font-bold text-center mt-10">Bandeja limpia.</p>`; return; }
 
                 list.innerHTML = d.map(c => `
-                    <div class="bg-white p-6 rounded-2xl border shadow-sm flex flex-col sm:flex-row gap-6 items-start">
+                    <div class="bg-white p-6 rounded-2xl border flex gap-6 items-start">
                         <img src="https://drive.google.com/thumbnail?id=${c.file_id}&sz=w200" class="w-24 h-24 object-cover rounded-xl bg-slate-100">
                         <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="bg-cyan-lf text-white text-[10px] px-2 py-1 rounded-full font-bold tracking-widest">${c.galleries.client_name}</span>
-                                <span class="text-xs text-slate-400 font-bold">${new Date(c.created_at).toLocaleDateString()}</span>
-                            </div>
-                            <p class="text-lg font-bold text-slate-800">"${c.comment_text}"</p>
+                            <div class="flex gap-2 mb-2"><span class="bg-cyan-lf text-white text-[10px] px-2 py-1 rounded-full font-bold">${c.galleries.client_name}</span></div>
+                            <p class="text-lg font-bold">"${c.comment_text}"</p>
                         </div>
-                        <a href="https://drive.google.com/uc?export=download&id=${c.file_id}" target="_blank" class="text-slate-400 hover:text-black transition-colors" title="Descargar Foto"><i class="fa-solid fa-download text-xl"></i></a>
-                    </div>
-                `).join('');
-            } catch(e) { console.error(e); }
+                    </div>`).join('');
+            } catch(e) {}
         }
 
         // ==========================================
-        // 📸 PORTAL DEL CLIENTE
+        // 🛠️ WORKSPACE (FOTÓGRAFO STUDIO)
+        // ==========================================
+        async function openWorkspace(galleryObj) {
+            currentGallery = galleryObj;
+            document.getElementById('ws-title').innerText = currentGallery.client_name;
+            document.getElementById('ws-photos').innerHTML = `<p class="animate-pulse font-bold text-slate-400">Cargando Studio...</p>`;
+            
+            // Configurar botón de subida
+            const btnUpload = document.getElementById('btn-ws-upload');
+            btnUpload.onclick = () => triggerUpload(currentGallery.id);
+
+            show('workspace');
+
+            try {
+                // Traer fotos y favoritos simultáneamente
+                const [photos, favs] = await Promise.all([
+                    gasRequest("getPhotos", null, currentGallery.drive_folder_id),
+                    gasRequest("getFavorites", null, currentGallery.id)
+                ]);
+                
+                const favSet = new Set(Array.isArray(favs) ? favs.map(f => f.file_id) : []);
+                document.getElementById('ws-fav-count').innerHTML = `<i class="fa-solid fa-heart"></i> ${favSet.size} Favoritos`;
+
+                if(!photos || photos.length === 0) { document.getElementById('ws-photos').innerHTML = `<p class="font-bold text-slate-400">No hay fotos en esta bóveda.</p>`; return; }
+
+                document.getElementById('ws-photos').innerHTML = photos.map(p => {
+                    const isCover = currentGallery.cover_photo_id === p.id;
+                    const coverBadge = isCover ? `<div class="absolute top-2 left-2 bg-yellow-400 text-black text-[10px] font-black px-2 py-1 rounded-full"><i class="fa-solid fa-star mr-1"></i>PORTADA</div>` : '';
+                    const favBadge = favSet.has(p.id) ? `<div class="absolute top-2 right-2 text-red-500 text-xl drop-shadow-md"><i class="fa-solid fa-heart"></i></div>` : '';
+                    
+                    return `
+                    <div id="card-${p.id}" class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100">
+                        ${coverBadge} ${favBadge}
+                        <img src="${p.thumb}" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center gap-3">
+                            <button onclick="setCover('${p.id}')" class="bg-white text-black px-4 py-2 rounded-lg font-bold text-xs hover:bg-yellow-400"><i class="fa-solid fa-image mr-1"></i> FIJAR PORTADA</button>
+                            <button onclick="deletePhoto('${p.id}')" class="bg-red-500 text-white px-4 py-2 rounded-lg font-bold text-xs hover:bg-red-600"><i class="fa-solid fa-trash mr-1"></i> BORRAR</button>
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch(e) { document.getElementById('ws-photos').innerHTML = `<p class="text-red-500">Error cargando fotos.</p>`; }
+        }
+
+        async function setCover(fileId) {
+            if(!confirm("¿Establecer como foto de portada principal?")) return;
+            await gasRequest("setCover", { gallery_id: currentGallery.id, file_id: fileId });
+            currentGallery.cover_photo_id = fileId; // Update local state
+            openWorkspace(currentGallery); // Reload workspace
+        }
+
+        async function deletePhoto(fileId) {
+            if(!confirm("¿Borrar esta foto de Google Drive definitivamente?")) return;
+            document.getElementById(`card-${fileId}`).style.opacity = '0.5';
+            await gasRequest("deletePhoto", { file_id: fileId });
+            document.getElementById(`card-${fileId}`).remove();
+        }
+
+        // ==========================================
+        // 📸 PORTAL DEL CLIENTE (CINEMATIC)
         // ==========================================
         async function fetchClientPhotos() {
             const container = document.getElementById('client-photos');
-            container.innerHTML = `<p class="text-center font-bold text-slate-400 col-span-full mt-10 animate-pulse">Obteniendo fotos en alta calidad...</p>`;
+            container.innerHTML = `<p class="text-center font-bold text-slate-400 col-span-full mt-10 animate-pulse">Revelando fotografías...</p>`;
             
             try {
-                const photos = await gasRequest("getPhotos", null, sessionUser.drive_folder_id);
-                if(!photos || photos.length === 0) {
-                    container.innerHTML = `<p class="text-center font-bold text-slate-400 col-span-full mt-10">Aún no hay fotos en esta galería.</p>`;
-                    return;
+                // Setup Hero Background si hay portada
+                const hero = document.getElementById('client-hero');
+                if (sessionUser.cover_photo_id) {
+                    hero.style.backgroundImage = `url('https://drive.google.com/thumbnail?id=${sessionUser.cover_photo_id}&sz=w2000')`;
+                } else {
+                    hero.style.backgroundColor = '#0f172a';
                 }
 
-                container.innerHTML = photos.map(p => `
-                    <div class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all bg-slate-100 cursor-pointer" onclick="openCommentModal('${p.id}', '${p.thumb}', '${p.download}')">
-                        <img src="${p.thumb}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
-                            <div class="flex justify-between items-center text-white">
-                                <span class="font-bold text-sm tracking-widest">VER / COMENTAR</span>
-                                <i class="fa-solid fa-expand text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            } catch(error) {
-                container.innerHTML = `<p class="text-center font-bold text-red-500 col-span-full mt-10">Error al cargar las fotos.</p>`;
-            }
+                const [photos, favs] = await Promise.all([
+                    gasRequest("getPhotos", null, sessionUser.drive_folder_id),
+                    gasRequest("getFavorites", null, sessionUser.id)
+                ]);
+                
+                photosCache = photos || [];
+                favoritesCache = Array.isArray(favs) ? favs.map(f => f.file_id) : [];
+
+                if(photosCache.length === 0) { container.innerHTML = `<p class="text-center font-bold text-slate-400">Aún no hay fotos.</p>`; return; }
+
+                renderClientGrid();
+
+            } catch(error) { container.innerHTML = `<p class="text-center text-red-500 font-bold">Error de red.</p>`; }
         }
 
-        function openCommentModal(id, thumbUrl, downloadUrl) {
+        function renderClientGrid() {
+            const container = document.getElementById('client-photos');
+            container.innerHTML = photosCache.map(p => {
+                const isFav = favoritesCache.includes(p.id);
+                const heartClass = isFav ? "fa-solid text-red-500" : "fa-regular text-white";
+                
+                return `
+                <div class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 masonry-item-client protect-img">
+                    <img src="${p.thumb}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-4 pointer-events-auto">
+                        <div class="flex justify-end">
+                            <button onclick="toggleFavorite('${p.id}')" class="text-2xl drop-shadow-md hover:scale-110 transition-transform"><i id="fav-${p.id}" class="${heartClass} fa-heart"></i></button>
+                        </div>
+                        <div class="flex justify-center mb-2">
+                            <button onclick="openCommentModal('${p.id}', '${p.thumb}')" class="bg-white/20 backdrop-blur-md text-white border border-white/50 px-6 py-2 rounded-full font-bold text-xs tracking-widest hover:bg-white hover:text-black transition-colors">COMENTAR</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function toggleFavorite(fileId) {
+            const icon = document.getElementById(`fav-${fileId}`);
+            // Optimistic UI Update
+            if (favoritesCache.includes(fileId)) {
+                favoritesCache = favoritesCache.filter(id => id !== fileId);
+                icon.className = "fa-regular text-white fa-heart";
+            } else {
+                favoritesCache.push(fileId);
+                icon.className = "fa-solid text-red-500 fa-heart";
+            }
+            // Background request
+            await gasRequest("toggleFavorite", { gallery_id: sessionUser.id, file_id: fileId });
+        }
+
+        function openCommentModal(id, thumbUrl) {
             currentPhotoId = id;
             document.getElementById('comment-img-preview').src = thumbUrl;
-            document.getElementById('btn-download-single').href = downloadUrl;
             document.getElementById('comment-text').value = '';
             document.getElementById('m-comment').classList.remove('hidden');
         }
-
-        function closeCommentModal() {
-            document.getElementById('m-comment').classList.add('hidden');
-            currentPhotoId = null;
-        }
+        function closeCommentModal() { document.getElementById('m-comment').classList.add('hidden'); currentPhotoId = null; }
 
         async function sendComment() {
             const txt = document.getElementById('comment-text').value;
-            if(!txt.trim()) return alert("Escribe un comentario antes de enviar.");
-            
+            if(!txt.trim()) return alert("Escribe un comentario.");
             const btn = document.getElementById('btn-send-comment');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`; btn.disabled = true;
+            try {
+                await gasRequest("addComment", { gallery_id: sessionUser.id, file_id: currentPhotoId, comment: txt });
+                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ENVIADO`; btn.classList.replace('bg-black', 'bg-green-500');
+                setTimeout(() => { closeCommentModal(); btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR`; btn.classList.replace('bg-green-500', 'bg-black'); btn.disabled = false; }, 1500);
+            } catch(e) { btn.innerHTML = `ENVIAR`; btn.disabled = false; }
+        }
+
+        // --- DESCARGA MASIVA ZIP (El Empaquetador) ---
+        async function downloadAllZip() {
+            if (photosCache.length === 0) return alert("No hay fotos para descargar.");
+            const btn = document.getElementById('btn-download-zip');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PREPARANDO ZIP...`;
             btn.disabled = true;
 
             try {
-                await gasRequest("addComment", { gallery_id: sessionUser.id, file_id: currentPhotoId, comment: txt });
-                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ENVIADO`;
-                btn.classList.replace('bg-black', 'bg-green-500');
-                setTimeout(() => {
-                    closeCommentModal();
-                    btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO`;
-                    btn.classList.replace('bg-green-500', 'bg-black');
-                    btn.disabled = false;
-                }, 1500);
-            } catch(e) {
-                alert("Error al enviar comentario");
-                btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO`;
-                btn.disabled = false;
+                const zip = new JSZip();
+                const folder = zip.folder(sessionUser.client_name.replace(/[^a-z0-9]/gi, '_'));
+                
+                // Descargar cada foto y agregarla al zip (usamos el thumbnail gigante para evadir CORS y dar buena calidad)
+                for (let i = 0; i < photosCache.length; i++) {
+                    const photo = photosCache[i];
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PROCESANDO ${i+1}/${photosCache.length}`;
+                    
+                    // Fetch como blob
+                    const highResUrl = `https://drive.google.com/thumbnail?id=${photo.id}&sz=w3000`; 
+                    const response = await fetch(highResUrl);
+                    const blob = await response.blob();
+                    folder.file(photo.name, blob);
+                }
+
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> EMPAQUETANDO...`;
+                const content = await zip.generateAsync({ type: "blob" });
+                saveAs(content, `LenteFria_${sessionUser.slug}.zip`); // Usa FileSaver.js
+
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> DESCARGA INICIADA`;
+            } catch (error) {
+                console.error(error);
+                alert("Hubo un error al generar el ZIP. Puede deberse a restricciones del navegador.");
             }
+            
+            setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 3000);
         }
 
         // ==========================================
-        // ➕ CREADORES Y SUBIDAS
+        // ➕ CREADORES Y UTILIDADES
         // ==========================================
-        async function apiS() { 
+        function triggerUpload(galleryId) {
+            const input = document.createElement('input'); input.type = 'file'; input.multiple = true; input.accept = "image/*";
+            input.onchange = async e => {
+                const btn = document.getElementById('btn-ws-upload'); const files = e.target.files; if(files.length === 0) return;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> 0/${files.length}`; btn.disabled = true;
+
+                for(let i=0; i<files.length; i++) {
+                    const reader = new FileReader();
+                    const b64 = await new Promise(res => { reader.onload = () => res(reader.result.split(',')[1]); reader.readAsDataURL(files[i]); });
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ${i+1}/${files.length}`;
+                    await gasRequest("uploadPhoto", { gallery_id: galleryId, filename: files[i].name, mimeType: files[i].type, base64Data: b64 });
+                }
+                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ¡LISTO!`;
+                setTimeout(() => { btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR FOTOS`; btn.disabled = false; openWorkspace(currentGallery); }, 2000);
+            }; input.click();
+        }
+
+        async function apiS() { /* Crear Staff */ 
             const n = document.getElementById('sN').value; const e = document.getElementById('sE').value; const p = document.getElementById('sP').value;
             if(!n || !e || !p) return alert("Llena todos los campos");
-
-            const btn = document.getElementById('btn-create-staff');
-            btn.innerText = "CREANDO..."; btn.disabled = true;
-
-            const res = await gasRequest("createStaff", { full_name: n, email: e, password: p });
-            if (res.error) { alert("Error: " + res.error); btn.innerText = "CREAR STAFF"; btn.disabled = false; return; }
-
-            document.getElementById('m-u').classList.add('hidden'); 
-            ['sN','sE','sP'].forEach(id => document.getElementById(id).value = '');
-            btn.innerText = "CREAR STAFF"; btn.disabled = false;
-            fetchS(); 
+            const btn = document.getElementById('btn-create-staff'); btn.innerText = "CREANDO..."; btn.disabled = true;
+            await gasRequest("createStaff", { full_name: n, email: e, password: p });
+            document.getElementById('m-u').classList.add('hidden'); fetchS(); btn.innerText = "CREAR"; btn.disabled = false;
         }
 
-        async function openGalleryModal() {
+        async function apiG() { /* Crear Bóveda */
+            let s_id = sessionRole === 'admin' ? document.getElementById('sel-staff').value : sessionUser.id;
+            const cN = document.getElementById('cN').value; const sl = document.getElementById('sl').value; 
+            const cU = document.getElementById('cU').value; const ps = document.getElementById('ps').value;
+            const isPort = document.getElementById('chk-portfolio').checked;
+            if(!s_id || !cN || !sl || !cU || !ps) return alert("Llena todos los campos");
+            const btn = document.getElementById('btn-create-vault'); btn.innerText = "CREANDO..."; btn.disabled = true;
+            await gasRequest("createGallery", { photographer_id: s_id, client_name: cN, client_username: cU, slug: sl, password: ps, is_portfolio: isPort, can_download: true });
+            document.getElementById('m-g').classList.add('hidden'); fetchG(); btn.innerText = "CREAR"; btn.disabled = false;
+        }
+
+        function openGalleryModal() {
             if (sessionRole === 'admin') {
                 document.getElementById('staff-select-container').classList.remove('hidden');
-                if (allStaffCache.length === 0) {
-                    const d = await gasRequest("getStaff");
-                    allStaffCache = Array.isArray(d) ? d : [];
-                }
                 document.getElementById('sel-staff').innerHTML = '<option value="">Selecciona Fotógrafo...</option>' + allStaffCache.map(s => `<option value="${s.id}">${s.full_name}</option>`).join('');
             }
             document.getElementById('m-g').classList.remove('hidden');
         }
 
         function toggleClientFields() {
-            const isPort = document.getElementById('chk-portfolio').checked;
-            const box = document.getElementById('client-credentials-box');
-            if(isPort) {
-                box.classList.add('opacity-50', 'pointer-events-none');
-                document.getElementById('cU').value = 'Publico';
-                document.getElementById('ps').value = '0000';
-            } else {
-                box.classList.remove('opacity-50', 'pointer-events-none');
-                document.getElementById('cU').value = '';
-                document.getElementById('ps').value = '';
-            }
+            const isPort = document.getElementById('chk-portfolio').checked; const box = document.getElementById('client-credentials-box');
+            if(isPort) { box.classList.add('opacity-50', 'pointer-events-none'); document.getElementById('cU').value = 'Publico'; document.getElementById('ps').value = '0000'; } 
+            else { box.classList.remove('opacity-50', 'pointer-events-none'); document.getElementById('cU').value = ''; document.getElementById('ps').value = ''; }
         }
 
-        async function apiG() { 
-            let s_id = sessionRole === 'admin' ? document.getElementById('sel-staff').value : sessionUser.id;
-            if (!s_id) return alert("Por favor, selecciona un fotógrafo.");
-
-            const cN = document.getElementById('cN').value; const sl = document.getElementById('sl').value; 
-            const cU = document.getElementById('cU').value; const ps = document.getElementById('ps').value;
-            const isPort = document.getElementById('chk-portfolio').checked;
-
-            if(!cN || !sl || !cU || !ps) return alert("Llena todos los campos");
-            
-            const btn = document.getElementById('btn-create-vault');
-            btn.innerText = "CREANDO..."; btn.disabled = true;
-
-            const res = await gasRequest("createGallery", { photographer_id: s_id, client_name: cN, client_username: cU, slug: sl, password: ps, is_portfolio: isPort, can_download: true });
-            if (res.error) { alert("Error: " + res.error); btn.innerText = "CREAR BÓVEDA"; btn.disabled = false; return; }
-
-            document.getElementById('m-g').classList.add('hidden'); 
-            ['cN','sl','cU','ps'].forEach(id => document.getElementById(id).value = '');
-            document.getElementById('chk-portfolio').checked = false;
-            toggleClientFields();
-            
-            btn.innerText = "CREAR BÓVEDA"; btn.disabled = false;
-            fetchG(); 
-        }
-
-        function up(galleryId) {
-            const input = document.createElement('input'); 
-            input.type = 'file'; input.multiple = true; input.accept = "image/*";
-            input.onchange = async e => {
-                const btn = document.getElementById(`b-${galleryId}`); 
-                const files = e.target.files;
-                if(files.length === 0) return;
-
-                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> 0/${files.length}`;
-                btn.disabled = true; btn.classList.replace('bg-slate-100', 'bg-black'); btn.classList.replace('text-black', 'text-white');
-
-                for(let i=0; i<files.length; i++) {
-                    const file = files[i];
-                    const reader = new FileReader();
-                    const base64Promise = new Promise(res => reader.onload = () => res(reader.result.split(',')[1]));
-                    reader.readAsDataURL(file);
-                    const base64Data = await base64Promise;
-
-                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ${i+1}/${files.length}`;
-                    try { await gasRequest("uploadPhoto", { gallery_id: galleryId, filename: file.name, mimeType: file.type, base64Data: base64Data }); } 
-                    catch (error) { console.error("Error", error); }
-                }
-
-                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ¡LISTO!`; btn.classList.replace('bg-black', 'bg-green-500');
-                setTimeout(() => { 
-                    btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR FOTOS`; 
-                    btn.classList.replace('bg-green-500', 'bg-slate-100'); btn.classList.replace('text-white', 'text-black');
-                    btn.disabled = false; 
-                }, 3000);
-            }; 
-            input.click();
-        }
-
-        // ==========================================
-        // 👁️ UTILIDADES UI
-        // ==========================================
         function togglePass(inputId, iconId) {
-            const inp = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
-            if(inp.type === "password") {
-                inp.type = "text";
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                inp.type = "password";
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
+            const inp = document.getElementById(inputId); const icon = document.getElementById(iconId);
+            if(inp.type === "password") { inp.type = "text"; icon.classList.replace('fa-eye', 'fa-eye-slash'); } 
+            else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
         }
     </script>
+    <div class="hidden text-white fa-solid fa-heart fa-regular fa-eye fa-eye-slash"></div> <!-- Precarga fontawesome -->
 </body>
 </html>
