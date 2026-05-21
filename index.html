@@ -46,7 +46,8 @@
         <section id="section-galleries">
             <div class="flex justify-between items-end mb-10">
                 <h2 class="text-5xl font-black">Entregas</h2>
-                <button id="btn-new-vault" onclick="openGalleryModal()" class="bg-black text-white px-8 py-4 rounded-3xl font-bold hover:bg-cyan-lf transition-all hidden">NUEVA BÓVEDA</button>
+                <!-- El botón ahora es visible para todos -->
+                <button id="btn-new-vault" onclick="openGalleryModal()" class="bg-black text-white px-8 py-4 rounded-3xl font-bold hover:bg-cyan-lf transition-all">NUEVA BÓVEDA</button>
             </div>
             <div id="galleries-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
         </section>
@@ -66,9 +67,12 @@
     <div id="m-g" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
         <div class="bg-white p-10 rounded-3xl w-96 shadow-2xl">
             <h3 class="font-bold text-xl mb-4">Nueva Bóveda</h3>
-            <select id="sel-staff" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm">
-                <option value="">Selecciona Fotógrafo...</option>
-            </select>
+            <!-- Contenedor del selector, se oculta si es Fotógrafo -->
+            <div id="staff-select-container" class="hidden mb-4">
+                <select id="sel-staff" class="p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm">
+                    <option value="">Selecciona Fotógrafo...</option>
+                </select>
+            </div>
             <input id="cN" placeholder="Nombre del Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <input id="sl" placeholder="Slug (Ej: boda-carlos)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <input id="ps" placeholder="Contraseña de acceso cliente" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none">
@@ -78,6 +82,7 @@
     </div>
 
     <script>
+        // PEGA TU URL DE APPS SCRIPT AQUÍ:
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzAEygb5pHlQ08emz8KqvEnYFl9uMv_4WhzYTEk8tqxdxfIxc8IYKq9c5iFv7EicfO4/exec";
 
         let sessionUser = null;
@@ -126,11 +131,9 @@
 
                     if(sessionRole === 'admin') {
                         document.getElementById('nav-staff-btn').classList.remove('hidden');
-                        document.getElementById('btn-new-vault').classList.remove('hidden');
                         show('admin');
                     } else {
                         document.getElementById('nav-staff-btn').classList.add('hidden');
-                        document.getElementById('btn-new-vault').classList.add('hidden');
                         show('galleries');
                     }
                 } else {
@@ -227,17 +230,41 @@
         }
 
         async function openGalleryModal() {
-            const sel = document.getElementById('sel-staff');
-            sel.innerHTML = '<option value="">Selecciona Fotógrafo...</option>' + allStaffCache.map(s => `<option value="${s.id}">${s.full_name}</option>`).join('');
+            // Logica Inteligente para el Modal de Galería
+            if (sessionRole === 'admin') {
+                // Si es admin, mostramos la lista para que asigne
+                document.getElementById('staff-select-container').classList.remove('hidden');
+                
+                // Si la cache está vacía (por ej. si no ha entrado a la pestaña staff), la descargamos
+                if (allStaffCache.length === 0) {
+                    const d = await gasRequest("getStaff");
+                    allStaffCache = Array.isArray(d) ? d : [];
+                }
+                const sel = document.getElementById('sel-staff');
+                sel.innerHTML = '<option value="">Selecciona Fotógrafo...</option>' + allStaffCache.map(s => `<option value="${s.id}">${s.full_name}</option>`).join('');
+            } else {
+                // Si es fotógrafo, ocultamos la lista (se le asignará automáticamente a él)
+                document.getElementById('staff-select-container').classList.add('hidden');
+            }
+            
             document.getElementById('m-g').classList.remove('hidden');
         }
 
         async function apiG() { 
-            const s_id = document.getElementById('sel-staff').value;
+            // Definir de quién es la galería
+            let s_id;
+            if (sessionRole === 'admin') {
+                s_id = document.getElementById('sel-staff').value;
+                if (!s_id) return alert("Por favor, selecciona un fotógrafo de la lista.");
+            } else {
+                // Fotógrafo: Asignación automática con su propio ID
+                s_id = sessionUser.id;
+            }
+
             const c = document.getElementById('cN').value; 
             const sl = document.getElementById('sl').value; 
             const p = document.getElementById('ps').value;
-            if(!s_id || !c || !sl || !p) return alert("Llena todos los campos");
+            if(!c || !sl || !p) return alert("Llena todos los campos");
             
             const btn = document.getElementById('btn-create-vault');
             btn.innerText = "CREANDO...";
