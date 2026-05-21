@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
     
-    <!-- GOOGLE ANALYTICS 4 (TELEMETRÍA) -->
+    <!-- GOOGLE ANALYTICS 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7CD1BCMB0"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -128,7 +128,7 @@
 
             <div class="border-2 border-red-200 bg-red-50 p-8 rounded-3xl mt-20 fade-in">
                 <h3 class="text-red-600 font-black text-2xl mb-2"><i class="fa-solid fa-triangle-exclamation mr-2 animate-pulse"></i> ZONA DE PELIGRO</h3>
-                <p class="text-red-400 font-bold text-sm mb-6">Esta acción borrará absolutamente TODAS las fotos, bóvedas, comentarios y fotógrafos del sistema.</p>
+                <p class="text-red-400 font-bold text-sm mb-6">Esta acción borrará absolutamente TODAS las fotos, sesiones y comentarios. Tu cuenta de Admin NO será afectada.</p>
                 <button onclick="document.getElementById('m-reset').classList.remove('hidden')" class="bg-red-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-red-700 transition-colors shadow-lg">REINICIAR SISTEMA A CERO</button>
             </div>
         </section>
@@ -136,8 +136,8 @@
         <!-- SECCIÓN GALERÍAS -->
         <section id="section-galleries" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
-                <div><h2 class="text-5xl font-black tracking-tight">Entregas</h2><p class="text-slate-400 mt-2 font-bold">Tus bóvedas y portafolios</p></div>
-                <button id="btn-new-vault" onclick="openGalleryModal()" class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:bg-cyan-lf transition-all shadow-xl w-full sm:w-auto"><i class="fa-solid fa-plus mr-2"></i> NUEVA BÓVEDA</button>
+                <div><h2 class="text-5xl font-black tracking-tight">Entregas</h2><p class="text-slate-400 mt-2 font-bold">Tus sesiones y portafolios</p></div>
+                <button id="btn-new-vault" onclick="openGalleryModal()" class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:bg-cyan-lf transition-all shadow-xl w-full sm:w-auto"><i class="fa-solid fa-plus mr-2"></i> NUEVA SESIÓN / PORTAFOLIO</button>
             </div>
             <div id="galleries-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </section>
@@ -173,7 +173,6 @@
                 <div class="hero-overlay"></div>
                 <div class="relative z-10 p-6 flex flex-col items-center fade-in max-w-4xl">
                     <h2 id="client-hero-title" class="text-5xl md:text-7xl font-black text-white mb-4 drop-shadow-2xl leading-tight">Cargando...</h2>
-                    <!-- DESCRIPCIÓN ELEGANTE DE LA GALERÍA -->
                     <p id="client-hero-desc" class="text-white/80 font-light italic tracking-wide text-lg md:text-xl mb-10 drop-shadow-md text-center max-w-2xl px-6 leading-relaxed"></p>
                     <p id="client-hero-subtitle" class="text-white/50 font-bold tracking-widest uppercase mb-10 text-xs">Una experiencia LenteFría</p>
                     <button onclick="document.getElementById('client-gallery-start').scrollIntoView()" class="text-white hover:text-cyan-lf transition-colors text-4xl animate-bounce bg-black/30 backdrop-blur-sm w-16 h-16 rounded-full flex items-center justify-center"><i class="fa-solid fa-chevron-down"></i></button>
@@ -227,7 +226,7 @@
         </div>
     </div>
 
-    <!-- MODAL EDITAR BÓVEDA (NUEVO) -->
+    <!-- MODAL EDITAR GALERÍA -->
     <div id="m-edit-g" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-2">Editar Entrega</h3>
@@ -259,12 +258,12 @@
     <!-- Modal Nueva Bóveda -->
     <div id="m-g" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
-            <h3 class="font-black text-2xl mb-6">Nueva Entrega</h3>
+            <h3 class="font-black text-2xl mb-6">Nueva Sesión / Portafolio</h3>
             <div id="staff-select-container" class="hidden mb-4">
                 <label class="text-xs font-bold text-slate-400 ml-2">Asignar a Fotógrafo:</label>
                 <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm focus:ring-2 focus:ring-cyan-lf"></select>
             </div>
-            <input id="cN" placeholder="Nombre de la Galería / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+            <input id="cN" placeholder="Nombre de la Sesión / Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
             <textarea id="gDesc" rows="2" placeholder="Dedicatoria o descripción de la sesión (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf resize-none"></textarea>
             <input id="sl" placeholder="Slug (Ruta web. Ej: boda-ana)" onkeyup="toggleClientFields()" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
             <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
@@ -279,7 +278,7 @@
                     <button onclick="togglePass('ps', 'eye-vault')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-vault" class="fa-solid fa-eye"></i></button>
                 </div>
             </div>
-            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold hover:bg-black transition-colors tracking-widest shadow-lg">CREAR BÓVEDA</button>
+            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold hover:bg-black transition-colors tracking-widest shadow-lg">CREAR</button>
             <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
         </div>
     </div>
@@ -316,7 +315,7 @@
         function getInboxSkeleton() { return Array(2).fill(`<div class="bg-white p-6 rounded-2xl border flex gap-6 items-start animate-pulse"><div class="w-24 h-24 bg-slate-200 rounded-xl"></div><div class="flex-1"><div class="h-4 bg-slate-200 rounded w-1/4 mb-4"></div><div class="h-4 bg-slate-200 rounded w-3/4"></div></div></div>`).join(''); }
 
         // ==========================================
-        // 🛡️ SISTEMA DE SESIÓN (LOGIN SILENCIOSO)
+        // 🛡️ SISTEMA DE SESIÓN
         // ==========================================
         function initApp() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -533,7 +532,11 @@
                     return `
                     <div class="border p-8 rounded-3xl flex flex-col justify-between shadow-sm bg-white relative hover:shadow-2xl transition-all duration-300 fade-in translate-y-2">
                         ${badge}
-                        <button onclick='openEditModal(${JSON.stringify(g)})' class="absolute top-4 left-4 text-slate-400 hover:text-black transition-colors" title="Editar Nombre/Descripción"><i class="fa-solid fa-pen text-sm"></i></button>
+                        <!-- NUEVOS BOTONES: EDITAR Y BORRAR -->
+                        <div class="absolute top-4 left-4 flex gap-3 z-10">
+                            <button onclick='openEditModal(${JSON.stringify(g)})' class="text-slate-400 hover:text-black transition-colors" title="Editar Nombre/Descripción"><i class="fa-solid fa-pen text-sm"></i></button>
+                            <button onclick="deleteGallery(${g.id})" class="text-red-300 hover:text-red-600 transition-colors" title="Eliminar de Drive y BD"><i class="fa-solid fa-trash text-sm"></i></button>
+                        </div>
                         <div class="mb-6 mt-4">
                             <h3 class="font-black text-2xl pr-10 leading-tight">${g.client_name}</h3>
                             <p class="text-xs font-bold text-cyan-lf mt-1 tracking-widest uppercase">/${g.slug}</p>
@@ -770,10 +773,9 @@
             
             document.getElementById('m-g').classList.add('hidden'); 
             ['cN','sl','cU','ps','gDesc'].forEach(id => document.getElementById(id).value = '');
-            fetchG(); btn.innerHTML = "CREAR BÓVEDA"; btn.disabled = false;
+            fetchG(); btn.innerHTML = "CREAR"; btn.disabled = false;
         }
 
-        // --- GESTIÓN DE EDICIÓN DE GALERÍA (NUEVO) ---
         function openEditModal(galleryObj) {
             activeEditGalleryId = galleryObj.id;
             document.getElementById('edit-cN').value = galleryObj.client_name;
@@ -802,12 +804,32 @@
                 } else {
                     showToast("Bóveda Actualizada");
                     document.getElementById('m-edit-g').classList.add('hidden');
+                    fetchG(); 
+                }
+            } catch(e) { alert("Error de red al actualizar"); }
+            btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
+        }
+
+        // --- ELIMINAR GALERÍA (NUEVO) ---
+        async function deleteGallery(galleryId) {
+            if(!confirm("¿Estás absolutamente seguro de eliminar esta sesión/portafolio?\n\nEsta acción borrará la carpeta física de Google Drive y todos los registros en Supabase.")) return;
+            
+            showToast("Borrando archivos de Drive y registros...");
+            try {
+                const res = await gasRequest("deleteGallery", { 
+                    gallery_id: galleryId, 
+                    actor: sessionUser.email 
+                });
+                
+                if (res.error) {
+                    alert("Error: " + res.error);
+                } else {
+                    showToast("Galería Eliminada de forma permanente");
                     fetchG(); // Refrescar tarjetas
                 }
             } catch(e) {
-                alert("Error de red al actualizar");
+                alert("Error de red al intentar eliminar");
             }
-            btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
         }
 
         function openGalleryModal() {
