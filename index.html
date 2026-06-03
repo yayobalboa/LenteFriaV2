@@ -37,7 +37,9 @@
         
         .hero-cover { height: 100vh; width: 100%; object-fit: cover; background-color: #0f172a; background-position: center; background-size: cover; position: relative; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%); }
-        .protect-img { -webkit-user-select: none; user-select: none; pointer-events: none; }
+        
+        /* CORRECCIÓN: Permitir clics pero bloquear selección o arrastre para proteger imagen */
+        .protect-img { -webkit-user-select: none; user-select: none; pointer-events: auto; }
         
         /* MARCA DE AGUA VECTORIAL */
         .watermark-overlay {
@@ -58,7 +60,7 @@
         .eq-bar { display: inline-block; width: 3px; background-color: #00B7F1; animation: bounce-eq 0.8s ease-in-out infinite alternate; }
         @keyframes bounce-eq { 0% { height: 3px; } 100% { height: 16px; } }
 
-        /* DISEÑO DE CARRUSEL MÓVIL (NUEVO) */
+        /* DISEÑO DE CARRUSEL MÓVIL */
         .carousel-container { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
         @media (min-width: 768px) { .carousel-container { flex-direction: row; } }
         
@@ -253,7 +255,7 @@
             </div>
         </section>
 
-        <!-- PORTAL DEL CLIENTE (VISTA CINEMÁTICA Y GRID NO-HOVER) -->
+        <!-- PORTAL DEL CLIENTE (NUEVO DISEÑO CON SELECCIÓN) -->
         <section id="section-client-view" class="hidden fade-in">
             <div id="client-hero" class="hero-cover flex items-center justify-center text-center">
                 <div class="hero-overlay"></div>
@@ -269,19 +271,20 @@
                 <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 border-b pb-8">
                     <div>
                         <h3 class="text-3xl font-black tracking-tight">Colección</h3>
-                        <p id="client-instruction" class="text-slate-400 font-bold">Haz clic en una foto para verla en pantalla completa.</p>
+                        <p id="client-instruction" class="text-slate-400 font-bold">Selecciona tus favoritas o elige cuáles descargar.</p>
                     </div>
                     
-                    <div class="flex items-center gap-4">
+                    <div class="flex flex-wrap items-center gap-4">
                         <button id="btn-lock-selection" onclick="lockFavorites()" class="hidden bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl flex items-center gap-3">
                             <i class="fa-solid fa-lock"></i> ENVIAR SELECCIÓN FINAL
                         </button>
                         <span id="badge-selection-locked" class="hidden bg-green-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-3 shadow-md">
-                            <i class="fa-solid fa-circle-check"></i> SELECCIÓN FINALIZADA (CONGELADA)
+                            <i class="fa-solid fa-circle-check"></i> SELECCIÓN ENVIADA
                         </span>
                         
-                        <button id="btn-download-zip" onclick="downloadAllZip()" class="bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-cyan-lf transition-all shadow-xl flex items-center gap-3">
-                            <i class="fa-solid fa-download"></i> DESCARGAR COLECCIÓN
+                        <!-- BOTÓN DE DESCARGA DINÁMICO -->
+                        <button id="btn-download-zip" onclick="downloadAllZip()" class="bg-black text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-all shadow-xl flex items-center gap-3">
+                            <i class="fa-solid fa-download"></i> DESCARGAR TODAS
                         </button>
                     </div>
                 </div>
@@ -329,29 +332,28 @@
         <span id="eq-lbl" class="text-[10px] font-black uppercase tracking-widest text-slate-300">SOUNDTRACK ON</span>
     </button>
 
-    <!-- CARRUSEL CINEMÁTICO (LIGHTBOX MOBILE FIRST) -->
+    <!-- CARRUSEL CINEMÁTICO (ARREGLADO PARA MOSTRAR IMAGEN Y COMENTARIOS) -->
     <div id="m-carousel" class="hidden fixed inset-0 bg-black/95 z-[500] carousel-container backdrop-blur-xl transition-opacity fade-in">
-        <!-- BOTÓN CERRAR GIGANTE -->
         <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white/50 hover:text-white z-[530] text-4xl transition-colors md:fixed md:top-6 md:right-6">
             <i class="fa-solid fa-xmark drop-shadow-md"></i>
         </button>
 
         <div id="carousel-img-container" class="flex-1 flex items-center justify-center relative protect-img p-2 sm:p-10 w-full md:w-2/3 h-[70vh] md:h-full">
             <button id="btn-prev" onclick="prevPhoto()" class="carousel-btn absolute left-2 sm:left-10 text-white/50 hover:text-white text-4xl bg-black/20 w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-left"></i></button>
-            <img id="carousel-img" src="" class="max-w-full max-h-full object-contain drop-shadow-2xl">
+            
+            <img id="carousel-img" src="" class="max-w-full max-h-full object-contain drop-shadow-2xl pointer-events-auto" oncontextmenu="return false;" draggable="false">
             <div id="carousel-watermark" class="watermark-overlay rounded-2xl hidden opacity-50"></div>
+            
             <button id="btn-next" onclick="nextPhoto()" class="carousel-btn absolute right-2 sm:right-10 text-white/50 hover:text-white text-4xl bg-black/20 w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-right"></i></button>
             
-            <!-- BOTÓN ABRIR COMENTARIOS EN MÓVIL -->
             <button id="btn-mobile-comment" onclick="toggleMobileSidebar()" class="md:hidden absolute bottom-6 bg-black/50 backdrop-blur-md text-white px-6 py-3 rounded-full font-bold text-xs tracking-widest border border-white/20 z-[501] shadow-xl">
-                <i class="fa-solid fa-comment-dots mr-2"></i> COMENTAR
+                <i class="fa-solid fa-comment-dots mr-2"></i> COMENTAR AL FOTÓGRAFO
             </button>
         </div>
         
         <div id="carousel-sidebar" class="carousel-sidebar shadow-2xl flex flex-col">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex justify-between items-center mb-6 mt-4 md:mt-0">
                 <h3 class="font-black text-3xl">Detalle</h3>
-                <!-- SISTEMA DE RATING POR ESTRELLAS -->
                 <div id="carousel-rating-box" class="flex gap-1 text-slate-300 text-xl cursor-pointer">
                     <i onclick="ratePhoto(1)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
                     <i onclick="ratePhoto(2)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
@@ -361,8 +363,8 @@
                 </div>
             </div>
             
-            <p class="text-slate-400 text-sm font-bold mb-8">Escribe un comentario al fotógrafo sobre esta imagen específica.</p>
-            <textarea id="comment-text" rows="5" placeholder="Ej: Me encanta, ¿puedes retocar la luz del fondo?" class="p-4 bg-slate-50 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf resize-none mb-6 transition-all"></textarea>
+            <p class="text-slate-400 text-sm font-bold mb-8">Envíale un mensaje o corrección al fotógrafo sobre esta imagen exacta.</p>
+            <textarea id="comment-text" rows="5" placeholder="Ej: Me encanta, ¿puedes retocar la luz del fondo?" class="p-4 bg-slate-50 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf resize-none mb-6 transition-all border"></textarea>
             
             <div class="mt-auto flex flex-col gap-3">
                 <button id="btn-send-comment" onclick="sendComment()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest shadow-lg">
@@ -493,7 +495,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT DE LOGICA CORE (EXPANDIDO Y LEGIBLE) -->
+    <!-- SCRIPT DE LOGICA CORE (COMPLETO) -->
     <script>
         // ==========================================
         // ⚙️ CONFIGURACIÓN CORE
@@ -512,12 +514,15 @@
         let activeEditGalleryId = null;
         let activeClientTabId = null;
         
+        // NUEVAS VARIABLES PARA CLIENTE
+        let downloadSelectionCache = [];
+        let filterFavoritesActive = false;
+        let currentDisplayPhotos = [];
+        
         window.systemSettings = { max_resolution: 3000, jpeg_quality: 82 };
 
-        // PROTECCIÓN ANTI CLIC DERECHO
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // TELEMETRÍA DE ERRORES GLOBAL
         window.onerror = function(message, source, lineno, colno, error) {
             const errorDetails = { message: message, source: source, line: lineno, column: colno, stack: error ? error.stack : "" };
             silentErrorLog(errorDetails); 
@@ -562,14 +567,12 @@
             const magicP = urlParams.get('p'); 
             const magicKey = urlParams.get('key');
 
-            // Interceptamos botón Back de Android para cerrar Lightbox sin salir de la web
             window.addEventListener('popstate', (e) => {
                 if(!document.getElementById('m-carousel').classList.contains('hidden')) {
                     closeCarousel();
                 }
             });
 
-            // Leer configuración global desde BD
             try {
                 const settings = await gasRequest("getSettings");
                 if (settings && settings.length > 0) {
@@ -580,7 +583,6 @@
                 }
             } catch(e) { console.error("Usando config local"); }
 
-            // Si hay enlace mágico, forzamos logout previo por seguridad
             if (magicKey || (magicU && magicP)) {
                 localStorage.removeItem('lf_session');
                 sessionStorage.removeItem('lf_session');
@@ -844,21 +846,6 @@
             btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
         }
 
-        async function changePassword() {
-            const newP = document.getElementById('p-new-pass').value;
-            if(!newP) return alert("Ingresa la nueva contraseña");
-            const btn = document.getElementById('btn-change-pass');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true;
-            try {
-                await gasRequest("changePassword", { user_id: sessionUser.id, role: sessionRole, new_password: newP });
-                showToast("Contraseña Actualizada"); document.getElementById('m-profile').classList.add('hidden');
-                document.getElementById('p-new-pass').value = '';
-                sessionUser.password = newP; sessionUser.password_hash = newP;
-                localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
-            } catch(e) { alert("Error"); }
-            btn.innerHTML = `GUARDAR CAMBIOS`; btn.disabled = false;
-        }
-
         async function executeHardReset() {
             const p = document.getElementById('reset-pass').value;
             if(!p) return alert("Ingresa la contraseña maestra");
@@ -1057,6 +1044,16 @@
             document.getElementById(`card-${fileId}`).remove(); showToast("Foto Eliminada"); updateStorageProgressBar(); 
         }
 
+        async function deleteGallery(galleryId) {
+            if(!confirm("PELIGRO: ¿Eliminar esta bóveda completa?\n\nSe borrará la carpeta de Google Drive y todo el historial de la base de datos.")) return;
+            showToast("Eliminando bóveda...");
+            try {
+                await gasRequest("deleteGallery", { gallery_id: galleryId, actor: sessionUser.email });
+                showToast("Bóveda eliminada con éxito");
+                fetchG();
+            } catch(e) { alert("Error eliminando bóveda"); }
+        }
+
         async function triggerReplace(oldFid) {
             const input = document.createElement('input'); input.type = 'file'; input.accept = "image/*";
             input.onchange = async e => {
@@ -1076,22 +1073,24 @@
         }
 
         // ==========================================
-        // 📸 PORTAL DEL CLIENTE
+        // 📸 PORTAL DEL CLIENTE MEJORADO
         // ==========================================
         async function fetchClientPhotos() {
             document.getElementById('client-photos').innerHTML = getPhotoSkeleton();
             const isPort = sessionUser.is_portfolio;
+            
+            downloadSelectionCache = [];
+            filterFavoritesActive = false;
 
             if(isPort) {
                 document.getElementById('client-hero-subtitle').innerText = "Portafolio Oficial";
                 document.getElementById('client-instruction').innerText = "Haz clic en una foto para verla en pantalla completa.";
                 document.getElementById('btn-download-zip').classList.add('hidden'); 
             } else { 
-                document.getElementById('client-instruction').innerText = "Selecciona tus favoritas (❤️) o deja un comentario.";
+                document.getElementById('client-instruction').innerText = "Selecciona tus favoritas (❤️) o elige cuáles descargar.";
                 document.getElementById('btn-download-zip').classList.remove('hidden');
             }
 
-            // Inicializar reproductor de música personalizado
             const audio = document.getElementById('audio-soundtrack');
             const ytID = getYouTubeId(sessionUser.soundtrack_url || "");
 
@@ -1129,14 +1128,19 @@
                 }
 
                 const tabsContainer = document.getElementById('client-tabs');
-                if (photosCache.length <= 1) {
-                    tabsContainer.classList.add('hidden'); activeClientTabId = photosCache[0].id;
-                } else {
-                    tabsContainer.classList.remove('hidden'); activeClientTabId = photosCache[0].id;
-                    tabsContainer.innerHTML = photosCache.map((set, idx) => {
+                if (photosCache.length > 0) {
+                    tabsContainer.classList.remove('hidden'); 
+                    activeClientTabId = photosCache[0].id;
+                    
+                    let tabsHtml = photosCache.map((set, idx) => {
                         const activeClass = idx === 0 ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:text-black';
-                        return `<button onclick="filterClientTab('${set.id}', this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase ${activeClass}">${set.name}</button>`;
+                        return `<button onclick="filterClientTab('${set.id}', this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn ${activeClass}">${set.name}</button>`;
                     }).join('');
+                    
+                    if(!isPort) {
+                        tabsHtml += `<button onclick="toggleFavoritesFilter(this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-200 ml-auto flex items-center gap-2"><i class="fa-solid fa-heart"></i> MIS FAVORITAS</button>`;
+                    }
+                    tabsContainer.innerHTML = tabsHtml;
                 }
                 
                 renderClientGrid(isPort);
@@ -1225,46 +1229,78 @@
         }
 
         function filterClientTab(setId, btnObj) {
+            filterFavoritesActive = false;
             activeClientTabId = setId;
-            const btns = document.querySelectorAll('#client-tabs button');
-            btns.forEach(b => b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase bg-slate-100 text-slate-400 hover:text-black');
-            btnObj.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase bg-black text-white';
+            
+            document.querySelectorAll('#client-tabs .tab-btn').forEach(b => {
+                if(b.innerText.includes('FAVORITAS')) {
+                   b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-200 ml-auto flex items-center gap-2';
+                } else { b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-slate-100 text-slate-400 hover:text-black'; }
+            });
+            btnObj.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-black text-white';
             renderClientGrid(sessionUser.is_portfolio);
         }
 
-        // RENDER CLIENT GRID (REDISEÑO MOBILE-FIRST)
+        function toggleFavoritesFilter(btnObj) {
+            filterFavoritesActive = true;
+            document.querySelectorAll('#client-tabs .tab-btn').forEach(b => {
+                if(!b.innerText.includes('FAVORITAS')) {
+                    b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-slate-100 text-slate-400 hover:text-black';
+                }
+            });
+            btnObj.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-500 text-white ml-auto flex items-center gap-2 shadow-lg';
+            renderClientGrid(sessionUser.is_portfolio);
+        }
+
+        // RENDER GRID Y SELECCIÓN DE DESCARGA
         function renderClientGrid(isPort) {
             const container = document.getElementById('client-photos');
-            const activeSet = photosCache.find(s => s.id === activeClientTabId);
-            if (!activeSet || activeSet.photos.length === 0) {
-                container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No hay fotos publicadas en esta categoría.</div>`; return;
+            
+            if (filterFavoritesActive) {
+                currentDisplayPhotos = photosCache.flatMap(s => s.photos).filter(p => favoritesCache.includes(p.id));
+            } else {
+                const activeSet = photosCache.find(s => s.id === activeClientTabId);
+                currentDisplayPhotos = activeSet ? activeSet.photos : [];
+            }
+
+            if (currentDisplayPhotos.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold text-lg"><i class="fa-solid fa-folder-open text-3xl mb-3"></i><br>Aún no hay fotos en esta vista.</div>`; return;
             }
 
             const showWatermark = sessionUser.watermark_enabled !== false; 
             const isSelectLocked = sessionUser.favorites_locked === true;
 
-            container.innerHTML = activeSet.photos.map((p, index) => {
+            container.innerHTML = currentDisplayPhotos.map((p, index) => {
                 const isFav = favoritesCache.includes(p.id);
+                const isSelectedForDl = downloadSelectionCache.includes(p.id);
+                
                 const heartIcon = isFav ? "fa-solid text-red-500" : "fa-regular text-white";
+                const checkIcon = isSelectedForDl ? "fa-solid fa-square-check text-cyan-lf" : "fa-regular fa-square text-white";
                 const wmLayer = showWatermark ? `<div class="watermark-overlay"></div>` : '';
 
-                // Botones siempre visibles (Action Bar flotante en la foto)
                 const gridActions = isPort ? '' : `
                     <div class="absolute top-4 right-4 z-20 flex flex-col gap-3 pointer-events-auto">
                         <button onclick="toggleFavorite('${p.id}')" class="bg-black/50 backdrop-blur-sm border border-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all ${isSelectLocked ? 'opacity-40 pointer-events-none' : 'hover:scale-110'}">
                             <i id="fav-${p.id}" class="${heartIcon} fa-heart text-xl"></i>
                         </button>
                     </div>
+                    <div class="absolute top-4 left-4 z-20 flex flex-col gap-3 pointer-events-auto">
+                        <button onclick="toggleDownloadSelect('${p.id}')" class="bg-black/50 backdrop-blur-sm border border-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all hover:scale-110" title="Seleccionar para descargar">
+                            <i id="dl-sel-${p.id}" class="${checkIcon} text-2xl"></i>
+                        </button>
+                    </div>
                 `;
 
                 return `
-                <div class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 protect-img fade-in">
-                    <img src="${p.thumb}" class="w-full h-auto object-cover cursor-pointer" onclick="openCarousel(${index})" loading="lazy">
+                <div class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 fade-in">
+                    <img src="${p.thumb}" class="w-full h-auto object-cover cursor-pointer protect-img" onclick="openCarousel(${index})" loading="lazy" oncontextmenu="return false;" draggable="false">
                     ${wmLayer}
                     ${gridActions}
-                    <button onclick="openCarousel(${index})" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/40 backdrop-blur-md text-white text-[10px] font-black px-6 py-2 rounded-full border border-white/20 uppercase tracking-widest z-20 hover:bg-white hover:text-black transition-colors">VER DETALLE</button>
+                    <button onclick="openCarousel(${index})" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/40 backdrop-blur-md text-white text-[10px] font-black px-6 py-2 rounded-full border border-white/20 uppercase tracking-widest z-20 hover:bg-white hover:text-black transition-colors pointer-events-auto shadow-lg">VER DETALLE</button>
                 </div>`;
             }).join('');
+            
+            updateDownloadBtnText();
         }
 
         async function toggleFavorite(fileId) {
@@ -1278,6 +1314,7 @@
                 icon.className = "fa-solid text-red-500 fa-heart text-xl animate-bounce"; 
                 setTimeout(()=> icon.classList.remove('animate-bounce'), 1000);
             }
+            if(filterFavoritesActive) renderClientGrid(sessionUser.is_portfolio);
             await gasRequest("toggleFavorite", { gallery_id: sessionUser.id, file_id: fileId });
         }
 
@@ -1297,6 +1334,31 @@
             } catch(e) { btn.innerHTML = `ENVIAR SELECCIÓN FINAL`; btn.disabled = false; }
         }
 
+        function toggleDownloadSelect(fileId) {
+            const icon = document.getElementById(`dl-sel-${fileId}`);
+            if (downloadSelectionCache.includes(fileId)) {
+                downloadSelectionCache = downloadSelectionCache.filter(id => id !== fileId);
+                icon.className = "fa-regular fa-square text-white text-2xl";
+            } else {
+                downloadSelectionCache.push(fileId);
+                icon.className = "fa-solid fa-square-check text-cyan-lf text-2xl animate-pulse";
+                setTimeout(()=> icon.classList.remove('animate-pulse'), 1000);
+            }
+            updateDownloadBtnText();
+        }
+
+        function updateDownloadBtnText() {
+            const btn = document.getElementById('btn-download-zip');
+            if(!btn) return;
+            if(downloadSelectionCache.length > 0) {
+                btn.innerHTML = `<i class="fa-solid fa-download"></i> DESCARGAR (${downloadSelectionCache.length})`;
+                btn.classList.add('bg-cyan-lf'); btn.classList.remove('bg-black');
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-download"></i> DESCARGAR TODAS`;
+                btn.classList.add('bg-black'); btn.classList.remove('bg-cyan-lf');
+            }
+        }
+
         // ==========================================
         // 🎠 CARRUSEL (LIGHTBOX MOBILE FIRST)
         // ==========================================
@@ -1306,16 +1368,14 @@
 
         async function openCarousel(index) {
             currentCarouselIndex = index;
-            const activeSet = photosCache.find(s => s.id === activeClientTabId);
-            const photo = activeSet.photos[index];
+            const photo = currentDisplayPhotos[index];
             currentPhotoId = photo.id;
             
-            // Push un estado falso a la historia para que el "Back Button" de Android no cierre la web
             window.history.pushState({ modal: true }, "");
 
             document.getElementById('carousel-img').src = `https://lh3.googleusercontent.com/d/${photo.id}=s2000`;
             document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
-            document.getElementById('btn-next').style.visibility = index === activeSet.photos.length - 1 ? 'hidden' : 'visible';
+            document.getElementById('btn-next').style.visibility = index === currentDisplayPhotos.length - 1 ? 'hidden' : 'visible';
 
             const wm = document.getElementById('carousel-watermark');
             if (sessionRole === 'client' && sessionUser.watermark_enabled !== false) wm.classList.remove('hidden'); 
@@ -1348,7 +1408,7 @@
             currentPhotoId = null; 
         }
         
-        function nextPhoto() { const activeSet = photosCache.find(s => s.id === activeClientTabId); if(currentCarouselIndex < activeSet.photos.length - 1) openCarousel(currentCarouselIndex + 1); }
+        function nextPhoto() { if(currentCarouselIndex < currentDisplayPhotos.length - 1) openCarousel(currentCarouselIndex + 1); }
         function prevPhoto() { if(currentCarouselIndex > 0) openCarousel(currentCarouselIndex - 1); }
 
         document.addEventListener('keydown', (e) => {
@@ -1436,14 +1496,18 @@
         }
 
         async function downloadAllZip() {
-            if (photosCache.length === 0) return alert("No hay fotos para descargar.");
+            const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
             
-            const pin = prompt("Por favor ingresa tu PIN de descarga de 4 dígitos para autorizar el paquete:");
+            const photosToDownload = downloadSelectionCache.length > 0 
+                ? photosCache.flatMap(s => s.photos).filter(p => downloadSelectionCache.includes(p.id))
+                : photosCache.flatMap(s => s.photos);
+
+            if (photosToDownload.length === 0) return alert("No hay fotos para descargar.");
+            
+            const pin = prompt("Por favor ingresa tu PIN de descarga de 4 dígitos para autorizar:");
             if (pin === null) return;
             if (pin !== sessionUser.password_hash) return alert("PIN de acceso incorrecto. Descarga bloqueada.");
 
-            const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-            
             if (isMobile) {
                 const container = document.getElementById('client-photos');
                 const btn = document.getElementById('btn-download-zip');
@@ -1451,14 +1515,10 @@
                 
                 showToast("Generando bandeja de descarga móvil...");
                 
-                const photosToRender = favoritesCache.length > 0 ? 
-                    photosCache.flatMap(s => s.photos).filter(p => favoritesCache.includes(p.id)) : 
-                    photosCache.flatMap(s => s.photos);
-
-                document.getElementById('client-instruction').innerHTML = `<span class="text-red-500 font-bold"><i class="fa-solid fa-mobile-screen mr-1"></i> DESCARGA MÓVIL EN ALTA CALIDAD</span><br>Mantén presionada cualquier foto y selecciona "Guardar en Fotos" (iOS) o "Descargar imagen" (Android).`;
+                document.getElementById('client-instruction').innerHTML = `<span class="text-red-500 font-bold"><i class="fa-solid fa-mobile-screen mr-1"></i> DESCARGA MÓVIL EN ALTA CALIDAD</span><br>Mantén presionada cada foto y selecciona "Guardar en Fotos" (iOS) o "Descargar imagen" (Android).`;
                 document.getElementById('client-tabs').classList.add('hidden');
 
-                container.innerHTML = photosToRender.map(p => `
+                container.innerHTML = photosToDownload.map(p => `
                     <div class="masonry-item rounded-2xl overflow-hidden shadow-xl border bg-slate-100 protect-img">
                         <img src="https://lh3.googleusercontent.com/d/${p.id}=s3000" class="w-full h-auto object-cover pointer-events-auto" style="pointer-events: auto !important;">
                     </div>
@@ -1466,7 +1526,7 @@
                 
                 btn.innerHTML = `<i class="fa-solid fa-arrow-left"></i> VOLVER A LA GALERÍA`;
                 btn.onclick = () => {
-                    btn.innerHTML = `<i class="fa-solid fa-download"></i> DESCARGAR COLECCIÓN`;
+                    updateDownloadBtnText();
                     btn.onclick = downloadAllZip;
                     btn.disabled = false;
                     fetchClientPhotos();
@@ -1475,25 +1535,30 @@
             }
 
             const btn = document.getElementById('btn-download-zip'); const originalText = btn.innerHTML;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> COMPRIMIENDO...`; btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PREPARANDO...`; btn.disabled = true;
 
             try {
                 const zip = new JSZip(); const folder = zip.folder(sessionUser.client_name.replace(/[^a-z0-9]/gi, '_'));
                 for (let s = 0; s < photosCache.length; s++) {
-                    const set = photosCache[s]; const setFolder = folder.folder(set.name.replace(/[^a-z0-9]/gi, '_'));
-                    for (let i = 0; i < set.photos.length; i++) {
-                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${set.name.toUpperCase()} • ${i+1}/${set.photos.length}`;
-                        const response = await fetch(`https://lh3.googleusercontent.com/d/${set.photos[i].id}=s3000`); 
-                        setFolder.file(set.photos[i].name, await response.blob());
+                    const set = photosCache[s];
+                    const setPhotos = set.photos.filter(p => downloadSelectionCache.length === 0 || downloadSelectionCache.includes(p.id));
+                    
+                    if(setPhotos.length > 0) {
+                        const setFolder = folder.folder(set.name.replace(/[^a-z0-9]/gi, '_'));
+                        for (let i = 0; i < setPhotos.length; i++) {
+                            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> DESCARGANDO • ${i+1}/${setPhotos.length}`;
+                            const response = await fetch(`https://lh3.googleusercontent.com/d/${setPhotos[i].id}=s3000`); 
+                            setFolder.file(setPhotos[i].name, await response.blob());
+                        }
                     }
                 }
-                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> EMPAQUETANDO...`;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> EMPAQUETANDO ZIP...`;
                 const content = await zip.generateAsync({ type: "blob" });
                 saveAs(content, `LenteFria_${sessionUser.slug}.zip`);
                 btn.innerHTML = `<i class="fa-solid fa-check"></i> DESCARGA INICIADA`; showToast("Descarga completada");
                 if (typeof trackEvent === "function") { trackEvent('download_zip', 'Gallery', sessionUser.slug); }
             } catch (error) { alert("Error al generar ZIP."); }
-            setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 3000);
+            setTimeout(() => { updateDownloadBtnText(); btn.disabled = false; }, 3000);
         }
 
         function triggerUpload(galleryId) {
@@ -1597,7 +1662,7 @@
                 } else {
                     showToast("Bóveda Actualizada");
                     document.getElementById('m-edit-g').classList.add('hidden');
-                    fetchG(); // Refrescar tarjetas
+                    fetchG();
                 }
             } catch(e) { alert("Error de red al actualizar"); }
             btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
@@ -1633,7 +1698,6 @@
             else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
         }
     </script>
-    <!-- PRECARGA DE ICONOS FONT AWESOME PARA RENDERIZADO RÁPIDO EN JAVASCRIPT -->
-    <div class="hidden text-white fa-solid fa-heart fa-regular fa-eye fa-eye-slash fa-triangle-exclamation fa-radiation fa-spinner fa-check fa-circle-check fa-chevron-left fa-chevron-right fa-folder-open fa-plus fa-arrow-left fa-image fa-trash fa-gear fa-pen fa-folder-plus fa-images fa-lock fa-sliders fa-mobile-screen fa-globe fa-arrows-rotate fa-music fa-brands fa-whatsapp fa-instagram fa-tiktok fa-facebook-f fa-droplet fa-droplet-slash fa-comment-dots"></div>
+    <div class="hidden text-white fa-solid fa-heart fa-regular fa-square fa-square-check fa-eye fa-eye-slash fa-folder-open fa-download fa-star text-yellow-400 text-slate-300 pointer-events-none fa-triangle-exclamation fa-radiation fa-spinner fa-check fa-circle-check fa-chevron-left fa-chevron-right fa-plus fa-arrow-left fa-image fa-trash fa-gear fa-pen fa-folder-plus fa-images fa-lock fa-sliders fa-mobile-screen fa-globe fa-arrows-rotate fa-music fa-brands fa-whatsapp fa-instagram fa-tiktok fa-facebook-f fa-droplet fa-droplet-slash fa-comment-dots"></div>
 </body>
 </html>
