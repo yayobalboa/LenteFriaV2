@@ -16,6 +16,7 @@
       gtag('js', new Date()); gtag('config', 'G-R7CD1BCMB0');
       function trackEvent(n, c, l) { gtag('event', n, { 'event_category': c, 'event_label': l }); }
     </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;800;900&display=swap'); 
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; color: #0f172a; scroll-behavior: smooth; overflow-x: hidden; } 
@@ -46,20 +47,21 @@
 </head>
 <body onload="initApp()">
 
-    <div class="hidden"><div id="yt-player-container"></div></div>
+    <!-- REPRODUCTOR NATIVO MP3 (PURA MARCA BLANCA) -->
     <audio id="audio-soundtrack" loop></audio>
 
-    <!-- SPLASH -->
+    <!-- SPLASH SCREEN -->
     <div id="splash-screen" class="fixed inset-0 bg-slate-900 z-[300] flex flex-col items-center justify-center text-white">
         <h1 class="font-black text-5xl tracking-tighter mb-4 animate-pulse">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
         <div class="w-16 h-1 bg-slate-800 rounded overflow-hidden"><div class="h-full bg-cyan-lf animate-[ping_1.5s_ease-in-out_infinite] w-full"></div></div>
     </div>
 
+    <!-- TOAST -->
     <div id="toast" class="fixed -bottom-24 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-3 rounded-full font-bold tracking-widest text-sm shadow-2xl z-[200] flex items-center gap-3">
         <i class="fa-solid fa-circle-check text-cyan-lf"></i><span id="toast-msg">Mensaje</span>
     </div>
 
-    <!-- LOGIN -->
+    <!-- PANTALLA DE LOGIN -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-500">
         <div class="bg-white p-12 rounded-3xl w-full max-w-md shadow-2xl mx-4 fade-in">
             <h1 class="font-black text-4xl tracking-tighter text-center mb-8">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
@@ -69,30 +71,30 @@
                 <input id="l-user" placeholder="Usuario o Email" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
                 <div class="relative mb-2">
                     <input id="l-pass" type="password" placeholder="Contraseña" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-                    <button onclick="togglePass('l-pass', 'eye-login')" class="absolute right-4 top-4 text-slate-400"><i id="eye-login" class="fa-solid fa-eye"></i></button>
+                    <button onclick="togglePass('l-pass', 'eye-login')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-login" class="fa-solid fa-eye"></i></button>
                 </div>
                 <div class="text-right mb-6"><button onclick="switchForm('forgot')" class="text-xs text-slate-400 font-bold hover:text-cyan-lf">¿Olvidaste tu contraseña?</button></div>
-                <button onclick="login()" id="btn-login" class="w-full bg-black text-white p-4 rounded-xl font-bold tracking-widest shadow-lg">INICIAR SESIÓN</button>
+                <button onclick="login()" id="btn-login" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all tracking-widest shadow-lg">INICIAR SESIÓN</button>
             </div>
 
             <div id="form-forgot" class="hidden">
-                <p class="text-sm font-bold text-slate-400 mb-6 text-center">Ingresa tu correo para recibir tu código.</p>
-                <input id="f-email" placeholder="Email" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-                <button onclick="requestReset()" id="btn-request-reset" class="w-full bg-black text-white p-4 rounded-xl font-bold tracking-widest shadow-lg mb-3">ENVIAR CÓDIGO</button>
+                <p class="text-sm font-bold text-slate-400 mb-6 text-center">Te enviaremos un código de 4 dígitos.</p>
+                <input id="f-email" placeholder="Ingresa tu Email" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <button onclick="requestReset()" id="btn-request-reset" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all tracking-widest shadow-lg mb-3">ENVIAR CÓDIGO</button>
                 <button onclick="switchForm('login')" class="w-full text-slate-400 font-bold text-xs hover:text-black">VOLVER</button>
             </div>
 
             <div id="form-reset" class="hidden">
-                <p class="text-sm font-bold text-slate-400 mb-6 text-center">Ingresa el código y nueva contraseña.</p>
+                <p class="text-sm font-bold text-slate-400 mb-6 text-center">Ingresa el código y tu nueva contraseña.</p>
                 <input id="r-code" placeholder="Código de 4 dígitos" maxlength="4" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none text-center font-bold tracking-widest text-xl">
-                <input id="r-new-pass" type="password" placeholder="Nueva Contraseña" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none">
-                <button onclick="verifyReset()" id="btn-verify-reset" class="w-full bg-green-500 text-white p-4 rounded-xl font-bold tracking-widest shadow-lg mb-3">ACTUALIZAR</button>
+                <input id="r-new-pass" type="password" placeholder="Nueva Contraseña" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <button onclick="verifyReset()" id="btn-verify-reset" class="w-full bg-green-500 text-white p-4 rounded-xl font-bold hover:bg-green-600 transition-all tracking-widest shadow-lg mb-3">ACTUALIZAR</button>
                 <button onclick="switchForm('login')" class="w-full text-slate-400 font-bold text-xs hover:text-black">CANCELAR</button>
             </div>
         </div>
     </div>
 
-    <!-- CERRAR SESIÓN (CLIENTE) -->
+    <!-- CERRAR SESIÓN FLOTANTE (CLIENTE) -->
     <button id="btn-client-logout" onclick="logout()" class="hidden fixed top-6 right-6 z-50 bg-black/40 backdrop-blur-md text-white px-6 py-2 rounded-full font-bold tracking-widest text-xs border border-white/20 hover:bg-red-500 transition-all shadow-xl"><i class="fa-solid fa-power-off mr-2"></i> SALIR</button>
 
     <!-- NAVEGACIÓN -->
@@ -106,18 +108,17 @@
                 <div class="w-28 h-1.5 bg-slate-100 rounded-full overflow-hidden"><div id="storage-bar" class="h-full bg-cyan-lf w-0 transition-all duration-500"></div></div>
             </div>
 
-            <button id="nav-staff-btn" onclick="show('admin')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden">Staff</button>
-            <button id="nav-gal-btn" onclick="show('galleries')" class="text-xs font-bold uppercase text-black hidden">Galerías</button>
-            <button id="nav-inbox-btn" onclick="show('inbox')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden">Inbox</button>
+            <button id="nav-staff-btn" onclick="show('admin')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden animate-fade-in">Staff</button>
+            <button id="nav-gal-btn" onclick="show('galleries')" class="text-xs font-bold uppercase text-black hidden animate-fade-in">Galerías</button>
+            <button id="nav-inbox-btn" onclick="show('inbox')" class="text-xs font-bold uppercase text-slate-400 hover:text-cyan-lf hidden animate-fade-in">Inbox</button>
             <div class="h-6 w-px bg-slate-200"></div>
-            <button onclick="openProfileModal()" class="text-slate-400 hover:text-black" title="Perfil"><i class="fa-solid fa-gear text-lg"></i></button>
+            <button onclick="openProfileModal()" class="text-slate-400 hover:text-black transition-colors" title="Perfil"><i class="fa-solid fa-gear text-lg"></i></button>
             <button onclick="logout()" class="text-xs font-bold uppercase text-red-500 hover:scale-110 transition-transform bg-red-50 p-2 rounded-full"><i class="fa-solid fa-power-off"></i></button>
         </div>
     </nav>
 
-    <!-- CUERPO APP -->
+    <!-- CONTENEDOR PRINCIPAL -->
     <main id="main-content" class="hidden">
-        
         <!-- SECCIÓN STAFF -->
         <section id="section-admin" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 shadow-xl">
@@ -126,6 +127,7 @@
             </div>
             <div id="staff-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
 
+            <!-- CONFIGURACIÓN COMPRESIÓN -->
             <div class="bg-white border p-8 rounded-3xl shadow-sm mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
                     <h3 class="font-black text-2xl mb-1"><i class="fa-solid fa-sliders text-cyan-lf mr-2"></i> Parámetros Globales de Compresión</h3>
@@ -133,7 +135,8 @@
                 </div>
                 <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto font-bold text-sm">
                     <div>
-                        <select id="cfg-res" class="p-3 bg-slate-100 rounded-xl outline-none w-full sm:w-40">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Resolución Máxima:</label>
+                        <select id="cfg-res" class="p-3 bg-slate-100 rounded-xl outline-none w-full sm:w-40 focus:ring-2 focus:ring-cyan-lf">
                             <option value="4000">4K (4000px)</option>
                             <option value="3000">Carta (3000px)</option>
                             <option value="2048">Optimizado (2048px)</option>
@@ -142,12 +145,13 @@
                     </div>
                     <div>
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Calidad (<span id="cfg-qual-lbl">82</span>%):</label>
-                        <input type="range" id="cfg-qual" min="50" max="100" value="82" class="accent-cyan-lf w-full sm:w-40" oninput="$('cfg-qual-lbl').innerText = this.value">
+                        <input type="range" id="cfg-qual" min="50" max="100" value="82" class="accent-cyan-lf w-full sm:w-40 mt-3" oninput="$('cfg-qual-lbl').innerText = this.value">
                     </div>
-                    <button id="btn-save-settings" onclick="saveSystemSettings()" class="bg-black text-white font-bold px-6 py-3 rounded-xl hover:bg-cyan-lf text-xs tracking-widest">GUARDAR AJUSTES</button>
+                    <button id="btn-save-settings" onclick="saveSystemSettings()" class="bg-black text-white font-bold px-6 py-3 rounded-xl hover:bg-cyan-lf transition-all text-xs tracking-widest sm:mt-5">GUARDAR AJUSTES</button>
                 </div>
             </div>
 
+            <!-- PELIGRO -->
             <div class="border-2 border-red-200 bg-red-50 p-8 rounded-3xl mt-20">
                 <h3 class="text-red-600 font-black text-2xl mb-2"><i class="fa-solid fa-triangle-exclamation mr-2 animate-pulse"></i> ZONA DE PELIGRO</h3>
                 <p class="text-red-400 font-bold text-sm mb-6">Purga total del sistema. No afecta tu cuenta Admin.</p>
@@ -158,7 +162,7 @@
         <!-- SECCIÓN GALERÍAS -->
         <section id="section-galleries" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
-                <div><h2 class="text-5xl font-black tracking-tight">Entregas</h2><p class="text-slate-400 mt-2 font-bold">Tus sesiones y portafolios</p></div>
+                <div><h2 class="text-5xl font-black tracking-tight">Entregas</h2><p class="text-slate-400 mt-2 font-bold">Sesiones y portafolios</p></div>
                 <button id="btn-new-vault" onclick="openGalleryModal()" class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:bg-cyan-lf transition-all shadow-xl w-full sm:w-auto"><i class="fa-solid fa-plus mr-2"></i> NUEVA SESIÓN / PORTAFOLIO</button>
             </div>
             <div id="galleries-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
@@ -175,7 +179,7 @@
                     <p class="text-slate-500 font-bold text-sm">Workspace • <span id="ws-fav-count" class="text-red-500"><i class="fa-solid fa-heart"></i> 0 Favoritos</span></p>
                 </div>
                 <div class="flex flex-wrap gap-4 w-full md:w-auto justify-end">
-                    <button onclick="openSetModal()" class="border-2 border-black text-black px-6 py-4 rounded-xl font-bold hover:bg-black hover:text-white transition-all text-xs tracking-widest"><i class="fa-solid fa-folder-plus mr-2"></i> CREAR SET</button>
+                    <button onclick="openSetModal()" class="border-2 border-black text-black px-6 py-4 rounded-xl font-bold hover:bg-black hover:text-white transition-all text-xs tracking-widest"><i class="fa-solid fa-folder-plus mr-2"></i> CREAR SET (CATEGORÍA)</button>
                     <button id="btn-ws-upload" class="bg-black text-white px-6 py-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors text-xs tracking-widest shadow-md"><i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR FOTOS</button>
                 </div>
             </div>
@@ -183,7 +187,7 @@
             <div class="mb-6 bg-slate-50 p-6 rounded-2xl border flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
                     <span class="text-xs font-bold text-slate-400 uppercase">Subir a:</span>
-                    <select id="ws-sel-folder" class="p-3 bg-white border rounded-xl font-bold text-sm outline-none"></select>
+                    <select id="ws-sel-folder" class="p-3 bg-white border rounded-xl font-bold text-sm outline-none focus:ring-2 focus:ring-cyan-lf"></select>
                 </div>
             </div>
             <div id="ws-photos" class="masonry"></div>
@@ -225,7 +229,7 @@
                 <div id="client-tabs" class="flex gap-4 overflow-x-auto pb-6 mb-8 border-b scrollbar-none animate-fade-in"></div>
                 <div id="client-photos" class="masonry"></div>
 
-                <!-- BIO FOTÓGRAFO -->
+                <!-- BIOGRAFÍA FOTÓGRAFO -->
                 <div id="client-photographer-card" class="mt-24 border-t pt-16 max-w-4xl mx-auto hidden fade-in">
                     <h4 class="text-xs font-black tracking-widest text-slate-400 uppercase mb-8 text-center">El autor detrás de la lente</h4>
                     <div class="bg-slate-50 p-8 sm:p-12 rounded-3xl text-center shadow-sm border border-slate-100">
@@ -248,8 +252,8 @@
             </div>
         </div>
         <div class="flex gap-3">
-            <button onclick="toggleMusic(true)" class="flex-1 bg-cyan-lf text-black font-black text-xs p-3 rounded-xl hover:bg-white">Activar</button>
-            <button onclick="toggleMusic(false)" class="flex-1 bg-slate-800 text-white font-bold text-xs p-3 rounded-xl hover:bg-slate-700">Silencio</button>
+            <button onclick="toggleMusic(true)" class="flex-1 bg-cyan-lf text-black font-black text-xs p-3 rounded-xl hover:bg-white transition-colors uppercase tracking-wider">Activar</button>
+            <button onclick="toggleMusic(false)" class="flex-1 bg-slate-800 text-white font-bold text-xs p-3 rounded-xl hover:bg-slate-700 transition-colors uppercase">Silencio</button>
         </div>
     </div>
 
@@ -265,7 +269,7 @@
 
     <!-- LIGHTBOX -->
     <div id="m-carousel" class="hidden fixed inset-0 bg-black/95 z-[500] flex flex-col md:flex-row backdrop-blur-xl transition-opacity fade-in">
-        <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white/50 hover:text-white z-[510] text-3xl"><i class="fa-solid fa-xmark"></i></button>
+        <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white/50 hover:text-white z-[510] text-3xl transition-colors"><i class="fa-solid fa-xmark"></i></button>
         <div id="carousel-img-container" class="w-full md:w-2/3 h-[60vh] md:h-full flex items-center justify-center relative protect-img p-4 sm:p-10">
             <button id="btn-prev" onclick="prevPhoto()" class="carousel-btn absolute left-4 sm:left-10 text-white/50 hover:text-white text-4xl bg-black/20 w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-left"></i></button>
             <img id="carousel-img" src="" class="max-w-full max-h-full object-contain drop-shadow-2xl">
@@ -276,42 +280,42 @@
             <div class="flex justify-between items-center mb-6">
                 <h3 class="font-black text-3xl">Detalle</h3>
                 <div id="carousel-rating-box" class="flex gap-1 text-slate-300 text-xl cursor-pointer">
-                    <i onclick="ratePhoto(1)" class="fa-solid fa-star star-btn"></i>
-                    <i onclick="ratePhoto(2)" class="fa-solid fa-star star-btn"></i>
-                    <i onclick="ratePhoto(3)" class="fa-solid fa-star star-btn"></i>
-                    <i onclick="ratePhoto(4)" class="fa-solid fa-star star-btn"></i>
-                    <i onclick="ratePhoto(5)" class="fa-solid fa-star star-btn"></i>
+                    <i onclick="ratePhoto(1)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
+                    <i onclick="ratePhoto(2)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
+                    <i onclick="ratePhoto(3)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
+                    <i onclick="ratePhoto(4)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
+                    <i onclick="ratePhoto(5)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
                 </div>
             </div>
-            <p class="text-slate-400 text-sm font-bold mb-8">Comentarios.</p>
-            <textarea id="comment-text" rows="5" placeholder="Comentarios..." class="p-4 bg-slate-50 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf resize-none mb-6"></textarea>
+            <p class="text-slate-400 text-sm font-bold mb-8">Escribe un comentario al fotógrafo.</p>
+            <textarea id="comment-text" rows="5" placeholder="Ej: Me encanta..." class="p-4 bg-slate-50 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf resize-none mb-6 transition-all"></textarea>
             <div class="mt-auto flex flex-col gap-3">
                 <button id="btn-send-comment" onclick="sendComment()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest shadow-lg"><i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL PERFIL -->
+    <!-- CONFIGURACIÓN PERFIL -->
     <div id="m-profile" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
-            <h3 class="font-black text-2xl mb-2">Mi Perfil</h3>
+            <h3 class="font-black text-2xl mb-2">Mi Perfil Profesional</h3>
             <p class="text-slate-400 text-sm font-bold mb-6">Administra tus datos y redes.</p>
             <div class="flex flex-col gap-4">
-                <textarea id="p-bio" rows="3" placeholder="Bio..." class="p-4 bg-slate-100 rounded-xl w-full outline-none resize-none"></textarea>
+                <textarea id="p-bio" rows="3" placeholder="Biografía corta..." class="p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf"></textarea>
                 <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Redes</h4>
-                <input id="p-ig" placeholder="Instagram Link" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
-                <input id="p-tt" placeholder="TikTok Link" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
-                <input id="p-fb" placeholder="Facebook Link" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
+                <input id="p-ig" placeholder="Enlace de Instagram" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
+                <input id="p-tt" placeholder="Enlace de TikTok" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
+                <input id="p-fb" placeholder="Enlace de Facebook" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
                 <input id="p-wa" placeholder="WhatsApp (Ej: 52199923485)" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
                 <input id="p-ap" placeholder="Enlace Adobe Portfolio" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
                 <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Seguridad</h4>
                 <div class="relative mb-4">
                     <input id="p-new-pass" type="password" placeholder="Nueva Contraseña (Opcional)" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
-                    <button onclick="togglePass('p-new-pass', 'eye-prof')" class="absolute right-4 top-4 text-slate-400"><i id="eye-prof" class="fa-solid fa-eye"></i></button>
+                    <button onclick="togglePass('p-new-pass', 'eye-prof')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-prof" class="fa-solid fa-eye"></i></button>
                 </div>
             </div>
-            <button id="btn-change-pass" onclick="saveProfileChanges()" class="w-full bg-black text-white p-4 rounded-xl font-bold tracking-widest mt-4">GUARDAR CAMBIOS</button>
-            <button onclick="hideModal('m-profile')" class="w-full mt-4 text-slate-400 font-bold">CERRAR</button>
+            <button id="btn-change-pass" onclick="saveProfileChanges()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf tracking-widest mt-4">GUARDAR CAMBIOS</button>
+            <button onclick="hideModal('m-profile')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CERRAR</button>
         </div>
     </div>
 
@@ -319,12 +323,16 @@
     <div id="m-edit-g" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-2xl mb-2">Editar Entrega</h3>
+            <p class="text-slate-400 text-sm font-bold mb-6">Modifica el nombre y la descripción.</p>
             <input id="edit-cN" placeholder="Nombre" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <textarea id="edit-gDesc" rows="3" placeholder="Descripción" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none"></textarea>
-            <input id="edit-gSound" placeholder="Soundtrack Link (MP3/YouTube)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <input id="edit-cU" placeholder="Usuario Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <input id="edit-ps" placeholder="Contraseña Cliente" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <button id="btn-update-vault" onclick="updateGallery()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf tracking-widest">GUARDAR</button>
+            <textarea id="edit-gDesc" rows="3" placeholder="Descripción (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none"></textarea>
+            
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Soundtrack Personalizado</h4>
+            <input id="edit-gSound" placeholder="Enlace directo a archivo MP3 (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <input id="edit-cU" placeholder="Usuario" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <input id="edit-ps" placeholder="Contraseña" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            
+            <button id="btn-update-vault" onclick="updateGallery()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf tracking-widest">GUARDAR CAMBIOS</button>
             <button onclick="hideModal('m-edit-g')" class="w-full mt-4 text-slate-400 font-bold">CANCELAR</button>
         </div>
     </div>
@@ -334,20 +342,20 @@
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-2">Nueva Categoría (Set)</h3>
             <p class="text-slate-400 text-sm font-bold mb-6">Ejemplo: Ceremonia, Recepción, Retratos.</p>
-            <input id="set-name" placeholder="Nombre de la categoría" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <input id="set-name" placeholder="Nombre" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <button id="btn-save-set" onclick="createSet()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf tracking-widest">CREAR</button>
             <button onclick="hideModal('m-set')" class="w-full mt-4 text-slate-400 font-bold">CANCELAR</button>
         </div>
     </div>
 
-    <!-- Modal Nuevo Staff -->
+    <!-- MODAL NUEVO STAFF -->
     <div id="m-u" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-6">Nuevo Staff</h3>
             <input id="sN" placeholder="Nombre completo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <input id="sE" placeholder="Email" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <input id="sE" placeholder="Email del fotógrafo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <div class="relative mb-8">
-                <input id="sP" placeholder="Contraseña" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
+                <input id="sP" placeholder="Contraseña de acceso" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none">
                 <button onclick="togglePass('sP', 'eye-staff')" class="absolute right-4 top-4 text-slate-400"><i id="eye-staff" class="fa-solid fa-eye"></i></button>
             </div>
             <button id="btn-create-staff" onclick="apiS()" class="w-full bg-black text-white p-4 rounded-xl font-bold tracking-widest shadow-lg">CREAR STAFF</button>
@@ -355,7 +363,7 @@
         </div>
     </div>
 
-    <!-- Modal Nueva Sesión -->
+    <!-- MODAL NUEVA SESIÓN -->
     <div id="m-g" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-2xl mb-6">Nueva Sesión / Portafolio</h3>
@@ -364,12 +372,12 @@
                 <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm"></select>
             </div>
             <input id="cN" placeholder="Nombre" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
-            <textarea id="gDesc" rows="2" placeholder="Dedicatoria (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none"></textarea>
+            <textarea id="gDesc" rows="2" placeholder="Dedicatoria o descripción de la sesión (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none"></textarea>
+            <input id="sl" placeholder="Slug (Ruta web)" onkeyup="toggleClientFields()" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             
             <h4 class="text-xs font-bold text-slate-400 ml-2 mb-2 uppercase tracking-widest">Soundtrack</h4>
-            <input id="gSound" placeholder="Link MP3 o Youtube (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
+            <input id="gSound" placeholder="Enlace directo a archivo MP3 (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
 
-            <input id="sl" placeholder="Slug" onkeyup="toggleClientFields()" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none">
             <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
                 <input type="checkbox" id="chk-portfolio" class="w-5 h-5 accent-cyan-lf" onchange="toggleClientFields()">
                 <span class="font-bold text-sm">Es un Portafolio Público</span>
@@ -382,16 +390,16 @@
                     <button onclick="togglePass('ps', 'eye-vault')" class="absolute right-4 top-4 text-slate-400"><i id="eye-vault" class="fa-solid fa-eye"></i></button>
                 </div>
             </div>
-            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold hover:bg-black transition-colors">CREAR</button>
+            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold tracking-widest shadow-lg">CREAR</button>
             <button onclick="hideModal('m-g')" class="w-full mt-4 text-slate-400 font-bold">CANCELAR</button>
         </div>
     </div>
 
-    <!-- Modal Reset -->
+    <!-- MODAL NUCLEAR -->
     <div id="m-reset" class="hidden fixed inset-0 bg-black/80 z-[200] flex items-center justify-center p-4 backdrop-blur-md fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl border-4 border-red-500">
             <h3 class="font-black text-3xl mb-4 text-red-600"><i class="fa-solid fa-radiation mr-2"></i> Factory Reset</h3>
-            <p class="text-slate-500 font-bold mb-6 text-sm">Ingresa contraseña de Admin:</p>
+            <p class="text-slate-500 font-bold mb-6 text-sm">Contraseña de Administrador:</p>
             <input id="reset-pass" placeholder="Contraseña" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none border border-red-200">
             <button id="btn-execute-reset" onclick="executeHardReset()" class="w-full mt-6 bg-red-600 text-white p-4 rounded-xl font-bold tracking-widest shadow-lg">EJECUTAR PURGA</button>
             <button onclick="hideModal('m-reset')" class="w-full mt-4 text-slate-400 font-bold">CANCELAR</button>
@@ -409,12 +417,10 @@
         // ==========================================
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzAEygb5pHlQ08emz8KqvEnYFl9uMv_4WhzYTEk8tqxdxfIxc8IYKq9c5iFv7EicfO4/exec";
 
-        let sessionUser = null; let sessionRole = null; let allStaffCache = []; let currentGallery = null; 
-        let currentPhotoId = null; let favoritesCache = []; let photosCache = []; 
-        let currentCarouselIndex = 0; let resetEmailStore = ""; let activeEditGalleryId = null;
-        let activeClientTabId = null;
-
+        let sessionUser=null, sessionRole=null, allStaffCache=[], currentGallery=null, currentPhotoId=null, favoritesCache=[], photosCache=[], currentCarouselIndex=0, resetEmailStore="", activeEditGalleryId=null, activeClientTabId=null;
         window.systemSettings = { max_resolution: 3000, jpeg_quality: 82 };
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
 
         window.onerror = function(msg, src, line, col, err) {
             silentErrorLog({ message: msg, source: src, line: line, column: col, stack: err ? err.stack : "" });
@@ -431,29 +437,25 @@
         }
 
         // ==========================================
-        // 🛡️ SISTEMA DE SESIÓN
+        // 🛡️ SISTEMA DE SESIÓN (LOGIN SILENCIOSO)
         // ==========================================
-        async function initApp() {
+        function initApp() {
             const params = new URLSearchParams(window.location.search);
             const mu = params.get('u'), mp = params.get('p'), key = params.get('key');
-
-            try {
-                const s = await gasRequest("getSettings");
-                if (s && s.length > 0) window.systemSettings = { max_resolution: parseInt(s[0].max_resolution), jpeg_quality: parseInt(s[0].jpeg_quality) };
-            } catch(e) {}
-
+            gasRequest("getSettings").then(s => {
+                if(s && s.length > 0) window.systemSettings = { max_resolution: parseInt(s[0].max_resolution), jpeg_quality: parseInt(s[0].jpeg_quality) };
+            });
             if (key) {
                 try {
                     const dec = atob(key).split(':');
-                    document.getElementById('l-user').value = dec[0]; document.getElementById('l-pass').value = dec[1];
+                    $('l-user').value = dec[0]; $('l-pass').value = dec[1];
                     window.history.replaceState({}, document.title, window.location.pathname);
                     login(true); return;
                 } catch(e) {}
             }
-
             if(mu && mp) {
                 sessionStorage.setItem('lf_magic_login', 'true');
-                document.getElementById('l-user').value = mu; document.getElementById('l-pass').value = mp;
+                $('l-user').value = mu; $('l-pass').value = mp;
                 window.history.replaceState({}, document.title, window.location.pathname);
                 login(true); return;
             }
@@ -486,7 +488,7 @@
                     showModal('login-screen');
                     setTimeout(() => $('login-screen').classList.remove('opacity-0'), 100);
                 }
-            } catch (e) { err.innerText = "Error."; btn.innerText = "INICIAR SESIÓN"; btn.disabled = false; }
+            } catch (e) { err.innerText = "Error de red."; btn.innerText = "INICIAR SESIÓN"; btn.disabled = false; }
         }
 
         function logout() {
@@ -545,53 +547,33 @@
             window.scrollTo(0,0);
         }
 
-        function copyShareLink(u, p) {
-            const token = btoa(`${u}:${p}`);
-            const link = window.location.origin + window.location.pathname + `?key=${token}`;
-            navigator.clipboard.writeText(link).then(() => { showToast("¡ENLACE MÁGICO COPIADO!"); }).catch(err => { alert("Copia esto:\n\n" + link); });
-        }
-        function showToast(msg) {
-            const toast = $('toast'); $('toast-msg').innerText = msg;
-            toast.style.bottom = "2rem"; setTimeout(() => { toast.style.bottom = "-6rem"; }, 3000);
+        function openProfileModal() {
+            $('p-bio').value = sessionUser.bio || '';
+            $('p-ig').value = sessionUser.instagram || '';
+            $('p-tt').value = sessionUser.tiktok || '';
+            $('p-fb').value = sessionUser.facebook || '';
+            $('p-wa').value = sessionUser.whatsapp || '';
+            $('p-ap').value = sessionUser.adobe_portfolio || '';
+            $('p-new-pass').value = '';
+            showModal('m-profile');
         }
 
-        // ==========================================
-        // 🔐 RECUPERACIÓN Y PERFIL
-        // ==========================================
-        function switchForm(target) {
-            ['form-login', 'form-forgot', 'form-reset'].forEach(id => hideModal(id));
-            showModal(`form-${target}`); $('login-error').classList.add('hidden');
-        }
-        async function requestReset() {
-            const email = $('f-email').value; if(!email) return alert("Completa el campo");
-            resetEmailStore = email; const btn = $('btn-request-reset'); btn.innerHTML = `ENVIANDO...`; btn.disabled = true;
-            try { await gasRequest("requestPasswordReset", { email: email }); switchForm('reset'); showToast("Revisa tu correo"); } catch(e) { switchForm('reset'); showToast("Revisa tu correo"); }
-            btn.innerHTML = `ENVIAR CÓDIGO`; btn.disabled = false;
-        }
-        async function verifyReset() {
-            const code = $('r-code').value, newP = $('r-new-pass').value; if(!code || !newP) return alert("Llena los campos");
-            const btn = $('btn-verify-reset'); btn.innerHTML = `VERIFICANDO...`; btn.disabled = true;
-            try {
-                const res = await gasRequest("verifyResetToken", { email: resetEmailStore, token: code, new_password: newP });
-                if(res.error) alert(res.error); else { showToast("Contraseña Actualizada"); switchForm('login'); }
-            } catch(e) {}
-            btn.innerHTML = `ACTUALIZAR`; btn.disabled = false;
-        }
         async function saveProfileChanges() {
             const btn = $('btn-change-pass'); btn.innerHTML = `GUARDANDO...`; btn.disabled = true;
             const payload = {
-                user_id: sessionUser.id, bio: $('p-bio').value, instagram: $('p-ig').value, tiktok: $('p-tt').value,
-                facebook: $('p-fb').value, whatsapp: $('p-wa').value, adobe_portfolio: $('p-ap').value
+                user_id: sessionUser.id, bio: $('p-bio').value, instagram: $('p-ig').value,
+                tiktok: $('p-tt').value, facebook: $('p-fb').value, whatsapp: $('p-wa').value, adobe_portfolio: $('p-ap').value
             };
             try {
                 await gasRequest("updateProfile", payload);
                 const np = $('p-new-pass').value;
-                if (np) { await gasRequest("changePassword", { user_id: sessionUser.id, role: sessionRole, new_password: np }); sessionUser.password = np; }
+                if(np) { await gasRequest("changePassword", { user_id: sessionUser.id, role: sessionRole, new_password: np }); sessionUser.password = np; }
                 Object.assign(sessionUser, payload); localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
                 showToast("Perfil actualizado"); hideModal('m-profile');
             } catch(e) {}
             btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
         }
+
         async function changePassword() {
             const np = $('p-new-pass').value; if(!np) return alert("Completa el campo");
             const btn = $('btn-change-pass'); btn.innerHTML = `GUARDANDO...`; btn.disabled = true;
@@ -602,19 +584,7 @@
             } catch(e) {}
             btn.innerHTML = "GUARDAR"; btn.disabled = false;
         }
-        async function executeHardReset() {
-            const p = $('reset-pass').value; if(!p) return alert("Falta contraseña");
-            const btn = $('btn-execute-reset'); btn.innerHTML = `PURGANDO...`; btn.disabled = true;
-            try {
-                const res = await gasRequest("hardReset", { admin_password: p });
-                if(res.error) alert(res.error); else { alert("SISTEMA REINICIADO."); logout(); }
-            } catch(e) {}
-            btn.innerHTML = "EJECUTAR PURGA"; btn.disabled = false;
-        }
 
-        // ==========================================
-        // 👥 STAFF & GALERÍAS
-        // ==========================================
         async function fetchS() {
             $('staff-list').innerHTML = getStaffSkeleton();
             try {
@@ -656,16 +626,17 @@
             $('inbox-list').innerHTML = getInboxSkeleton();
             try {
                 const d = await gasRequest("getComments", null, sessionUser.id);
-                if(!Array.isArray(d) || d.length === 0) { $('inbox-list').innerHTML = `<p class="text-slate-400 font-bold text-center mt-10">Bandeja limpia.</p>`; return; }
-                $('inbox-list').innerHTML = d.map(c => `<div class="bg-white p-6 rounded-2xl border flex gap-6 items-start shadow-sm fade-in"><img src="https://drive.google.com/thumbnail?id=${c.file_id}&sz=w200" class="w-24 h-24 object-cover rounded-xl bg-slate-100"><div class="flex-1"><div class="flex gap-2 mb-2"><span class="bg-cyan-lf text-white text-[10px] px-3 py-1 rounded-full font-bold">${c.galleries.client_name}</span></div><p class="text-lg font-bold">"${c.comment_text}"</p></div></div>`).join('');
+                const list = $('inbox-list');
+                if(!Array.isArray(d) || d.length === 0) { list.innerHTML = `<p class="text-slate-400 font-bold text-center mt-10">Bandeja limpia.</p>`; return; }
+                list.innerHTML = d.map(c => `<div class="bg-white p-6 rounded-2xl border flex gap-6 items-start shadow-sm fade-in"><img src="https://drive.google.com/thumbnail?id=${c.file_id}&sz=w200" class="w-24 h-24 object-cover rounded-xl bg-slate-100"><div class="flex-1"><div class="flex gap-2 mb-2"><span class="bg-cyan-lf text-white text-[10px] px-3 py-1 rounded-full font-bold">${c.galleries.client_name}</span></div><p class="text-lg font-bold">"${c.comment_text}"</p></div></div>`).join('');
             } catch(e) {}
         }
 
         // ==========================================
         // 🛠️ WORKSPACE
         // ==========================================
-        async function openWorkspace(gObj) {
-            currentGallery = gObj; $('ws-title').innerText = currentGallery.client_name;
+        async function openWorkspace(galleryObj) {
+            currentGallery = galleryObj; $('ws-title').innerText = currentGallery.client_name;
             $('ws-photos').innerHTML = getPhotoSkeleton();
             $('btn-ws-upload').onclick = () => triggerUpload(currentGallery.id);
             show('workspace');
@@ -697,7 +668,7 @@
 
         function openSetModal() { $('set-name').value = ''; showModal('m-set'); }
         async function createSet() {
-            const n = $('set-name').value.trim(); if(!n) return alert("Completa el campo");
+            const n = $('set-name').value.trim(); if(!n) return alert("Escribe un nombre.");
             const btn = $('btn-save-set'); btn.innerHTML = `CREANDO...`; btn.disabled = true;
             try {
                 await gasRequest("createSet", { parent_folder_id: currentGallery.drive_folder_id, set_name: n, actor: sessionUser.email });
@@ -734,7 +705,7 @@
         }
 
         // ==========================================
-        // 📸 PORTAL CLIENTE
+        // 📸 PORTAL CLIENTE (CINEMATIC)
         // ==========================================
         async function fetchClientPhotos() {
             $('client-photos').innerHTML = getPhotoSkeleton();
@@ -775,10 +746,11 @@
                     showModal('btn-lock-selection'); hideModal('badge-selection-locked');
                 }
 
-                if (photosCache.length <= 1) { $('client-tabs').classList.add('hidden'); activeClientTabId = photosCache[0].id; } 
+                const tabs = $('client-tabs');
+                if (photosCache.length <= 1) { tabs.classList.add('hidden'); activeClientTabId = photosCache[0].id; } 
                 else {
                     showModal('client-tabs'); activeClientTabId = photosCache[0].id;
-                    $('client-tabs').innerHTML = photosCache.map((set, idx) => {
+                    tabs.innerHTML = photosCache.map((set, idx) => {
                         const act = idx === 0 ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:text-black';
                         return `<button onclick="filterClientTab('${set.id}', this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase ${act}">${set.name}</button>`;
                     }).join('');
@@ -796,19 +768,20 @@
         }
 
         function renderClientGrid(isPort) {
+            const container = $('client-photos');
             const activeSet = photosCache.find(s => s.id === activeClientTabId);
-            if (!activeSet || activeSet.photos.length === 0) { $('client-photos').innerHTML = `<div class="col-span-full py-12 text-slate-400 text-center font-bold">Categoría vacía.</div>`; return; }
+            if (!activeSet || activeSet.photos.length === 0) { container.innerHTML = `<div class="col-span-full py-12 text-slate-400 text-center font-bold">Categoría vacía.</div>`; return; }
 
-            $('client-photos').innerHTML = activeSet.photos.map((p, index) => {
+            container.innerHTML = activeSet.photos.map((p, idx) => {
                 const isFav = favoritesCache.includes(p.id);
                 const heartClass = isFav ? "fa-solid text-red-500" : "fa-regular text-white drop-shadow-md";
                 const locked = sessionUser.favorites_locked ? "pointer-events-none opacity-40" : "pointer-events-auto";
 
                 const layer = isPort ? 
-                    `<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-auto" onclick="openCarousel(${index})"><span class="text-white font-bold tracking-widest border border-white/50 px-6 py-2 rounded-full backdrop-blur-sm">VER PORTAFOLIO</span></div>` : 
+                    `<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-auto" onclick="openCarousel(${idx})"><span class="text-white font-bold tracking-widest border border-white/50 px-6 py-2 rounded-full backdrop-blur-sm">VER PORTAFOLIO</span></div>` : 
                     `<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-6 pointer-events-none">
                         <div class="flex justify-end pointer-events-auto ${locked}"><button onclick="toggleFavorite('${p.id}')" class="text-3xl hover:scale-110 transition-transform"><i id="fav-${p.id}" class="${heartClass} fa-heart"></i></button></div>
-                        <div class="flex justify-center mb-2 pointer-events-auto"><button onclick="openCarousel(${index})" class="bg-white/20 backdrop-blur-md text-white border border-white/30 px-8 py-3 rounded-full font-bold text-xs tracking-widest hover:bg-white hover:text-black transition-colors shadow-xl">VER / COMENTAR</button></div>
+                        <div class="flex justify-center mb-2 pointer-events-auto"><button onclick="openCarousel(${idx})" class="bg-white/20 backdrop-blur-md text-white border border-white/30 px-8 py-3 rounded-full font-bold text-xs tracking-widest hover:bg-white hover:text-black transition-colors shadow-xl">VER / COMENTAR</button></div>
                     </div>`;
 
                 return `<div class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 protect-img fade-in"><img src="${p.thumb}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" loading="lazy"><div class="watermark-overlay"></div>${layer}</div>`;
@@ -837,6 +810,23 @@
                 saved.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
                 showToast("Selección enviada"); fetchClientPhotos();
             } catch(e) { btn.innerHTML = `ENVIAR`; btn.disabled = false; }
+        }
+
+        async function fetchPhotographerDetails(pid) {
+            try {
+                const d = await gasRequest("getPhotographer", null, pid);
+                if (d && d.length > 0) {
+                    const p = d[0]; $('c-photo-name').innerText = p.full_name;
+                    $('c-photo-bio').innerText = p.bio || "Persiguiendo momentos honestos a través de la lente.";
+                    let html = "";
+                    if(p.whatsapp) html += `<a href="https://wa.me/${p.whatsapp}?text=Hola%20${p.full_name.replace(/ /g, '%20')}!%20Me%20encanto%20tu%20trabajo..." target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-whatsapp text-2xl"></i></a>`;
+                    if(p.instagram) html += `<a href="${p.instagram}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-instagram text-2xl"></i></a>`;
+                    if(p.tiktok) html += `<a href="${p.tiktok}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-tiktok text-2xl"></i></a>`;
+                    if(p.facebook) html += `<a href="${p.facebook}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-facebook-f text-2xl"></i></a>`;
+                    if(p.adobe_portfolio) html += `<a href="${p.adobe_portfolio}" target="_blank" class="bg-black text-white text-[10px] font-black px-4 py-2 rounded-full tracking-widest hover:bg-cyan-lf transition-colors"><i class="fa-solid fa-globe mr-2"></i>PORTAFOLIO</a>`;
+                    $('c-photo-socials').innerHTML = html; showModal('client-photographer-card');
+                }
+            } catch(e) {}
         }
 
         // ==========================================
@@ -879,25 +869,8 @@
         }
         async function ratePhoto(val) { resetStars(); paintStars(val); await gasRequest("toggleRating", { gallery_id: sessionUser.id, file_id: currentPhotoId, rating_value: val }); }
 
-        async function fetchPhotographerDetails(pid) {
-            try {
-                const d = await gasRequest("getPhotographer", null, pid);
-                if (d && d.length > 0) {
-                    const p = d[0]; $('c-photo-name').innerText = p.full_name;
-                    $('c-photo-bio').innerText = p.bio || "Capturando fragmentos de vida a través de la lente.";
-                    let html = "";
-                    if(p.whatsapp) html += `<a href="https://wa.me/${p.whatsapp}?text=Hola%20${p.full_name.replace(/ /g, '%20')}!%20Vi%20tu%20trabajo%20y%20me%20encanto..." target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-whatsapp text-2xl"></i></a>`;
-                    if(p.instagram) html += `<a href="${p.instagram}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-instagram text-2xl"></i></a>`;
-                    if(p.tiktok) html += `<a href="${p.tiktok}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-tiktok text-2xl"></i></a>`;
-                    if(p.facebook) html += `<a href="${p.facebook}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-facebook-f text-2xl"></i></a>`;
-                    if(p.adobe_portfolio) html += `<a href="${p.adobe_portfolio}" target="_blank" class="bg-black text-white text-[10px] font-black px-4 py-2 rounded-full tracking-widest hover:bg-cyan-lf transition-colors"><i class="fa-solid fa-globe mr-2"></i>PORTAFOLIO</a>`;
-                    $('c-photo-socials').innerHTML = html; showModal('client-photographer-card');
-                }
-            } catch(e) {}
-        }
-
         // ==========================================
-        // 💾 BANDA SONORA YOUTUBE (NUEVO)
+        // 💾 BANDA SONORA (YOUTUBE Y MP3)
         // ==========================================
         function toggleMusic(status) {
             const audio = $('audio-soundtrack'), promptCard = $('music-prompt-card'), eqBtn = $('btn-eq-toggle'), ytFrame = $('yt-player');
@@ -968,7 +941,7 @@
         }
 
         async function downloadAllZip() {
-            if (photosCache.length === 0) return;
+            if (photosCache.length === 0) return alert("No hay fotos.");
             const pin = prompt("Por favor ingresa tu PIN de descarga de 4 dígitos para autorizar el paquete ZIP:");
             if (pin === null) return; if (pin !== sessionUser.password_hash) return alert("PIN incorrecto. Descarga bloqueada.");
 
@@ -1009,6 +982,7 @@
             input.onchange = async e => {
                 const btn = $('btn-ws-upload'), files = e.target.files; if(files.length === 0) return;
                 btn.innerHTML = `Procesando...`; btn.disabled = true;
+
                 for(let i=0; i<files.length; i++) {
                     let file = files[i];
                     if (file.type.startsWith('image/')) {
@@ -1018,7 +992,8 @@
                     btn.innerHTML = `SUBIENDO ${i+1}/${files.length}`;
                     const b64 = await new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.readAsDataURL(file); });
                     const cleanName = files[i].name.replace(/\.[^/.]+$/, "") + ".jpg";
-                    const uploadResult = await gasRequest("uploadPhoto", { folder_id: sfid, gallery_id: galleryId, filename: cleanName, mimeType: "image/jpeg", base64Data: b64, actor: sessionUser.email });
+
+                    const uploadResult = await gasRequest("uploadPhoto", { folder_id: setFolderId, gallery_id: galleryId, filename: cleanName, mimeType: "image/jpeg", base64Data: b64, actor: sessionUser.email });
                     if (uploadResult.error) { alert(uploadResult.error); btn.innerHTML = `SUBIR FOTOS`; btn.disabled = false; openWorkspace(currentGallery); return; }
                 }
                 btn.innerHTML = `¡LISTO!`; showToast("Fotografías publicadas");
@@ -1035,24 +1010,24 @@
 
         async function apiG() { 
             let sid = sessionRole === 'admin' ? $('sel-staff').value : sessionUser.id;
-            const cn = $('cN').value, sl = $('sl').value, cu = $('cU').value, ps = $('ps').value, isPort = $('chk-portfolio').checked, desc = $('gDesc').value, sound = $('gSound').value;
+            const cn = $('cN').value, sl = $('sl').value, cu = $('cU').value, ps = $('ps').value, isPort = $('chk-portfolio').checked, d = $('gDesc').value, sound = $('gSound').value;
             if(!sid || !cn || !sl || !cu || !ps) return alert("Campos incompletos");
             const btn = $('btn-create-vault'); btn.innerHTML = `CREANDO...`; btn.disabled = true;
-            await gasRequest("createGallery", { photographer_id: sid, client_name: cn, client_username: cu, slug: sl, password: ps, is_portfolio: isPort, can_download: true, actor: sessionUser.email, description: desc, soundtrack_url: sound });
+            await gasRequest("createGallery", { photographer_id: sid, client_name: cn, client_username: cu, slug: sl, password: ps, is_portfolio: isPort, can_download: true, actor: sessionUser.email, description: d, soundtrack_url: sound });
             hideModal('m-g'); ['cN','sl','cU','ps','gDesc','gSound'].forEach(id => $(id).value = ''); fetchG(); btn.innerHTML = "CREAR"; btn.disabled = false;
         }
 
-        function openEditModal(gObj) {
-            activeEditGalleryId = gObj.id; $('edit-cN').value = gObj.client_name;
-            $('edit-gDesc').value = gObj.description || ""; $('edit-gSound').value = gObj.soundtrack_url || "";
+        function openEditModal(g) {
+            activeEditGalleryId = g.id; document.getElementById('edit-cN').value = g.client_name;
+            document.getElementById('edit-gDesc').value = g.description || ""; document.getElementById('edit-gSound').value = g.soundtrack_url || "";
             showModal('m-edit-g');
         }
 
         async function updateGallery() {
-            const newName = $('edit-cN').value, newDesc = $('edit-gDesc').value, newSound = $('edit-gSound').value; if(!newName) return alert("Nombre vacío");
+            const newName = $('edit-cN').value, newDesc = $('edit-gDesc').value, newSound = $('edit-gSound').value, newU = $('edit-cU').value, newP = $('edit-ps').value; if(!newName) return alert("Nombre vacío");
             const btn = $('btn-update-vault'); btn.innerHTML = `GUARDANDO...`; btn.disabled = true;
             try {
-                const res = await gasRequest("updateGallery", { gallery_id: activeEditGalleryId, client_name: newName, description: newDesc, soundtrack_url: newSound, actor: sessionUser.email });
+                const res = await gasRequest("updateGallery", { gallery_id: activeEditGalleryId, client_name: newName, description: newDesc, soundtrack_url: newSound, client_username: newU, password_hash: newP, actor: sessionUser.email });
                 if (res.error) alert("Error: " + res.error); else { showToast("Actualizada"); hideModal('m-edit-g'); fetchG(); }
             } catch(e) {}
             btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
