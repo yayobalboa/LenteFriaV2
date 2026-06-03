@@ -921,16 +921,49 @@
             try {
                 const d = await gasRequest("getComments", null, sessionUser.id);
                 const list = document.getElementById('inbox-list');
-                if(!Array.isArray(d) || d.length === 0) { list.innerHTML = `<p class="text-slate-400 font-bold text-center mt-10">Bandeja limpia.</p>`; return; }
+                if(!Array.isArray(d) || d.length === 0) { list.innerHTML = `<p class="text-slate-400 font-bold text-center mt-10"><i class="fa-solid fa-check-double text-4xl mb-3 block text-slate-200"></i>Bandeja limpia. Todo al día.</p>`; return; }
+                
+                // Mapeamos los comentarios. Asumimos que cada comentario tiene un "id" único.
                 list.innerHTML = d.map(c => `
-                    <div class="bg-white p-6 rounded-2xl border flex gap-6 items-start shadow-sm fade-in">
+                    <div id="comment-card-${c.id}" class="bg-white p-6 rounded-2xl border flex flex-col sm:flex-row gap-6 items-start shadow-sm transition-all duration-300">
                         <img src="https://lh3.googleusercontent.com/d/${c.file_id}=s200" class="w-24 h-24 object-cover rounded-xl bg-slate-100">
                         <div class="flex-1">
                             <div class="flex gap-2 mb-2"><span class="bg-cyan-lf text-white text-[10px] px-3 py-1 rounded-full font-bold tracking-widest">${c.galleries.client_name}</span></div>
                             <p class="text-lg font-bold">"${c.comment_text}"</p>
                         </div>
+                        <button onclick="resolveComment('${c.id}')" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl text-xs tracking-widest shadow-md transition-colors flex items-center justify-center gap-2 mt-4 sm:mt-0">
+                            <i class="fa-solid fa-check-double"></i> RESUELTO
+                        </button>
                     </div>`).join('');
             } catch(e) { document.getElementById('inbox-list').innerHTML = `<p class="text-red-500 font-bold">Error de red.</p>`; }
+        }
+
+        async function resolveComment(commentId) {
+            const card = document.getElementById(`comment-card-${commentId}`);
+            const btn = card.querySelector('button');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+            btn.disabled = true;
+            
+            try {
+                // Le avisamos a la base de datos que este comentario ya se resolvió
+                await gasRequest("resolveComment", { comment_id: commentId });
+                
+                // Animación para desaparecer la tarjeta suavemente
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    card.remove();
+                    // Si ya no hay más comentarios, mostramos el mensaje de "Bandeja limpia"
+                    if(document.getElementById('inbox-list').children.length === 0) {
+                        document.getElementById('inbox-list').innerHTML = `<p class="text-slate-400 font-bold text-center mt-10"><i class="fa-solid fa-check-double text-4xl mb-3 block text-slate-200"></i>Bandeja limpia. Todo al día.</p>`;
+                    }
+                }, 300);
+                showToast("Marcado como resuelto");
+            } catch(e) {
+                btn.innerHTML = `<i class="fa-solid fa-check-double"></i> RESUELTO`;
+                btn.disabled = false;
+                alert("Error al marcar como resuelto");
+            }
         }
 
         // ==========================================
