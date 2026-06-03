@@ -1500,7 +1500,7 @@
             } else { document.getElementById('nav-storage-container').classList.add('hidden'); }
         }
 
-        // DESCARGA EN LOTE DIRECTA (Bypass CORS y sin ZIP)
+        // DESCARGA EN LOTE DIRECTA (Iframes ocultos, cero pestañas nuevas)
         async function downloadAllZip() {
             const photosToDownload = downloadSelectionCache.length > 0 
                 ? photosCache.flatMap(s => s.photos).filter(p => downloadSelectionCache.includes(p.id))
@@ -1509,51 +1509,51 @@
             if (photosToDownload.length === 0) return alert("No hay fotos para descargar.");
 
             const btn = document.getElementById('btn-download-zip'); 
-            const originalText = btn.innerHTML;
             
-            // Si son muchas fotos, avisamos al usuario que su navegador podría pedir permiso
             if (photosToDownload.length > 3) {
-                if(!confirm(`Se descargarán ${photosToDownload.length} fotos en su calidad original.\n\nIMPORTANTE: Tu navegador podría mostrarte un aviso preguntando si "Permites múltiples descargas". Por favor dale en Permitir.`)) return;
+                if(!confirm(`Se descargarán ${photosToDownload.length} fotos en su calidad original.\n\nIMPORTANTE: Tu navegador podría preguntar si "Permites múltiples descargas". Por favor dale en Permitir.`)) return;
             }
 
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PROCESANDO...`; 
             btn.disabled = true;
             showToast("Iniciando descarga en lote...");
 
-            // Hacemos un ciclo para bajar una por una con una ligera pausa (para que el navegador no se trabe)
             for (let i = 0; i < photosToDownload.length; i++) {
                 btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> BAJANDO • ${i+1}/${photosToDownload.length}`;
                 
-                const link = document.createElement('a');
-                link.href = `https://drive.google.com/uc?export=download&id=${photosToDownload[i].id}`;
-                link.setAttribute('download', photosToDownload[i].name || `LenteFria_${i}.jpg`);
-                link.target = '_blank';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = `https://drive.google.com/uc?export=download&id=${photosToDownload[i].id}`;
+                document.body.appendChild(iframe);
                 
-                // Pausa de 800 milisegundos entre cada foto
-                await new Promise(resolve => setTimeout(resolve, 800));
+                // Limpiamos la basura oculta después de 10 segundos
+                setTimeout(() => {
+                    if (document.body.contains(iframe)) document.body.removeChild(iframe);
+                }, 10000);
+                
+                // Pausa de 1 segundo entre fotos para que el navegador procese tranquilo
+                await new Promise(resolve => setTimeout(resolve, 1000));
             }
             
             btn.innerHTML = `<i class="fa-solid fa-check"></i> DESCARGA FINALIZADA`; 
             setTimeout(() => { updateDownloadBtnText(); btn.disabled = false; }, 3000);
         }
         
-        // DESCARGA DIRECTA DE UNA SOLA FOTO (Bypass CORS)
+        // DESCARGA DIRECTA DE UNA SOLA FOTO (Iframe oculto, no abre pestañas)
         function downloadSinglePhoto() {
             if(!currentPhotoId) return;
             const photo = currentDisplayPhotos[currentCarouselIndex];
             showToast("Descargando foto original...");
             
-            const link = document.createElement('a');
-            // Usamos el link nativo de Google Drive para forzar descarga
-            link.href = `https://drive.google.com/uc?export=download&id=${currentPhotoId}`;
-            link.setAttribute('download', photo.name || 'LenteFria_Foto.jpg');
-            link.target = '_blank'; // Por si Safari bloquea la descarga en la misma ventana
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = `https://drive.google.com/uc?export=download&id=${currentPhotoId}`;
+            document.body.appendChild(iframe);
+            
+            // Limpiamos el código oculto después de 5 segundos
+            setTimeout(() => {
+                if (document.body.contains(iframe)) document.body.removeChild(iframe);
+            }, 5000);
         }
         
         function triggerUpload(galleryId) {
