@@ -337,7 +337,11 @@
         <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white/50 hover:text-white z-[530] text-4xl transition-colors md:fixed md:top-6 md:right-6">
             <i class="fa-solid fa-xmark drop-shadow-md"></i>
         </button>
-
+        
+        <!-- NUEVO BOTÓN DESCARGA DIRECTA (OPCIÓN 1) -->
+        <button onclick="downloadSinglePhoto()" class="absolute top-6 left-6 bg-black/50 hover:bg-cyan-lf backdrop-blur-md text-white px-6 py-3 rounded-full font-bold text-xs tracking-widest border border-white/20 z-[530] shadow-xl transition-colors md:fixed md:top-6 md:left-6 flex items-center gap-2">
+            <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">DESCARGAR FOTO</span>
+        </button>
         <div id="carousel-img-container" class="flex-1 flex items-center justify-center relative protect-img p-2 sm:p-10 w-full md:w-2/3 h-[70vh] md:h-full">
             <button id="btn-prev" onclick="prevPhoto()" class="carousel-btn absolute left-2 sm:left-10 text-white/50 hover:text-white text-4xl bg-black/20 w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-left"></i></button>
             
