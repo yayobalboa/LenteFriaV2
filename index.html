@@ -704,6 +704,7 @@
                 if (sessionRole === 'admin') {
                     document.getElementById('nav-staff-btn').classList.remove('hidden'); 
                     document.getElementById('nav-gal-btn').classList.remove('hidden'); 
+                    document.getElementById('nav-inbox-btn').classList.remove('hidden'); // <-- LÍNEA AGREGADA
                     showSection('admin');
                 } else if (sessionRole === 'photographer') {
                     document.getElementById('nav-gal-btn').classList.remove('hidden'); 
