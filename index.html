@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -59,16 +58,15 @@
         .eq-bar { display: inline-block; width: 3px; background-color: #00B7F1; animation: bounce-eq 0.8s ease-in-out infinite alternate; }
         @keyframes bounce-eq { 0% { height: 3px; } 100% { height: 16px; } }
 
-        /* Lighbox Mobile First Layout */
+        /* DISEÑO DE CARRUSEL MÓVIL (NUEVO) */
         .carousel-container { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
         @media (min-width: 768px) { .carousel-container { flex-direction: row; } }
-        .carousel-img-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 1rem; }
+        
         .carousel-sidebar { background: white; height: auto; border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease-out; position: absolute; bottom: 0; width: 100%; z-index: 520; }
         .carousel-sidebar.active { transform: translateY(0); }
         @media (min-width: 768px) {
             .carousel-sidebar { position: relative; width: 33.333333%; height: 100vh; transform: none; border-radius: 0; }
         }
-        .fav-touch-zone { position: absolute; top: 0; right: 0; width: 80px; height: 80px; z-index: 20; display: flex; align-items: flex-start; justify-content: flex-end; padding: 1rem; cursor: pointer; }
     </style>
 </head>
 <body onload="initApp()" class="bg-white">
@@ -255,9 +253,8 @@
             </div>
         </section>
 
-        <!-- PORTAL DEL CLIENTE -->
+        <!-- PORTAL DEL CLIENTE (VISTA CINEMÁTICA Y GRID NO-HOVER) -->
         <section id="section-client-view" class="hidden fade-in">
-            
             <div id="client-hero" class="hero-cover flex items-center justify-center text-center">
                 <div class="hero-overlay"></div>
                 <div class="relative z-10 p-6 flex flex-col items-center fade-in max-w-4xl">
@@ -280,7 +277,7 @@
                             <i class="fa-solid fa-lock"></i> ENVIAR SELECCIÓN FINAL
                         </button>
                         <span id="badge-selection-locked" class="hidden bg-green-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-3 shadow-md">
-                            <i class="fa-solid fa-circle-check"></i> SELECCIÓN FINALIZADA
+                            <i class="fa-solid fa-circle-check"></i> SELECCIÓN FINALIZADA (CONGELADA)
                         </span>
                         
                         <button id="btn-download-zip" onclick="downloadAllZip()" class="bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-cyan-lf transition-all shadow-xl flex items-center gap-3">
@@ -290,6 +287,8 @@
                 </div>
 
                 <div id="client-tabs" class="flex gap-4 overflow-x-auto pb-6 mb-8 border-b scrollbar-none animate-fade-in"></div>
+                
+                <!-- GRID DE FOTOS DEL CLIENTE -->
                 <div id="client-photos" class="masonry"></div>
 
                 <!-- BIOGRAFÍA FOTÓGRAFO -->
@@ -332,33 +331,44 @@
 
     <!-- CARRUSEL CINEMÁTICO (LIGHTBOX MOBILE FIRST) -->
     <div id="m-carousel" class="hidden fixed inset-0 bg-black/95 z-[500] carousel-container backdrop-blur-xl transition-opacity fade-in">
-        <button onclick="closeCarousel()" class="fixed top-6 right-6 bg-white/20 backdrop-blur-md text-white rounded-full w-12 h-12 flex items-center justify-center z-[530] text-2xl shadow-xl border border-white/30 hover:bg-white hover:text-black transition-colors"><i class="fa-solid fa-xmark"></i></button>
+        <!-- BOTÓN CERRAR GIGANTE -->
+        <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white/50 hover:text-white z-[530] text-4xl transition-colors md:fixed md:top-6 md:right-6">
+            <i class="fa-solid fa-xmark drop-shadow-md"></i>
+        </button>
 
-        <div id="carousel-img-container" class="carousel-img-wrapper protect-img">
-            <button id="btn-prev" onclick="prevPhoto()" class="carousel-btn absolute left-4 sm:left-10 text-white/50 hover:text-white text-4xl bg-black/20 w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-left"></i></button>
+        <div id="carousel-img-container" class="flex-1 flex items-center justify-center relative protect-img p-2 sm:p-10 w-full md:w-2/3 h-[70vh] md:h-full">
+            <button id="btn-prev" onclick="prevPhoto()" class="carousel-btn absolute left-2 sm:left-10 text-white/50 hover:text-white text-4xl bg-black/20 w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-left"></i></button>
             <img id="carousel-img" src="" class="max-w-full max-h-full object-contain drop-shadow-2xl">
             <div id="carousel-watermark" class="watermark-overlay rounded-2xl hidden opacity-50"></div>
-            <button id="btn-next" onclick="nextPhoto()" class="carousel-btn absolute right-4 sm:right-10 text-white/50 hover:text-white text-4xl bg-black/20 w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-right"></i></button>
+            <button id="btn-next" onclick="nextPhoto()" class="carousel-btn absolute right-2 sm:right-10 text-white/50 hover:text-white text-4xl bg-black/20 w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-right"></i></button>
             
-            <button id="btn-mobile-comment" onclick="document.getElementById('carousel-sidebar').classList.toggle('active');" class="md:hidden absolute bottom-6 bg-black/50 backdrop-blur-md text-white px-6 py-3 rounded-full font-bold text-xs tracking-widest border border-white/20 z-[501] shadow-xl"><i class="fa-solid fa-comment-dots mr-2"></i> VER/AÑADIR COMENTARIO</button>
+            <!-- BOTÓN ABRIR COMENTARIOS EN MÓVIL -->
+            <button id="btn-mobile-comment" onclick="toggleMobileSidebar()" class="md:hidden absolute bottom-6 bg-black/50 backdrop-blur-md text-white px-6 py-3 rounded-full font-bold text-xs tracking-widest border border-white/20 z-[501] shadow-xl">
+                <i class="fa-solid fa-comment-dots mr-2"></i> COMENTAR
+            </button>
         </div>
         
         <div id="carousel-sidebar" class="carousel-sidebar shadow-2xl flex flex-col">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="font-black text-3xl">Detalle</h3>
+                <!-- SISTEMA DE RATING POR ESTRELLAS -->
                 <div id="carousel-rating-box" class="flex gap-1 text-slate-300 text-xl cursor-pointer">
-                    <i onclick="ratePhoto(1)" class="fa-solid fa-star star-btn"></i>
-                    <i onclick="ratePhoto(2)" class="fa-solid fa-star star-btn"></i>
-                    <i onclick="ratePhoto(3)" class="fa-solid fa-star star-btn"></i>
-                    <i onclick="ratePhoto(4)" class="fa-solid fa-star star-btn"></i>
-                    <i onclick="ratePhoto(5)" class="fa-solid fa-star star-btn"></i>
+                    <i onclick="ratePhoto(1)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
+                    <i onclick="ratePhoto(2)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
+                    <i onclick="ratePhoto(3)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
+                    <i onclick="ratePhoto(4)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
+                    <i onclick="ratePhoto(5)" class="fa-solid fa-star star-btn hover:text-yellow-400 transition-colors"></i>
                 </div>
             </div>
-            <p class="text-slate-400 text-sm font-bold mb-8">Escribe un comentario al fotógrafo.</p>
-            <textarea id="comment-text" rows="5" placeholder="Comentarios..." class="p-4 bg-slate-50 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf resize-none mb-6"></textarea>
+            
+            <p class="text-slate-400 text-sm font-bold mb-8">Escribe un comentario al fotógrafo sobre esta imagen específica.</p>
+            <textarea id="comment-text" rows="5" placeholder="Ej: Me encanta, ¿puedes retocar la luz del fondo?" class="p-4 bg-slate-50 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf resize-none mb-6 transition-all"></textarea>
+            
             <div class="mt-auto flex flex-col gap-3">
-                <button id="btn-send-comment" onclick="sendComment()" class="w-full bg-black text-white p-4 rounded-xl font-bold tracking-widest shadow-lg hover:bg-cyan-lf transition-colors"><i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR</button>
-                <button onclick="document.getElementById('carousel-sidebar').classList.remove('active');" class="md:hidden w-full text-slate-400 font-bold mt-2 hover:text-black">CERRAR PANEL</button>
+                <button id="btn-send-comment" onclick="sendComment()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest shadow-lg">
+                    <i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO
+                </button>
+                <button onclick="toggleMobileSidebar()" class="md:hidden w-full text-slate-400 font-bold mt-2 hover:text-black">CERRAR PANEL</button>
             </div>
         </div>
     </div>
@@ -392,11 +402,11 @@
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-2xl mb-2">Editar Entrega</h3>
             <p class="text-slate-400 text-sm font-bold mb-6">Modifica los parámetros de visualización.</p>
-            <input id="edit-cN" placeholder="Nombre de la Galería" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-            <textarea id="edit-gDesc" rows="3" placeholder="Descripción poética (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf"></textarea>
+            <input id="edit-cN" placeholder="Nombre de la Galería" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <textarea id="edit-gDesc" rows="3" placeholder="Descripción poética (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf transition-all"></textarea>
             
             <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-2">Opciones Avanzadas</h4>
-            <input id="edit-gSound" placeholder="Enlace a archivo MP3 o YouTube Link (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+            <input id="edit-gSound" placeholder="Enlace a archivo MP3 o YouTube Link (Opcional)" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
             
             <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
                 <input type="checkbox" id="edit-chk-wm" class="w-5 h-5 accent-cyan-lf">
@@ -404,8 +414,8 @@
             </label>
 
             <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-2">Seguridad de Cliente</h4>
-            <input id="edit-cU" placeholder="Usuario Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-            <input id="edit-ps" placeholder="Contraseña Cliente (PIN)" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+            <input id="edit-cU" placeholder="Usuario Cliente" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <input id="edit-ps" placeholder="Contraseña Cliente (PIN)" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
             
             <button id="btn-update-vault" onclick="updateGallery()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest shadow-lg">GUARDAR CAMBIOS</button>
             <button onclick="document.getElementById('m-edit-g').classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
@@ -417,20 +427,20 @@
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-2">Nueva Categoría (Set)</h3>
             <p class="text-slate-400 text-sm font-bold mb-6">Ejemplo: Ceremonia, Recepción, Retratos.</p>
-            <input id="set-name" placeholder="Nombre de la categoría" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+            <input id="set-name" placeholder="Nombre de la categoría" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
             <button id="btn-save-set" onclick="createSet()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest shadow-lg">CREAR CATEGORÍA</button>
             <button onclick="document.getElementById('m-set').classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
         </div>
     </div>
 
-    <!-- MODAL NUEVO STAFF -->
+    <!-- Modal Nuevo Staff -->
     <div id="m-u" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-6">Nuevo Staff</h3>
-            <input id="sN" placeholder="Nombre completo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-            <input id="sE" placeholder="Email del fotógrafo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+            <input id="sN" placeholder="Nombre completo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <input id="sE" placeholder="Email del fotógrafo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
             <div class="relative mb-8">
-                <input id="sP" placeholder="Contraseña de acceso" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="sP" placeholder="Contraseña de acceso" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
                 <button onclick="togglePass('sP', 'eye-staff')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-staff" class="fa-solid fa-eye"></i></button>
             </div>
             <button id="btn-create-staff" onclick="apiS()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all shadow-lg tracking-widest">CREAR STAFF</button>
@@ -438,7 +448,7 @@
         </div>
     </div>
 
-    <!-- MODAL NUEVA SESIÓN -->
+    <!-- Modal Nueva Sesión -->
     <div id="m-g" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-2xl mb-6">Nueva Sesión / Portafolio</h3>
@@ -446,12 +456,12 @@
                 <label class="text-xs font-bold text-slate-400 ml-2">Asignar a Fotógrafo:</label>
                 <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm focus:ring-2 focus:ring-cyan-lf"></select>
             </div>
-            <input id="cN" placeholder="Nombre de la Sesión" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-            <textarea id="gDesc" rows="2" placeholder="Dedicatoria o descripción de la sesión (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf"></textarea>
-            <input id="sl" placeholder="Slug (Ruta web)" onkeyup="toggleClientFields()" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+            <input id="cN" placeholder="Nombre de la Sesión" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <textarea id="gDesc" rows="2" placeholder="Dedicatoria o descripción de la sesión (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf transition-all"></textarea>
+            <input id="sl" placeholder="Slug (Ruta web. Ej: boda-ana)" onkeyup="toggleClientFields()" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
             
-            <h4 class="text-xs font-bold text-slate-400 ml-2 mb-2 uppercase tracking-widest">Soundtrack</h4>
-            <input id="gSound" placeholder="Enlace directo a archivo MP3 o YouTube (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+            <h4 class="text-xs font-bold text-slate-400 ml-2 mb-2 uppercase tracking-widest">Soundtrack de Ambiente</h4>
+            <input id="gSound" placeholder="Enlace directo a archivo MP3 o YouTube (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
 
             <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
                 <input type="checkbox" id="chk-portfolio" class="w-5 h-5 accent-cyan-lf" onchange="toggleClientFields()">
@@ -459,9 +469,9 @@
             </label>
             <div id="client-credentials-box" class="transition-opacity duration-300">
                 <h4 class="text-xs font-bold text-slate-400 ml-2 mb-2 uppercase tracking-widest">Credenciales del Cliente</h4>
-                <input id="cU" placeholder="Usuario" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="cU" placeholder="Usuario (Ej: familia, o un email)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
                 <div class="relative mb-8">
-                    <input id="ps" placeholder="Contraseña" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                    <input id="ps" placeholder="Contraseña del cliente" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
                     <button onclick="togglePass('ps', 'eye-vault')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-vault" class="fa-solid fa-eye"></i></button>
                 </div>
             </div>
@@ -470,21 +480,24 @@
         </div>
     </div>
 
-    <!-- MODAL BOTON NUCLEAR -->
+    <!-- Modal Botón Nuclear -->
     <div id="m-reset" class="hidden fixed inset-0 bg-black/80 z-[200] flex items-center justify-center p-4 backdrop-blur-md fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl border-4 border-red-500">
             <h3 class="font-black text-3xl mb-4 text-red-600"><i class="fa-solid fa-radiation mr-2"></i> Factory Reset</h3>
             <p class="text-slate-500 font-bold mb-6 text-sm">Ingresa tu contraseña de Administrador maestro para purgar:</p>
             <div class="relative mb-8">
-                <input id="reset-pass" placeholder="Contraseña de Admin" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none border border-red-200 focus:ring-2 focus:ring-red-500">
+                <input id="reset-pass" placeholder="Contraseña de Admin" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none border border-red-200 focus:ring-2 focus:ring-red-500 transition-all">
             </div>
             <button id="btn-execute-reset" onclick="executeHardReset()" class="w-full bg-red-600 text-white p-4 rounded-xl font-bold hover:bg-red-800 transition-colors tracking-widest mb-3 shadow-lg">EJECUTAR PURGA</button>
             <button onclick="document.getElementById('m-reset').classList.add('hidden')" class="w-full text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
         </div>
     </div>
 
-    <!-- CORE SCRIPTS -->
+    <!-- SCRIPT DE LOGICA CORE (EXPANDIDO Y LEGIBLE) -->
     <script>
+        // ==========================================
+        // ⚙️ CONFIGURACIÓN CORE
+        // ==========================================
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzAEygb5pHlQ08emz8KqvEnYFl9uMv_4WhzYTEk8tqxdxfIxc8IYKq9c5iFv7EicfO4/exec";
 
         let sessionUser = null; 
@@ -507,16 +520,23 @@
         // TELEMETRÍA DE ERRORES GLOBAL
         window.onerror = function(message, source, lineno, colno, error) {
             const errorDetails = { message: message, source: source, line: lineno, column: colno, stack: error ? error.stack : "" };
-            silentErrorLog(errorDetails); return false;
+            silentErrorLog(errorDetails); 
+            return false;
         };
+        
         window.onunhandledrejection = function(event) {
             const errorDetails = { message: "Promise Rejection: " + event.reason, stack: event.reason ? event.reason.stack : "" };
             silentErrorLog(errorDetails);
         };
+        
         async function silentErrorLog(details) {
             try {
                 const actor = (sessionUser && sessionUser.email) ? sessionUser.email : "ANONYMOUS_CLIENT";
-                fetch(GAS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: "logError", payload: { actor: actor, error_details: details } }) });
+                fetch(GAS_URL, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'text/plain' }, 
+                    body: JSON.stringify({ action: "logError", payload: { actor: actor, error_details: details } }) 
+                });
             } catch(e) { console.error("Fallo reporte telemetría"); }
         }
 
@@ -542,6 +562,13 @@
             const magicP = urlParams.get('p'); 
             const magicKey = urlParams.get('key');
 
+            // Interceptamos botón Back de Android para cerrar Lightbox sin salir de la web
+            window.addEventListener('popstate', (e) => {
+                if(!document.getElementById('m-carousel').classList.contains('hidden')) {
+                    closeCarousel();
+                }
+            });
+
             // Leer configuración global desde BD
             try {
                 const settings = await gasRequest("getSettings");
@@ -553,12 +580,11 @@
                 }
             } catch(e) { console.error("Usando config local"); }
 
-            // Interceptamos botón Back de Android para cerrar Lightbox
-            window.addEventListener('popstate', (e) => {
-                if(!document.getElementById('m-carousel').classList.contains('hidden')) {
-                    closeCarousel();
-                }
-            });
+            // Si hay enlace mágico, forzamos logout previo por seguridad
+            if (magicKey || (magicU && magicP)) {
+                localStorage.removeItem('lf_session');
+                sessionStorage.removeItem('lf_session');
+            }
 
             if (magicKey) {
                 try {
@@ -570,9 +596,10 @@
                 } catch(e) { console.error("Llave mágica inválida"); }
             }
 
-            if(magicU && magicP) {
+            if (magicU && magicP) {
                 sessionStorage.setItem('lf_magic_login', 'true');
-                document.getElementById('l-user').value = magicU; document.getElementById('l-pass').value = magicP;
+                document.getElementById('l-user').value = magicU; 
+                document.getElementById('l-pass').value = magicP;
                 window.history.replaceState({}, document.title, window.location.pathname);
                 login(true); return;
             }
@@ -627,13 +654,17 @@
         }
 
         function logout() {
-            localStorage.removeItem('lf_session'); sessionStorage.removeItem('lf_session'); sessionStorage.removeItem('lf_magic_login');
+            localStorage.removeItem('lf_session'); 
+            sessionStorage.removeItem('lf_session'); 
+            sessionStorage.removeItem('lf_magic_login');
             sessionUser = null; sessionRole = null;
-            document.getElementById('l-user').value = ''; document.getElementById('l-pass').value = '';
+            document.getElementById('l-user').value = ''; 
+            document.getElementById('l-pass').value = '';
             
             toggleMusic(false);
 
-            document.getElementById('main-nav').classList.add('hidden'); document.getElementById('btn-client-logout').classList.add('hidden');
+            document.getElementById('main-nav').classList.add('hidden'); 
+            document.getElementById('btn-client-logout').classList.add('hidden');
             document.getElementById('main-content').classList.add('hidden');
             
             ['section-admin', 'section-galleries', 'section-workspace', 'section-inbox', 'section-client-view'].forEach(id => {
@@ -654,11 +685,13 @@
             const isClient = sessionRole === 'client';
             
             if(isClient) {
-                document.getElementById('main-nav').classList.add('hidden'); document.getElementById('btn-client-logout').classList.remove('hidden');
+                document.getElementById('main-nav').classList.add('hidden'); 
+                document.getElementById('btn-client-logout').classList.remove('hidden');
                 document.getElementById('main-content').classList.remove('hidden'); 
                 showSection('client-view');
             } else {
-                document.getElementById('btn-client-logout').classList.add('hidden'); document.getElementById('main-nav').classList.remove('hidden');
+                document.getElementById('btn-client-logout').classList.add('hidden'); 
+                document.getElementById('main-nav').classList.remove('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
                 document.getElementById('user-greeting').innerText = `HOLA, ${sessionUser.full_name.toUpperCase()}`;
                 
@@ -667,10 +700,12 @@
                 });
                 
                 if (sessionRole === 'admin') {
-                    document.getElementById('nav-staff-btn').classList.remove('hidden'); document.getElementById('nav-gal-btn').classList.remove('hidden'); 
+                    document.getElementById('nav-staff-btn').classList.remove('hidden'); 
+                    document.getElementById('nav-gal-btn').classList.remove('hidden'); 
                     showSection('admin');
                 } else if (sessionRole === 'photographer') {
-                    document.getElementById('nav-gal-btn').classList.remove('hidden'); document.getElementById('nav-inbox-btn').classList.remove('hidden'); 
+                    document.getElementById('nav-gal-btn').classList.remove('hidden'); 
+                    document.getElementById('nav-inbox-btn').classList.remove('hidden'); 
                     showSection('galleries');
                 }
             }
@@ -807,6 +842,21 @@
                 document.getElementById('m-profile').classList.add('hidden');
             } catch(e) { alert("Error al guardar cambios de perfil"); }
             btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
+        }
+
+        async function changePassword() {
+            const newP = document.getElementById('p-new-pass').value;
+            if(!newP) return alert("Ingresa la nueva contraseña");
+            const btn = document.getElementById('btn-change-pass');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true;
+            try {
+                await gasRequest("changePassword", { user_id: sessionUser.id, role: sessionRole, new_password: newP });
+                showToast("Contraseña Actualizada"); document.getElementById('m-profile').classList.add('hidden');
+                document.getElementById('p-new-pass').value = '';
+                sessionUser.password = newP; sessionUser.password_hash = newP;
+                localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
+            } catch(e) { alert("Error"); }
+            btn.innerHTML = `GUARDAR CAMBIOS`; btn.disabled = false;
         }
 
         async function executeHardReset() {
@@ -1182,6 +1232,7 @@
             renderClientGrid(sessionUser.is_portfolio);
         }
 
+        // RENDER CLIENT GRID (REDISEÑO MOBILE-FIRST)
         function renderClientGrid(isPort) {
             const container = document.getElementById('client-photos');
             const activeSet = photosCache.find(s => s.id === activeClientTabId);
@@ -1190,32 +1241,28 @@
             }
 
             const showWatermark = sessionUser.watermark_enabled !== false; 
+            const isSelectLocked = sessionUser.favorites_locked === true;
 
             container.innerHTML = activeSet.photos.map((p, index) => {
                 const isFav = favoritesCache.includes(p.id);
-                const heartClass = isFav ? "fa-solid text-red-500" : "fa-regular text-white drop-shadow-md";
-                const lockedClass = sessionUser.favorites_locked ? "pointer-events-none opacity-40" : "pointer-events-auto";
-
-                const interactiveLayer = isPort ? 
-                    `<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-auto" onclick="openCarousel(${index})">
-                        <span class="text-white font-bold tracking-widest border border-white/50 px-6 py-2 rounded-full backdrop-blur-sm">VER FOTO</span>
-                    </div>` : 
-                    `<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-6 pointer-events-none">
-                        <div class="flex justify-end pointer-events-auto ${lockedClass}">
-                            <button onclick="toggleFavorite('${p.id}')" class="text-3xl hover:scale-110 transition-transform"><i id="fav-${p.id}" class="${heartClass} fa-heart"></i></button>
-                        </div>
-                        <div class="flex justify-center mb-2 pointer-events-auto">
-                            <button onclick="openCarousel(${index})" class="bg-white/20 backdrop-blur-md text-white border border-white/30 px-8 py-3 rounded-full font-bold text-xs tracking-widest hover:bg-white hover:text-black transition-colors shadow-xl">VER / COMENTAR</button>
-                        </div>
-                    </div>`;
-
+                const heartIcon = isFav ? "fa-solid text-red-500" : "fa-regular text-white";
                 const wmLayer = showWatermark ? `<div class="watermark-overlay"></div>` : '';
+
+                // Botones siempre visibles (Action Bar flotante en la foto)
+                const gridActions = isPort ? '' : `
+                    <div class="absolute top-4 right-4 z-20 flex flex-col gap-3 pointer-events-auto">
+                        <button onclick="toggleFavorite('${p.id}')" class="bg-black/50 backdrop-blur-sm border border-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all ${isSelectLocked ? 'opacity-40 pointer-events-none' : 'hover:scale-110'}">
+                            <i id="fav-${p.id}" class="${heartIcon} fa-heart text-xl"></i>
+                        </button>
+                    </div>
+                `;
 
                 return `
                 <div class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 protect-img fade-in">
-                    <img src="${p.thumb}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700" loading="lazy">
+                    <img src="${p.thumb}" class="w-full h-auto object-cover cursor-pointer" onclick="openCarousel(${index})" loading="lazy">
                     ${wmLayer}
-                    ${interactiveLayer}
+                    ${gridActions}
+                    <button onclick="openCarousel(${index})" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/40 backdrop-blur-md text-white text-[10px] font-black px-6 py-2 rounded-full border border-white/20 uppercase tracking-widest z-20 hover:bg-white hover:text-black transition-colors">VER DETALLE</button>
                 </div>`;
             }).join('');
         }
@@ -1225,10 +1272,10 @@
             const icon = document.getElementById(`fav-${fileId}`);
             if (favoritesCache.includes(fileId)) {
                 favoritesCache = favoritesCache.filter(id => id !== fileId);
-                icon.className = "fa-regular text-white drop-shadow-md fa-heart";
+                icon.className = "fa-regular text-white fa-heart text-xl";
             } else {
                 favoritesCache.push(fileId);
-                icon.className = "fa-solid text-red-500 fa-heart animate-bounce"; 
+                icon.className = "fa-solid text-red-500 fa-heart text-xl animate-bounce"; 
                 setTimeout(()=> icon.classList.remove('animate-bounce'), 1000);
             }
             await gasRequest("toggleFavorite", { gallery_id: sessionUser.id, file_id: fileId });
@@ -1292,26 +1339,7 @@
                 } catch(e){}
             }
 
-            // Crear Botón de Favorito Flotante para Móvil
-            const fHeart = favoritesCache.includes(currentPhotoId) ? "fa-solid text-red-500" : "fa-regular text-white drop-shadow-md";
-            const fLock = sessionUser.favorites_locked ? "hidden" : "";
-            
-            if(!sessionUser.is_portfolio && !document.getElementById('mobile-fav-zone')) {
-                const fz = document.createElement('div'); fz.id = 'mobile-fav-zone'; fz.className = `fav-touch-zone md:hidden ${fLock}`;
-                fz.innerHTML = `<button onclick="toggleFavoriteCarousel()" class="text-4xl filter drop-shadow-lg"><i id="fav-c-${currentPhotoId}" class="${fHeart} fa-heart"></i></button>`;
-                document.getElementById('carousel-img-container').appendChild(fz);
-            } else if(document.getElementById('mobile-fav-zone')) {
-                document.getElementById('mobile-fav-zone').className = `fav-touch-zone md:hidden ${fLock}`;
-                document.getElementById('mobile-fav-zone').innerHTML = `<button onclick="toggleFavoriteCarousel()" class="text-4xl filter drop-shadow-lg"><i id="fav-c-${currentPhotoId}" class="${fHeart} fa-heart"></i></button>`;
-            }
-
             document.getElementById('m-carousel').classList.remove('hidden');
-        }
-
-        async function toggleFavoriteCarousel() {
-            await toggleFavorite(currentPhotoId);
-            const iconC = document.getElementById(`fav-c-${currentPhotoId}`);
-            if(iconC) iconC.className = favoritesCache.includes(currentPhotoId) ? "fa-solid text-red-500 fa-heart" : "fa-regular text-white drop-shadow-md fa-heart";
         }
 
         function closeCarousel() { 
@@ -1328,13 +1356,6 @@
                 if(e.key === 'ArrowRight') nextPhoto(); 
                 if(e.key === 'ArrowLeft') prevPhoto(); 
                 if(e.key === 'Escape') { window.history.back(); closeCarousel(); }
-            }
-        });
-
-        // Evento POPSTATE para el botón "Atrás" en Android
-        window.addEventListener('popstate', (e) => {
-            if(!document.getElementById('m-carousel').classList.contains('hidden')) {
-                closeCarousel();
             }
         });
 
@@ -1388,7 +1409,7 @@
             try {
                 const res = await gasRequest("updateSettings", { max_resolution: resVal, jpeg_quality: qualVal, actor: sessionUser.email });
                 if (res.error) { alert("Error: " + res.error); } 
-                else { window.systemSettings = { max_resolution: resVal, jpeg_quality: qualVal }; showToast("Configuración Guardada"); }
+                else { window.systemSettings = { max_resolution: resVal, jpeg_quality: qualVal }; showToast("Configuración Global de Compresión Actualizada"); }
             } catch(e) { alert("Error de red"); }
             btn.innerHTML = "GUARDAR AJUSTES"; btn.disabled = false;
         }
@@ -1532,7 +1553,7 @@
             
             document.getElementById('m-g').classList.add('hidden'); 
             ['cN','sl','cU','ps','gDesc','gSound'].forEach(id => document.getElementById(id).value = '');
-            fetchG(); btn.innerHTML = "CREAR BÓVEDA"; btn.disabled = false;
+            fetchG(); btn.innerHTML = "CREAR"; btn.disabled = false;
         }
 
         function openEditModal(galleryObj) {
