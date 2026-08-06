@@ -753,6 +753,7 @@
             if (payload === null) { 
                 const r = await fetch(url); return await r.json(); 
             } else { 
+                // AQUÍ FALTABA EL HEADER QUE YO BORRÉ
                 const r = await fetch(GAS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: action, payload: payload }) }); 
                 return await r.json(); 
             }
