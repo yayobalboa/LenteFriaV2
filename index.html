@@ -90,7 +90,7 @@
         <span id="toast-msg">Mensaje</span>
     </div>
 
-    <!-- PANTALLA LOGIN -->
+    <!-- PANTALLA LOGIN Y FORMULARIOS -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-500">
         <div class="bg-white p-12 rounded-3xl w-full max-w-md shadow-2xl mx-4 fade-in">
             <h1 class="font-black text-4xl tracking-tighter text-center mb-8 brand-logo-container">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
@@ -104,6 +104,18 @@
                 </div>
                 <div class="text-right mb-6"><button onclick="switchForm('forgot')" class="text-xs text-slate-400 font-bold hover:text-cyan-lf">¿Olvidaste tu contraseña?</button></div>
                 <button onclick="login()" id="btn-login" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all tracking-widest shadow-lg">INICIAR SESIÓN</button>
+            </div>
+            
+            <!-- NUEVA PANTALLA: FORZAR CAMBIO DE CONTRASEÑA -->
+            <div id="form-force-pass" class="hidden">
+                <h2 class="text-2xl font-black text-center mb-2">Cambio Obligatorio</h2>
+                <p class="text-sm font-bold text-slate-400 mb-6 text-center">Por seguridad, debes crear una nueva contraseña en tu primer inicio de sesión.</p>
+                <div class="relative mb-6">
+                    <input id="new-force-pass" type="password" placeholder="Nueva Contraseña Fuerte" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+                    <button onclick="togglePass('new-force-pass', 'eye-force')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-force" class="fa-solid fa-eye"></i></button>
+                </div>
+                <button onclick="executeForcePassChange()" id="btn-force-pass" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-black hover:bg-black transition-all tracking-widest shadow-lg mb-3">GUARDAR Y ENTRAR</button>
+                <button onclick="logout()" class="w-full text-slate-400 font-bold text-xs hover:text-black">CANCELAR</button>
             </div>
 
             <div id="form-forgot" class="hidden">
@@ -414,7 +426,7 @@
     <div id="m-profile" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-2xl mb-2">Mi Perfil Profesional</h3>
-            <p class="text-slate-400 text-sm font-bold mb-6">Administra tus datos, biografía y marca.</p>
+            <p class="text-slate-400 text-sm font-bold mb-6">Administra tus datos, biografía y canales de contacto.</p>
             <div class="flex flex-col gap-4">
                 <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Marca Personal</h4>
                 <div class="flex gap-4 items-center">
@@ -428,10 +440,10 @@
                     </div>
                 </div>
                 <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2 mt-2">Biografía & Redes</h4>
-                <textarea id="p-bio" rows="3" placeholder="Biografía..." class="p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf"></textarea>
-                <input id="p-ig" placeholder="Enlace Instagram" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-                <input id="p-wa" placeholder="WhatsApp (Ej: 52199923485)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-                <input id="p-ap" placeholder="Enlace Portafolio Externo" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <textarea id="p-bio" rows="3" placeholder="Si dejas este campo vacío, no se mostrará nada." class="p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf"></textarea>
+                <input id="p-ig" placeholder="Enlace Instagram (vacío para ocultar)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="p-wa" placeholder="WhatsApp (Ej: 52199923485) (vacío para ocultar)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="p-ap" placeholder="Enlace Portafolio Externo (vacío para ocultar)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
                 <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2 mt-2">Seguridad</h4>
                 <div class="relative mb-2">
                     <input id="p-new-pass" type="password" placeholder="Nueva Contraseña (Opcional)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
@@ -519,6 +531,7 @@
 
         let sessionUser = null; 
         let sessionRole = null; 
+        let pendingLoginUser = null;
         let allStaffCache = []; 
         let currentGallery = null; 
         let currentPhotoId = null; 
@@ -739,10 +752,15 @@
             try { 
                 const res = await gasRequest("login", { identifier: u, password: p }); 
                 if(res.success) { 
-                    sessionUser = res.user; 
-                    sessionRole = res.role; 
-                    localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole })); 
-                    applyRoleUI(); 
+                    if(res.require_change) {
+                        pendingLoginUser = { id: res.user_id, role: res.role };
+                        switchForm('force-pass');
+                    } else {
+                        sessionUser = res.user; 
+                        sessionRole = res.role; 
+                        localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole })); 
+                        applyRoleUI(); 
+                    }
                 } else { 
                     err.innerText = res.message; 
                     err.classList.remove('hidden'); 
@@ -757,11 +775,38 @@
             }
         }
 
+        async function executeForcePassChange() {
+            const newP = document.getElementById('new-force-pass').value;
+            if(!newP || newP.length < 4) return alert("Ingresa una contraseña válida");
+            
+            const btn = document.getElementById('btn-force-pass');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; 
+            btn.disabled = true;
+            
+            try {
+                const res = await gasRequest("forceChangePassword", { user_id: pendingLoginUser.id, role: pendingLoginUser.role, new_password: newP });
+                if(res.success) {
+                    sessionUser = res.user;
+                    sessionRole = res.role;
+                    localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
+                    showToast("Contraseña guardada con éxito");
+                    applyRoleUI();
+                } else {
+                    alert("Error guardando la contraseña.");
+                }
+            } catch (e) { 
+                alert("Error de red."); 
+            }
+            btn.innerHTML = "GUARDAR Y ENTRAR"; 
+            btn.disabled = false;
+        }
+
         function logout() { 
             localStorage.removeItem('lf_session'); 
             localStorage.removeItem('lf_route_gallery'); 
             sessionUser = null; 
             sessionRole = null; 
+            pendingLoginUser = null;
             document.getElementById('l-user').value = ''; 
             document.getElementById('l-pass').value = ''; 
             toggleMusic(false); 
@@ -776,6 +821,7 @@
             logoContainers.forEach(container => { container.innerHTML = `LENTE<span class="text-cyan-lf">FRÍA</span>`; }); 
             
             document.getElementById('login-screen').classList.remove('hidden'); 
+            switchForm('login');
             setTimeout(() => document.getElementById('login-screen').classList.remove('opacity-0'), 50); 
             const btn = document.getElementById('btn-login'); 
             btn.innerText = "INICIAR SESIÓN"; 
@@ -783,7 +829,7 @@
         }
 
         function switchForm(target) { 
-            ['form-login', 'form-forgot', 'form-reset'].forEach(id => document.getElementById(id).classList.add('hidden')); 
+            ['form-login', 'form-forgot', 'form-reset', 'form-force-pass'].forEach(id => document.getElementById(id).classList.add('hidden')); 
             document.getElementById(`form-${target}`).classList.remove('hidden'); 
             document.getElementById('login-error').classList.add('hidden'); 
         }
@@ -996,7 +1042,7 @@
                 showToast("Perfil actualizado"); 
                 document.getElementById('m-profile').classList.add('hidden'); 
             } catch(e) { 
-                alert("Error"); 
+                alert("Error al guardar el perfil"); 
             } 
             btn.innerHTML = "GUARDAR CAMBIOS"; 
             btn.disabled = false; 
@@ -1018,7 +1064,7 @@
                 document.getElementById('cfg-qual').value = window.systemSettings.jpeg_quality; 
                 document.getElementById('cfg-qual-lbl').innerText = window.systemSettings.jpeg_quality; 
             } catch(e) { 
-                document.getElementById('staff-list').innerHTML = `<p class="text-red-500 font-bold">Error.</p>`; 
+                document.getElementById('staff-list').innerHTML = `<p class="text-red-500 font-bold">Error al cargar.</p>`; 
             } 
         }
 
@@ -1026,16 +1072,24 @@
             const n = document.getElementById('sN').value; 
             const e = document.getElementById('sE').value; 
             const p = document.getElementById('sP').value; 
-            if(!n || !e || !p) return alert("Llena todo"); 
+            if(!n || !e || !p) return alert("Llena todos los campos"); 
             
             const btn = document.getElementById('btn-create-staff'); 
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; 
             btn.disabled = true; 
             
-            await gasRequest("createStaff", { full_name: n, email: e, password: p, actor: sessionUser.email }); 
-            document.getElementById('m-u').classList.add('hidden'); 
-            showToast("Staff Creado"); 
-            fetchS(); 
+            try {
+                const res = await gasRequest("createStaff", { full_name: n, email: e, password: p, actor: sessionUser.email }); 
+                if (res.error) {
+                    alert(res.error);
+                } else {
+                    document.getElementById('m-u').classList.add('hidden'); 
+                    showToast("Staff Creado"); 
+                    fetchS(); 
+                }
+            } catch(e) {
+                alert("Error de red");
+            }
             btn.innerHTML = "CREAR STAFF"; 
             btn.disabled = false; 
         }
@@ -1057,7 +1111,7 @@
                     showToast("Ajustes guardados"); 
                 } 
             } catch(e) { 
-                alert("Error"); 
+                alert("Error de red"); 
             } 
             btn.innerHTML = "GUARDAR"; 
             btn.disabled = false; 
@@ -1118,7 +1172,7 @@
                     gasRequest("getFavorites", null, currentGallery.id) 
                 ]);
                 
-                photosCache = structure; 
+                photosCache = structure || []; 
                 const favSet = new Set(Array.isArray(favs) ? favs.map(f => f.file_id) : []); 
                 document.getElementById('ws-fav-count').innerHTML = `<i class="fa-solid fa-heart"></i> ${favSet.size} Favoritos`;
                 
@@ -1325,7 +1379,10 @@
                 if (d && d.length > 0) {
                     const p = d[0]; 
                     document.getElementById('c-photo-name').innerText = p.full_name; 
+                    
+                    // Enfoque de campos vacíos: Si biografía está nula/vacía, ponemos algo genérico o simplemente la dejamos vacía.
                     document.getElementById('c-photo-bio').innerText = p.bio || "Fotografía Profesional"; 
+                    
                     applyBranding(p.brand_color, p.brand_logo_url);
                     
                     const ctaBtn = document.getElementById('cta-hire-me'); 
@@ -1336,6 +1393,7 @@
                         ctaBtn.classList.add('hidden'); 
                     }
                     
+                    // Redes sociales dinámicas
                     let socialsHtml = "";
                     if(p.whatsapp) socialsHtml += `<a href="https://wa.me/${p.whatsapp}?text=Hola..." target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-whatsapp text-2xl"></i></a>`;
                     if(p.instagram) socialsHtml += `<a href="${p.instagram}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-instagram text-2xl"></i></a>`;
@@ -1496,7 +1554,6 @@
                 document.getElementById('carousel-media-container').classList.replace('w-full', 'md:w-2/3'); 
                 document.getElementById('comment-text').value = ''; 
                 resetStars(); 
-                
                 try { 
                     const ratings = await gasRequest("getRatings", null, sessionUser.active_gallery.id); 
                     const match = ratings.find(r => r.file_id === currentPhotoId); 
@@ -1533,7 +1590,6 @@
             const ytFrame = document.getElementById('yt-player'); 
             
             promptCard.classList.add('hidden'); 
-            
             if (status) { 
                 eqBtn.classList.remove('hidden'); 
                 document.getElementById('eq-lbl').innerText = "SOUNDTRACK ON"; 
@@ -1569,7 +1625,6 @@
                 } 
                 return; 
             } 
-            
             if (audio.paused) { 
                 audio.play(); 
                 lbl.innerText = "SOUNDTRACK ON"; 
@@ -1631,7 +1686,6 @@
                         document.getElementById('storage-lbl').innerText = `${(used / 1073741824).toFixed(2)} GB / ${(limit / 1073741824).toFixed(0)} GB`; 
                         document.getElementById('storage-bar').style.width = `${pct}%`; 
                         document.getElementById('nav-storage-container').classList.remove('hidden'); 
-                        
                         if (pct >= 95) { 
                             document.getElementById('storage-bar').className = "h-full bg-red-500 transition-all duration-500"; 
                         } else { 
@@ -1667,11 +1721,9 @@
             btn.disabled = true; 
             
             await gasRequest("createGallery", { photographer_id: s_id, client_name: cN, slug: sl, is_portfolio: isPort, can_download: true, description: desc, soundtrack_url: sound }); 
-            
             document.getElementById('m-g').classList.add('hidden'); 
             ['cN','sl','gDesc','gSound'].forEach(id => document.getElementById(id).value = ''); 
             fetchG(); 
-            
             btn.innerHTML = "CREAR CONTENEDOR"; 
             btn.disabled = false; 
             
@@ -1798,9 +1850,7 @@
                         btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> OPTIMIZANDO ${i+1}/${files.length}`; 
                         try { file = await compressFile(file); } catch(err) {} 
                     } 
-                    
                     btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> SUBIENDO ${i+1}/${files.length}`; 
-                    
                     const reader = new FileReader(); 
                     const b64 = await new Promise(res => { 
                         reader.onload = () => res(reader.result.split(',')[1]); 
@@ -1808,7 +1858,6 @@
                     }); 
                     
                     const uploadResult = await gasRequest("uploadPhoto", { folder_id: setFolderId, gallery_id: galleryId, filename: files[i].name, mimeType: file.type, base64Data: b64, actor: sessionUser.email }); 
-                    
                     if (uploadResult.error) { 
                         alert(uploadResult.error); 
                         break; 
@@ -1830,14 +1879,7 @@
             const tW = window.systemSettings ? window.systemSettings.max_resolution : 3000; 
             const tQ = window.systemSettings ? (window.systemSettings.jpeg_quality / 100) : 0.82; 
             return new Promise((res, rej) => { 
-                new Compressor(file, { 
-                    quality: tQ, 
-                    maxWidth: tW, 
-                    maxHeight: tW, 
-                    mimeType: 'image/jpeg', 
-                    success(r) { res(r); }, 
-                    error(e) { rej(e); } 
-                }); 
+                new Compressor(file, { quality: tQ, maxWidth: tW, maxHeight: tW, mimeType: 'image/jpeg', success(r) { res(r); }, error(e) { rej(e); } }); 
             }); 
         }
 
@@ -1845,19 +1887,16 @@
             const input = document.createElement('input'); 
             input.type = 'file'; 
             input.accept = "image/*,video/mp4,video/quicktime"; 
-            
             input.onchange = async e => { 
                 const file = e.target.files[0]; 
                 if(!file) return; 
                 
                 let finalFile = file; 
                 let isVideo = file.type.startsWith('video/'); 
-                
                 if(!isVideo) { 
                     showToast("Optimizando reemplazo..."); 
                     finalFile = await compressFile(file); 
                 } 
-                
                 showToast("Sustituyendo..."); 
                 
                 const reader = new FileReader(); 
@@ -1906,7 +1945,6 @@
 
         async function toggleFavorite(fileId) { 
             if (sessionUser.active_gallery.favorites_locked) return; 
-            
             const icon = document.getElementById(`fav-${fileId}`); 
             if (favoritesCache.includes(fileId)) { 
                 favoritesCache = favoritesCache.filter(id => id !== fileId); 
@@ -1916,7 +1954,6 @@
                 icon.className = "fa-solid text-red-500 fa-heart text-xl animate-bounce"; 
                 setTimeout(()=> icon.classList.remove('animate-bounce'), 1000); 
             } 
-            
             if(filterFavoritesActive) renderClientGrid(sessionUser.active_gallery.is_portfolio); 
             await gasRequest("toggleFavorite", { gallery_id: sessionUser.active_gallery.id, file_id: fileId }); 
         }
@@ -1945,7 +1982,6 @@
         function updateDownloadBtnText() { 
             const btn = document.getElementById('btn-download-zip'); 
             if(!btn) return; 
-            
             btn.classList.remove('bg-green-500'); 
             if(downloadSelectionCache.length > 0) { 
                 btn.innerHTML = `<i class="fa-solid fa-envelope"></i> RECIBIR DESCARGA POR CORREO (${downloadSelectionCache.length})`; 
@@ -1976,12 +2012,10 @@
             try { 
                 const d = await gasRequest("getComments", null, sessionUser.id); 
                 const list = document.getElementById('inbox-list'); 
-                
                 if(!Array.isArray(d) || d.length === 0) { 
                     list.innerHTML = `<p class="text-slate-400 font-bold text-center mt-10"><i class="fa-solid fa-check-double text-4xl mb-3 block text-slate-200"></i>Bandeja limpia.</p>`; 
                     return; 
                 } 
-                
                 list.innerHTML = d.map(c => `
                     <div id="comment-card-${c.id}" class="bg-white p-6 rounded-2xl border flex flex-col sm:flex-row gap-6 items-start shadow-sm">
                         <img src="https://lh3.googleusercontent.com/d/${c.file_id}=s200" class="w-24 h-24 object-cover rounded-xl bg-slate-100">
@@ -1989,9 +2023,7 @@
                             <div class="flex gap-2 mb-2"><span class="bg-cyan-lf text-white text-[10px] px-3 py-1 rounded-full font-bold tracking-widest">${c.galleries.client_name}</span></div>
                             <p class="text-lg font-bold">"${c.comment_text}"</p>
                         </div>
-                        <button onclick="resolveComment('${c.id}')" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl text-xs tracking-widest shadow-md flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-check-double"></i> RESUELTO
-                        </button>
+                        <button onclick="resolveComment('${c.id}')" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl text-xs tracking-widest shadow-md flex items-center justify-center gap-2"><i class="fa-solid fa-check-double"></i> RESUELTO</button>
                     </div>`).join(''); 
             } catch(e) { 
                 document.getElementById('inbox-list').innerHTML = `<p class="text-red-500 font-bold">Error.</p>`; 
@@ -2003,12 +2035,10 @@
             const btn = card.querySelector('button'); 
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`; 
             btn.disabled = true; 
-            
             try { 
                 await gasRequest("resolveComment", { comment_id: commentId }); 
                 card.style.opacity = '0'; 
                 card.style.transform = 'scale(0.95)'; 
-                
                 setTimeout(() => { 
                     card.remove(); 
                     if(document.getElementById('inbox-list').children.length === 0) { 
@@ -2025,13 +2055,10 @@
 
         async function openAccessManager() { 
             document.getElementById('m-access').classList.remove('hidden'); 
-            
             const galSelect = document.getElementById('acc-gal-id'); 
             galSelect.innerHTML = '<option value="">1. Selecciona la Galería / Sesión</option>' + globalGalleriesCache.map(g => `<option value="${g.id}">${g.client_name} (/${g.slug})</option>`).join(''); 
-            
             const clientSelect = document.getElementById('acc-client-id'); 
             clientSelect.innerHTML = '<option value="">Cargando clientes...</option>'; 
-            
             try { 
                 const clients = await gasRequest("getClients"); 
                 if(clients && clients.length > 0) { 
@@ -2058,12 +2085,16 @@
             btn.disabled = true; 
             
             try { 
-                await gasRequest("createClient", { username: user, full_name: name, email: email, phone: phone, password: pass }); 
-                showToast("Cliente registrado."); 
-                ['nc-username', 'nc-name', 'nc-email', 'nc-phone', 'nc-pass'].forEach(id => document.getElementById(id).value = ''); 
-                openAccessManager(); 
+                const res = await gasRequest("createClient", { username: user, full_name: name, email: email, phone: phone, password: pass }); 
+                if (res.error) {
+                    alert(res.error);
+                } else {
+                    showToast("Cliente registrado."); 
+                    ['nc-username', 'nc-name', 'nc-email', 'nc-phone', 'nc-pass'].forEach(id => document.getElementById(id).value = ''); 
+                    openAccessManager(); 
+                }
             } catch(e) { 
-                alert("Error creando cliente. (Usuario, Correo o Teléfono ya existe)."); 
+                alert("Error de red"); 
             } 
             btn.innerHTML = "REGISTRAR EN DIRECTORIO"; 
             btn.disabled = false; 
@@ -2101,12 +2132,7 @@
             
             try { 
                 const res = await gasRequest("hardReset", { admin_password: p }); 
-                if (res.error) { 
-                    alert("Error: " + res.error); 
-                    btn.innerHTML = "EJECUTAR PURGA"; 
-                    btn.disabled = false; 
-                    return; 
-                } 
+                if (res.error) { alert("Error: " + res.error); btn.innerHTML = "EJECUTAR PURGA"; btn.disabled = false; return; } 
                 alert("SISTEMA REINICIADO."); 
                 logout(); 
             } catch (error) { 
@@ -2119,13 +2145,8 @@
         function togglePass(inputId, iconId) { 
             const inp = document.getElementById(inputId); 
             const icon = document.getElementById(iconId); 
-            if(inp.type === "password") { 
-                inp.type = "text"; 
-                icon.classList.replace('fa-eye', 'fa-eye-slash'); 
-            } else { 
-                inp.type = "password"; 
-                icon.classList.replace('fa-eye-slash', 'fa-eye'); 
-            } 
+            if(inp.type === "password") { inp.type = "text"; icon.classList.replace('fa-eye', 'fa-eye-slash'); } 
+            else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); } 
         }
     </script>
 </body>
