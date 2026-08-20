@@ -1804,19 +1804,40 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; 
             btn.disabled = true; 
             
-            await gasRequest("createGallery", { photographer_id: s_id, client_name: cN, slug: sl, is_portfolio: isPort, can_download: true, description: desc, soundtrack_url: sound }); 
-            document.getElementById('m-g').classList.add('hidden'); 
-            ['cN','sl','gDesc','gSound'].forEach(id => document.getElementById(id).value = ''); 
-            fetchG(); 
+            try {
+                const res = await gasRequest("createGallery", { 
+                    photographer_id: s_id, 
+                    client_name: cN, 
+                    slug: sl, 
+                    is_portfolio: isPort, 
+                    can_download: true, 
+                    description: desc, 
+                    soundtrack_url: sound 
+                }); 
+                
+                // ¡AQUÍ ESTÁ LA MAGIA DE DIAGNÓSTICO!
+                if (res.error) {
+                    alert("Supabase rechazó la entrega. Error: " + res.error);
+                } else {
+                    document.getElementById('m-g').classList.add('hidden'); 
+                    ['cN','sl','gDesc','gSound'].forEach(id => document.getElementById(id).value = ''); 
+                    fetchG(); 
+                    
+                    setTimeout(() => { 
+                        if(!isPort) { 
+                            openAccessManager(); 
+                            showToast("Contenedor listo. Ahora asígnale un cliente."); 
+                        } else {
+                            showToast("Portafolio creado exitosamente.");
+                        }
+                    }, 1000); 
+                }
+            } catch (e) {
+                alert("Falló la conexión con el servidor: " + e.message);
+            }
+            
             btn.innerHTML = "CREAR CONTENEDOR"; 
             btn.disabled = false; 
-            
-            setTimeout(() => { 
-                if(!isPort) { 
-                    openAccessManager(); 
-                    showToast("Contenedor listo. Ahora asígnale un cliente."); 
-                } 
-            }, 1000); 
         }
 
         function openEditModal(galleryObj) { 
