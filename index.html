@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LenteFría DAM - Premium Enterprise</title>
+    
+    <!-- LIBRERÍAS DE RENDIMIENTO Y UI -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    
+    <!-- GOOGLE ANALYTICS -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7CD1BCMB0"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -19,29 +23,37 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700;900&display=swap'); 
+        
         :root { --brand-color: #00B7F1; }
+        
         body { font-family: 'Noto Sans', sans-serif; background: #fff; color: #0f172a; scroll-behavior: smooth; overflow-x: hidden; } 
         
+        /* CLASES DINÁMICAS WHITE-LABEL */
         .text-cyan-lf { color: var(--brand-color) !important; } 
         .bg-cyan-lf { background-color: var(--brand-color) !important; }
         .border-cyan-lf { border-color: var(--brand-color) !important; } 
         .accent-cyan-lf { accent-color: var(--brand-color) !important; }
         .focus\:ring-cyan-lf:focus { --tw-ring-color: var(--brand-color) !important; }
         
+        /* GRID MASONRY */
         .masonry { column-count: 1; column-gap: 1.5rem; } 
         @media (min-width: 640px) { .masonry { column-count: 2; } } 
         @media (min-width: 1024px) { .masonry { column-count: 3; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; position: relative; }
         
+        /* LAZY LOADING EFFECT */
         .lazy-image { opacity: 0; transition: opacity 0.5s ease-in-out; } 
         .lazy-loaded { opacity: 1; }
         
+        /* CLIENT HERO COVER */
         .hero-cover { height: 100vh; width: 100%; object-fit: cover; background-color: #0f172a; background-repeat: no-repeat; background-size: cover; position: relative; transition: background-position 0.3s; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%); }
         .protect-img { -webkit-user-select: none; user-select: none; pointer-events: auto; }
         
+        /* MARCA DE AGUA CSS */
         .watermark-overlay { position: absolute; inset: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 150 150'><text x='10' y='100' fill='rgba(255, 255, 255, 0.15)' font-family='Noto Sans' font-size='11' font-weight='bold' transform='rotate(-45 75 75)'>LENTE FRÍA</text></svg>"); background-repeat: repeat; pointer-events: none; z-index: 10; }
         
+        /* ANIMACIONES Y COMPONENTES */
         #toast { transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); } 
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -106,7 +118,7 @@
                 <button onclick="login()" id="btn-login" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all tracking-widest shadow-lg">INICIAR SESIÓN</button>
             </div>
             
-            <!-- NUEVA PANTALLA: FORZAR CAMBIO DE CONTRASEÑA -->
+            <!-- FORZAR CAMBIO DE CONTRASEÑA -->
             <div id="form-force-pass" class="hidden">
                 <h2 class="text-2xl font-black text-center mb-2">Cambio Obligatorio</h2>
                 <p class="text-sm font-bold text-slate-400 mb-6 text-center">Por seguridad, debes crear una nueva contraseña en tu primer inicio de sesión.</p>
@@ -135,7 +147,7 @@
         </div>
     </div>
 
-    <!-- BOTONES GLOBALES Y NAV -->
+    <!-- BOTONES GLOBALES Y NAVEGACIÓN -->
     <a id="cta-hire-me" href="#" target="_blank" class="hidden fixed bottom-6 right-6 z-[200] bg-green-500 text-white px-6 py-4 rounded-full font-black tracking-widest shadow-2xl hover:scale-105 transition-transform flex items-center gap-3">
         <i class="fa-brands fa-whatsapp text-2xl animate-pulse"></i> CONTRÁTAME
     </a>
@@ -182,14 +194,14 @@
             </div>
         </section>
 
-        <!-- SECCIONES STAFF -->
+        <!-- SECCIONES STAFF / ADMIN -->
         <section id="section-admin" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 shadow-xl">
                 <div>
                     <h2 class="text-3xl font-black">Equipo LenteFría</h2>
                     <p class="text-slate-400 text-sm mt-1">Gestión de fotógrafos y accesos</p>
                 </div>
-                <button onclick="document.getElementById('m-u').classList.remove('hidden')" class="bg-cyan-lf text-black px-8 py-4 rounded-xl font-bold hover:bg-white transition-colors shadow-lg">+ NUEVO FOTÓGRAFO</button>
+                <button onclick="document.getElementById('m-u').classList.remove('hidden')" class="bg-cyan-lf text-black px-8 py-4 rounded-xl font-bold hover:bg-white transition-colors shadow-lg w-full sm:w-auto">+ NUEVO FOTÓGRAFO</button>
             </div>
             
             <div id="staff-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
@@ -197,26 +209,34 @@
             <div class="bg-white border p-8 rounded-3xl shadow-sm mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
                     <h3 class="font-black text-2xl mb-1"><i class="fa-solid fa-sliders text-cyan-lf mr-2"></i> Parámetros Compresión</h3>
+                    <p class="text-slate-400 font-bold text-sm">Establece la resolución y calidad global del sistema.</p>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-4 font-bold text-sm items-end">
+                <div class="flex flex-col sm:flex-row gap-4 font-bold text-sm items-end w-full md:w-auto">
                     <div>
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Resolución:</label>
-                        <select id="cfg-res" class="p-3 bg-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-cyan-lf">
+                        <select id="cfg-res" class="p-3 bg-slate-100 rounded-xl outline-none w-full sm:w-40 focus:ring-2 focus:ring-cyan-lf">
                             <option value="4000">4K (4000px)</option>
                             <option value="3000">Carta (3000px)</option>
                             <option value="2048">Optimizado (2048px)</option>
+                            <option value="1600">Liviano (1600px)</option>
                         </select>
                     </div>
                     <div>
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Calidad (<span id="cfg-qual-lbl">82</span>%):</label>
-                        <input type="range" id="cfg-qual" min="50" max="100" value="82" class="accent-cyan-lf mt-3" oninput="document.getElementById('cfg-qual-lbl').innerText = this.value">
+                        <input type="range" id="cfg-qual" min="50" max="100" value="82" class="accent-cyan-lf mt-3 w-full sm:w-40" oninput="document.getElementById('cfg-qual-lbl').innerText = this.value">
                     </div>
-                    <button onclick="saveSystemSettings()" class="bg-black text-white font-bold px-6 py-3 rounded-xl hover:bg-cyan-lf transition-all text-xs tracking-widest">GUARDAR</button>
+                    <button onclick="saveSystemSettings()" class="bg-black text-white font-bold px-6 py-3 rounded-xl hover:bg-cyan-lf transition-all text-xs tracking-widest sm:mt-5">GUARDAR</button>
                 </div>
+            </div>
+
+            <div class="border-2 border-red-200 bg-red-50 p-8 rounded-3xl animate-fade-in">
+                <h3 class="text-red-600 font-black text-2xl mb-2"><i class="fa-solid fa-triangle-exclamation mr-2 animate-pulse"></i> ZONA DE PELIGRO</h3>
+                <p class="text-red-400 font-bold text-sm mb-6">Esta acción borrará absolutamente TODAS las fotos, sesiones y comentarios. Tu cuenta de Admin NO será afectada.</p>
+                <button onclick="document.getElementById('m-reset').classList.remove('hidden')" class="bg-red-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-red-700 transition-colors shadow-lg">REINICIAR SISTEMA A CERO</button>
             </div>
         </section>
 
-        <!-- SECCIÓN ENTREGAS -->
+        <!-- SECCIÓN ENTREGAS GLOBALES -->
         <section id="section-galleries" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
                 <div>
@@ -224,9 +244,9 @@
                     <p class="text-slate-400 mt-2 font-bold">Tus sesiones y portafolios</p>
                 </div>
                 <div class="flex flex-wrap gap-4 w-full sm:w-auto">
-                    <button onclick="copyMyProfileLink()" class="bg-blue-50 text-blue-600 border border-blue-200 px-6 py-4 rounded-2xl font-bold hover:bg-blue-600 hover:text-white transition-all shadow-sm text-sm"><i class="fa-solid fa-globe mr-2"></i> MI PÁGINA PÚBLICA</button>
-                    <button onclick="openAccessManager()" class="bg-slate-100 text-black border px-6 py-4 rounded-2xl font-bold hover:bg-slate-200 transition-all shadow-sm text-sm"><i class="fa-solid fa-users mr-2"></i> CLIENTES</button>
-                    <button onclick="openGalleryModal()" class="bg-black text-white px-6 py-4 rounded-2xl font-bold hover:bg-cyan-lf transition-all shadow-xl text-sm"><i class="fa-solid fa-plus mr-2"></i> NUEVA ENTREGA</button>
+                    <button onclick="copyMyProfileLink()" class="bg-blue-50 text-blue-600 border border-blue-200 px-6 py-4 rounded-2xl font-bold hover:bg-blue-600 hover:text-white transition-all shadow-sm w-full sm:w-auto text-sm"><i class="fa-solid fa-globe mr-2"></i> MI PÁGINA PÚBLICA</button>
+                    <button onclick="openAccessManager()" class="bg-slate-100 text-black border px-6 py-4 rounded-2xl font-bold hover:bg-slate-200 transition-all shadow-sm w-full sm:w-auto text-sm"><i class="fa-solid fa-users mr-2"></i> CLIENTES</button>
+                    <button onclick="openGalleryModal()" class="bg-black text-white px-6 py-4 rounded-2xl font-bold hover:bg-cyan-lf transition-all shadow-xl w-full sm:w-auto text-sm"><i class="fa-solid fa-plus mr-2"></i> NUEVA ENTREGA</button>
                 </div>
             </div>
             <div id="galleries-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8"></div>
@@ -304,7 +324,7 @@
         </section>
     </main>
 
-    <!-- UI FLOTANTE Y CAROUSEL -->
+    <!-- UI FLOTANTE Y CAROUSEL MÚSICA -->
     <div id="music-prompt-card" class="hidden fixed bottom-6 left-6 z-[250] bg-slate-950 text-white p-6 rounded-3xl shadow-2xl flex flex-col gap-4 border border-white/10 max-w-xs transition-all duration-500 transform translate-y-2 fade-in">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-cyan-lf/20 text-cyan-lf rounded-full flex items-center justify-center text-lg animate-pulse"><i class="fa-solid fa-music animate-[spin_5s_linear_infinite]"></i></div>
@@ -363,7 +383,7 @@
         </div>
     </div>
 
-    <!-- MODALES VARIOS -->
+    <!-- MODALES DE CONTROL -->
     <div id="m-cropper" class="hidden fixed inset-0 z-[600] bg-black/95 flex flex-col backdrop-blur-md fade-in">
         <div class="flex justify-between items-center p-6 text-white bg-black/50 z-10">
             <div>
@@ -387,6 +407,17 @@
             <select id="move-folder-sel" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all"></select>
             <button id="btn-execute-move" onclick="executeMove()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest shadow-lg">MOVER AHORA</button>
             <button onclick="document.getElementById('m-move').classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+        </div>
+    </div>
+
+    <!-- MODAL PORTAFOLIO -->
+    <div id="m-portfolio" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
+            <h3 class="font-black text-2xl mb-2">Añadir a Portafolio</h3>
+            <p class="text-slate-400 text-sm font-bold mb-6">Selecciona el portafolio destino para esta fotografía.</p>
+            <select id="portfolio-sel" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all"></select>
+            <button id="btn-execute-portfolio" onclick="executeCopyToPortfolio()" class="w-full bg-purple-500 text-white p-4 rounded-xl font-bold hover:bg-purple-600 transition-colors tracking-widest shadow-lg">COPIAR AL PORTAFOLIO</button>
+            <button onclick="document.getElementById('m-portfolio').classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
         </div>
     </div>
     
@@ -526,6 +557,7 @@
         </div>
     </div>
 
+    <!-- CORE SCRIPT -->
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzAEygb5pHlQ08emz8KqvEnYFl9uMv_4WhzYTEk8tqxdxfIxc8IYKq9c5iFv7EicfO4/exec";
 
@@ -550,6 +582,7 @@
         let fileIdToCrop = null; 
         let galleryIdToCrop = null; 
         let moveFileIdCache = null;
+        let copyFileIdCache = null;
 
         window.systemSettings = { max_resolution: 3000, jpeg_quality: 82 };
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -1203,9 +1236,10 @@
                                 <div id="card-${p.id}" class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 fade-in min-h-[200px]">
                                     ${coverBadge} ${favBadge} ${videoBadge}
                                     <img data-src="${p.thumb}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" class="w-full h-auto object-cover lazy-image">
-                                    <div class="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center gap-3 backdrop-blur-sm z-20">
+                                    <div class="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center gap-2 backdrop-blur-sm z-20">
                                         ${!isVideo ? `<button onclick="openCropper('${p.thumb.replace('=s800', '=s2000')}', '${p.id}', ${currentGallery.id})" class="bg-white text-black px-6 py-2 rounded-full font-bold text-[10px] hover:bg-yellow-400 transition-colors tracking-widest"><i class="fa-solid fa-crop-simple mr-2"></i> PORTADA</button>` : ''}
                                         <button onclick="openMoveModal('${p.id}')" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold text-[10px] hover:bg-blue-700 transition-colors tracking-widest"><i class="fa-solid fa-folder-tree mr-2"></i> MOVER</button>
+                                        <button onclick="openPortfolioModal('${p.id}')" class="bg-purple-500 text-white px-6 py-2 rounded-full font-bold text-[10px] hover:bg-purple-600 transition-colors tracking-widest"><i class="fa-solid fa-briefcase mr-1"></i> A PORTAFOLIO</button>
                                         <button onclick="triggerReplace('${p.id}')" class="bg-yellow-500 text-black px-6 py-2 rounded-full font-bold text-[10px] hover:bg-yellow-600 transition-colors tracking-widest"><i class="fa-solid fa-arrows-rotate mr-1"></i> SUSTITUIR</button>
                                         <button onclick="deletePhoto('${p.id}')" class="bg-red-500 text-white px-6 py-2 rounded-full font-bold text-[10px] hover:bg-red-600 transition-colors tracking-widest"><i class="fa-solid fa-trash mr-2"></i> BORRAR</button>
                                     </div>
@@ -1244,6 +1278,47 @@
                 alert("Error moviendo archivo"); 
             } 
             btn.innerHTML = `MOVER AHORA`; 
+            btn.disabled = false; 
+        }
+
+        function openPortfolioModal(fileId) { 
+            copyFileIdCache = fileId; 
+            const sel = document.getElementById('portfolio-sel'); 
+            const btn = document.getElementById('btn-execute-portfolio');
+            
+            sel.innerHTML = '<option value="">Cargando portafolios...</option>'; 
+            document.getElementById('m-portfolio').classList.remove('hidden'); 
+            
+            const portfolios = globalGalleriesCache.filter(g => g.is_portfolio === true);
+            
+            if (portfolios.length === 0) {
+                sel.innerHTML = '<option value="">No tienes portafolios creados.</option>';
+                btn.disabled = true;
+                btn.classList.replace('bg-purple-500', 'bg-slate-300');
+            } else {
+                btn.disabled = false;
+                btn.classList.replace('bg-slate-300', 'bg-purple-500');
+                sel.innerHTML = portfolios.map(p => `<option value="${p.drive_folder_id}">${p.client_name}</option>`).join(''); 
+            }
+        }
+
+        async function executeCopyToPortfolio() { 
+            const destFolder = document.getElementById('portfolio-sel').value; 
+            if(!destFolder || !copyFileIdCache) return; 
+            
+            const btn = document.getElementById('btn-execute-portfolio'); 
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> COPIANDO...`; 
+            btn.disabled = true; 
+            
+            try { 
+                await gasRequest("copyToPortfolio", { file_id: copyFileIdCache, portfolio_folder_id: destFolder, photographer_id: sessionUser.id }); 
+                showToast("¡Foto añadida al portafolio!"); 
+                document.getElementById('m-portfolio').classList.add('hidden'); 
+                updateStorageProgressBar();
+            } catch(e) { 
+                alert("Error copiando la foto."); 
+            } 
+            btn.innerHTML = `COPIAR AL PORTAFOLIO`; 
             btn.disabled = false; 
         }
 
@@ -1380,7 +1455,6 @@
                     const p = d[0]; 
                     document.getElementById('c-photo-name').innerText = p.full_name; 
                     
-                    // Enfoque de campos vacíos: Si biografía está nula/vacía, ponemos algo genérico o simplemente la dejamos vacía.
                     document.getElementById('c-photo-bio').innerText = p.bio || "Fotografía Profesional"; 
                     
                     applyBranding(p.brand_color, p.brand_logo_url);
@@ -1393,7 +1467,6 @@
                         ctaBtn.classList.add('hidden'); 
                     }
                     
-                    // Redes sociales dinámicas
                     let socialsHtml = "";
                     if(p.whatsapp) socialsHtml += `<a href="https://wa.me/${p.whatsapp}?text=Hola..." target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-whatsapp text-2xl"></i></a>`;
                     if(p.instagram) socialsHtml += `<a href="${p.instagram}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-instagram text-2xl"></i></a>`;
@@ -1554,6 +1627,7 @@
                 document.getElementById('carousel-media-container').classList.replace('w-full', 'md:w-2/3'); 
                 document.getElementById('comment-text').value = ''; 
                 resetStars(); 
+                
                 try { 
                     const ratings = await gasRequest("getRatings", null, sessionUser.active_gallery.id); 
                     const match = ratings.find(r => r.file_id === currentPhotoId); 
@@ -1698,9 +1772,19 @@
             } 
         }
 
-        function openGalleryModal() { 
+        async function openGalleryModal() { 
             if (sessionRole === 'admin') { 
                 document.getElementById('staff-select-container').classList.remove('hidden'); 
+                
+                if (allStaffCache.length === 0) {
+                    document.getElementById('sel-staff').innerHTML = '<option value="">Cargando fotógrafos...</option>';
+                    try {
+                        const d = await gasRequest("getStaff"); 
+                        allStaffCache = Array.isArray(d) ? d : []; 
+                    } catch(e) {
+                        console.error("Error cargando staff para el modal");
+                    }
+                }
                 document.getElementById('sel-staff').innerHTML = '<option value="">Selecciona Fotógrafo...</option>' + allStaffCache.map(s => `<option value="${s.id}">${s.full_name}</option>`).join(''); 
             } 
             document.getElementById('m-g').classList.remove('hidden'); 
@@ -1914,6 +1998,13 @@
                 } 
             }; 
             input.click(); 
+        }
+
+        async function deletePhoto(fileId) { 
+            if(!confirm("¿Borrar este archivo de Google Drive definitivamente?")) return; 
+            document.getElementById(`card-${fileId}`).style.opacity = '0.3'; 
+            await gasRequest("deletePhoto", { file_id: fileId, actor: sessionUser.email }); 
+            document.getElementById(`card-${fileId}`).remove(); showToast("Archivo Eliminado"); updateStorageProgressBar(); 
         }
 
         async function requestEmailDownload() { 
