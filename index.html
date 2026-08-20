@@ -35,7 +35,6 @@
         @media (min-width: 1024px) { .masonry { column-count: 3; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; position: relative; }
         
-        /* Modificado para soportar object-position dinámico del reencuadre */
         .hero-cover { height: 100vh; width: 100%; object-fit: cover; background-color: #0f172a; background-repeat: no-repeat; background-size: cover; position: relative; transition: background-position 0.3s; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%); }
         
@@ -68,7 +67,6 @@
             .carousel-sidebar { position: relative; width: 33.333333%; height: 100vh; transform: none; border-radius: 0; }
         }
         
-        /* Contenedor de Cropper */
         .cropper-view-box, .cropper-face { border-radius: 12px; }
     </style>
 </head>
@@ -89,7 +87,6 @@
         <span id="toast-msg">Mensaje</span>
     </div>
 
-    <!-- PANTALLA DE LOGIN -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-500">
         <div class="bg-white p-12 rounded-3xl w-full max-w-md shadow-2xl mx-4 fade-in">
             <h1 class="font-black text-4xl tracking-tighter text-center mb-8">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
@@ -124,12 +121,10 @@
         </div>
     </div>
 
-    <!-- BOTÓN CERRAR SESIÓN CLIENTE -->
     <button id="btn-client-logout" onclick="logout()" class="hidden fixed top-6 right-6 z-50 bg-black/40 backdrop-blur-md text-white px-6 py-2 rounded-full font-bold tracking-widest text-xs border border-white/20 hover:bg-red-500 transition-all shadow-xl">
         <i class="fa-solid fa-power-off mr-2"></i> SALIR
     </button>
 
-    <!-- NAVEGACIÓN STAFF -->
     <nav id="main-nav" class="p-6 border-b flex justify-between items-center hidden bg-white/90 backdrop-blur-md sticky top-0 z-40 shadow-sm fade-in">
         <h1 class="font-black text-2xl tracking-tighter">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
         <div class="flex items-center gap-6">
@@ -148,7 +143,7 @@
             
             <div class="h-6 w-px bg-slate-200"></div>
             
-            <button onclick="document.getElementById('m-profile').classList.remove('hidden')" class="text-slate-400 hover:text-black transition-colors" title="Configuración de Perfil">
+            <button onclick="openProfileModal()" class="text-slate-400 hover:text-black transition-colors" title="Configuración de Perfil">
                 <i class="fa-solid fa-gear text-lg"></i>
             </button>
             <button onclick="logout()" class="text-xs font-bold uppercase text-red-500 hover:scale-110 transition-transform bg-red-50 p-2 rounded-full">
@@ -159,7 +154,6 @@
 
     <main id="main-content" class="hidden">
         
-        <!-- ADMIN -->
         <section id="section-admin" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 shadow-xl">
                 <div>
@@ -201,7 +195,6 @@
             </div>
         </section>
 
-        <!-- GALERÍAS STAFF -->
         <section id="section-galleries" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
                 <div>
@@ -220,7 +213,6 @@
             <div id="galleries-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </section>
 
-        <!-- WORKSPACE FOTÓGRAFO -->
         <section id="section-workspace" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="flex items-center gap-4 mb-6">
                 <button onclick="showSection('galleries')" class="text-slate-400 hover:text-black font-bold bg-slate-100 px-4 py-2 rounded-full transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> VOLVER</button>
@@ -246,7 +238,6 @@
             <div id="ws-photos" class="masonry"></div>
         </section>
 
-        <!-- INBOX STAFF -->
         <section id="section-inbox" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <h2 class="text-4xl font-black mb-8 tracking-tight">Bandeja de Entrada</h2>
             <div class="bg-slate-50 border rounded-3xl p-6 sm:p-10 min-h-[50vh] shadow-inner">
@@ -254,7 +245,6 @@
             </div>
         </section>
 
-        <!-- PORTAL DEL CLIENTE (PREMIUM) -->
         <section id="section-client-view" class="hidden fade-in">
             <div id="client-hero" class="hero-cover flex items-center justify-center text-center">
                 <div class="hero-overlay"></div>
@@ -281,7 +271,6 @@
                             <i class="fa-solid fa-circle-check"></i> SELECCIÓN ENVIADA
                         </span>
                         
-                        <!-- BOTÓN DE DESCARGA POR CORREO -->
                         <button id="btn-download-zip" onclick="requestEmailDownload()" class="bg-black text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-all shadow-xl flex items-center gap-3">
                             <i class="fa-solid fa-envelope"></i> RECIBIR DESCARGA POR CORREO
                         </button>
@@ -291,7 +280,6 @@
                 <div id="client-tabs" class="flex gap-4 overflow-x-auto pb-6 mb-8 border-b scrollbar-none animate-fade-in"></div>
                 <div id="client-photos" class="masonry"></div>
 
-                <!-- BIOGRAFÍA -->
                 <div id="client-photographer-card" class="mt-24 border-t pt-16 max-w-4xl mx-auto hidden fade-in">
                     <h4 class="text-xs font-black tracking-widest text-slate-400 uppercase mb-8 text-center">El autor detrás de la lente</h4>
                     <div class="bg-slate-50 p-8 sm:p-12 rounded-3xl text-center shadow-sm border border-slate-100">
@@ -304,7 +292,6 @@
         </section>
     </main>
 
-    <!-- UI FLOTANTES (SOUNDTRACK, ETC) -->
     <div id="music-prompt-card" class="hidden fixed bottom-6 left-6 z-[250] bg-slate-950 text-white p-6 rounded-3xl shadow-2xl flex flex-col gap-4 border border-white/10 max-w-xs transition-all duration-500 transform translate-y-2 fade-in">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-cyan-lf/20 text-cyan-lf rounded-full flex items-center justify-center text-lg animate-pulse"><i class="fa-solid fa-music animate-[spin_5s_linear_infinite]"></i></div>
@@ -328,7 +315,6 @@
         <span id="eq-lbl" class="text-[10px] font-black uppercase tracking-widest text-slate-300">SOUNDTRACK ON</span>
     </button>
 
-    <!-- CARRUSEL LIGHTBOX (SOPORTA VIDEO) -->
     <div id="m-carousel" class="hidden fixed inset-0 bg-black/95 z-[500] carousel-container backdrop-blur-xl transition-opacity fade-in">
         <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white/50 hover:text-white z-[530] text-4xl transition-colors md:fixed md:top-6 md:right-6">
             <i class="fa-solid fa-xmark drop-shadow-md"></i>
@@ -337,7 +323,6 @@
         <div id="carousel-media-container" class="flex-1 flex items-center justify-center relative protect-img p-2 sm:p-10 w-full md:w-2/3 h-[70vh] md:h-full">
             <button id="btn-prev" onclick="prevPhoto()" class="carousel-btn absolute left-2 sm:left-10 text-white/50 hover:text-white text-4xl bg-black/20 w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-sm z-[501]"><i class="fa-solid fa-chevron-left"></i></button>
             
-            <!-- Contenedor dinámico (Imagen o Video) -->
             <div id="carousel-content-wrapper" class="w-full h-full flex items-center justify-center pointer-events-auto">
                 <img id="carousel-img" src="" class="max-w-full max-h-full object-contain drop-shadow-2xl" oncontextmenu="return false;" draggable="false">
                 <video id="carousel-vid" src="" controls class="max-w-full max-h-full drop-shadow-2xl hidden" controlsList="nodownload"></video>
@@ -393,7 +378,7 @@
         </div>
     </div>
 
-    <!-- GESTOR DE CLIENTES Y ACCESOS (NUEVO) -->
+    <!-- GESTOR DE CLIENTES Y ACCESOS -->
     <div id="m-access" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-3xl mb-2 tracking-tight">Directorio & Accesos</h3>
@@ -501,7 +486,7 @@
         </div>
     </div>
 
-    <!-- Modal Nueva Sesión (MODIFICADO SIN CREDENCIALES, SE USA ACCESOS) -->
+    <!-- Modal Nueva Sesión -->
     <div id="m-g" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-2xl mb-2">Crear Entrega</h3>
@@ -541,7 +526,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT CORE -->
+    <!-- SCRIPT CORE COMPLETO E ÍNTEGRO -->
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzAEygb5pHlQ08emz8KqvEnYFl9uMv_4WhzYTEk8tqxdxfIxc8IYKq9c5iFv7EicfO4/exec";
 
@@ -561,10 +546,9 @@
         let filterFavoritesActive = false;
         let currentDisplayPhotos = [];
         
-        let clientAccessList = []; // Galerías permitidas para el cliente logueado
-        let globalGalleriesCache = []; // Para el dropdown de accesos
+        let clientAccessList = []; 
+        let globalGalleriesCache = []; 
         
-        // Variables Cropper
         let cropperInstance = null;
         let fileIdToCrop = null;
         let galleryIdToCrop = null;
@@ -633,6 +617,14 @@
             } catch (error) { throw error; }
         }
 
+        function showToast(msg) {
+            const toast = document.getElementById('toast'); 
+            document.getElementById('toast-msg').innerText = msg;
+            toast.style.bottom = "2rem"; 
+            setTimeout(() => { toast.style.bottom = "-6rem"; }, 3000);
+        }
+
+        // --- SISTEMA DE LOGIN Y RECUPERACIÓN ---
         async function login() {
             const u = document.getElementById('l-user').value; const p = document.getElementById('l-pass').value;
             const btn = document.getElementById('btn-login'); const err = document.getElementById('login-error');
@@ -670,6 +662,39 @@
             const btn = document.getElementById('btn-login'); btn.innerText = "INICIAR SESIÓN"; btn.disabled = false;
         }
 
+        function switchForm(target) {
+            ['form-login', 'form-forgot', 'form-reset'].forEach(id => { document.getElementById(id).classList.add('hidden'); });
+            document.getElementById(`form-${target}`).classList.remove('hidden');
+            document.getElementById('login-error').classList.add('hidden');
+        }
+
+        async function requestReset() {
+            const email = document.getElementById('f-email').value;
+            if(!email) return alert("Ingresa tu correo o teléfono");
+            resetEmailStore = email;
+            const btn = document.getElementById('btn-request-reset');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`; btn.disabled = true;
+            try {
+                await gasRequest("requestPasswordReset", { email: email });
+                switchForm('reset'); showToast("Revisa tu correo");
+            } catch(e) { switchForm('reset'); showToast("Revisa tu correo"); }
+            btn.innerHTML = `ENVIAR CÓDIGO`; btn.disabled = false;
+        }
+
+        async function verifyReset() {
+            const code = document.getElementById('r-code').value; 
+            const newP = document.getElementById('r-new-pass').value;
+            if(!code || !newP) return alert("Llena todos los campos");
+            const btn = document.getElementById('btn-verify-reset');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> VERIFICANDO...`; btn.disabled = true;
+            try {
+                const res = await gasRequest("verifyResetToken", { email: resetEmailStore, token: code, new_password: newP });
+                if(res.error) { alert(res.error); } else { showToast("Contraseña Actualizada"); switchForm('login'); }
+            } catch(e) { alert("Error de red o código inválido"); }
+            btn.innerHTML = `ACTUALIZAR CONTRASEÑA`; btn.disabled = false;
+        }
+
+        // --- NAVEGACIÓN Y ROLES ---
         async function applyRoleUI() {
             document.getElementById('splash-screen').classList.add('splash-exit');
             document.getElementById('login-screen').classList.add('opacity-0');
@@ -681,11 +706,8 @@
                 document.getElementById('main-content').classList.remove('hidden'); 
                 
                 try {
-                    // Cargar los accesos del cliente
                     const permissions = await gasRequest("getClientAccess", null, sessionUser.id);
                     if(permissions.length > 0) {
-                        // Por ahora, asumimos que carga la primera galería a la que tiene acceso. 
-                        // Idealmente, aquí habría un dashboard de cliente si tuviera múltiples.
                         const targetGalId = permissions[0].gallery_id;
                         const galleriesInfo = await gasRequest("getGalleries"); 
                         const galData = galleriesInfo.find(g => g.id === targetGalId);
@@ -694,12 +716,8 @@
                             sessionUser.active_gallery = galData;
                             sessionUser.can_download = permissions[0].can_download;
                             showSection('client-view');
-                        } else {
-                            alert("No tienes galerías asignadas activas.");
-                        }
-                    } else {
-                        alert("Aún no tienes fotos asignadas.");
-                    }
+                        } else { alert("No tienes galerías asignadas activas."); }
+                    } else { alert("Aún no tienes fotos asignadas."); }
                 } catch(e) { console.error("Error cargando accesos"); }
 
             } else {
@@ -746,65 +764,99 @@
             window.scrollTo(0,0);
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast'); 
-            document.getElementById('toast-msg').innerText = msg;
-            toast.style.bottom = "2rem"; 
-            setTimeout(() => { toast.style.bottom = "-6rem"; }, 3000);
+        // --- GESTIÓN PERFIL ---
+        function openProfileModal() {
+            document.getElementById('p-bio').value = sessionUser.bio || '';
+            document.getElementById('p-ig').value = sessionUser.instagram || '';
+            document.getElementById('p-tt').value = sessionUser.tiktok || '';
+            document.getElementById('p-fb').value = sessionUser.facebook || '';
+            document.getElementById('p-wa').value = sessionUser.whatsapp || '';
+            document.getElementById('p-ap').value = sessionUser.adobe_portfolio || '';
+            document.getElementById('p-new-pass').value = '';
+            document.getElementById('m-profile').classList.remove('hidden');
         }
 
-        // ==========================================
-        // GESTIÓN DE CROPPER (PORTADAS)
-        // ==========================================
-        function openCropper(imageUrl, fileId, galleryId) {
-            fileIdToCrop = fileId;
-            galleryIdToCrop = galleryId;
-            const img = document.getElementById('cropper-image');
-            img.src = imageUrl;
-            document.getElementById('m-cropper').classList.remove('hidden');
+        async function saveProfileChanges() {
+            const btn = document.getElementById('btn-change-pass');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true;
 
-            if (cropperInstance) cropperInstance.destroy();
-            cropperInstance = new Cropper(img, {
-                aspectRatio: window.innerWidth > 768 ? 16 / 9 : 9 / 16, // Proporción diferente movil vs desktop
-                viewMode: 1,
-                background: false,
-                autoCropArea: 0.8
-            });
-        }
-
-        function closeCropper() {
-            document.getElementById('m-cropper').classList.add('hidden');
-            if (cropperInstance) cropperInstance.destroy();
-            fileIdToCrop = null; galleryIdToCrop = null;
-        }
-
-        async function saveCoverCrop() {
-            if(!cropperInstance) return;
-            const btn = document.getElementById('btn-save-crop');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> APLICANDO...`; btn.disabled = true;
-            
-            // Obtenemos los porcentajes para usar con CSS object-position (X% Y%)
-            const canvasData = cropperInstance.getCanvasData();
-            const cropBoxData = cropperInstance.getCropBoxData();
-            const percentX = ((cropBoxData.left - canvasData.left) / canvasData.width) * 100;
-            const percentY = ((cropBoxData.top - canvasData.top) / canvasData.height) * 100;
-            const cropDataStr = JSON.stringify({ x: percentX, y: percentY });
+            const payload = {
+                user_id: sessionUser.id,
+                bio: document.getElementById('p-bio').value,
+                instagram: document.getElementById('p-ig').value,
+                tiktok: document.getElementById('p-tt').value,
+                facebook: document.getElementById('p-fb').value,
+                whatsapp: document.getElementById('p-wa').value,
+                adobe_portfolio: document.getElementById('p-ap').value
+            };
 
             try {
-                await gasRequest("setCover", { gallery_id: galleryIdToCrop, file_id: fileIdToCrop, crop_data: cropDataStr });
-                currentGallery.cover_photo_id = fileIdToCrop;
-                currentGallery.cover_crop_data = cropDataStr;
-                showToast("Portada y reencuadre actualizados");
-                closeCropper();
-                openWorkspace(currentGallery);
-            } catch(e) { alert("Error guardando portada"); }
-            
-            btn.innerHTML = `APLICAR PORTADA`; btn.disabled = false;
+                await gasRequest("updateProfile", payload);
+                const newP = document.getElementById('p-new-pass').value;
+                if (newP) {
+                    await gasRequest("changePassword", { user_id: sessionUser.id, role: sessionRole, new_password: newP });
+                    sessionUser.password = newP;
+                }
+                Object.assign(sessionUser, payload);
+                localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
+                showToast("Perfil actualizado con éxito");
+                document.getElementById('m-profile').classList.add('hidden');
+            } catch(e) { alert("Error al guardar cambios de perfil"); }
+            btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
         }
 
-        // ==========================================
-        // WORKSPACE Y FOTOS
-        // ==========================================
+        async function executeHardReset() {
+            const p = document.getElementById('reset-pass').value;
+            if(!p) return alert("Ingresa la contraseña maestra");
+            const btn = document.getElementById('btn-execute-reset');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> PURGANDO...`; btn.disabled = true;
+            try {
+                const res = await gasRequest("hardReset", { admin_password: p });
+                if (res.error) { alert("Error: " + res.error); btn.innerHTML = "EJECUTAR PURGA"; btn.disabled = false; return; }
+                alert("SISTEMA REINICIADO A CERO."); logout();
+            } catch (error) { alert("Error de conexión."); btn.innerHTML = "EJECUTAR PURGA"; btn.disabled = false; }
+        }
+
+        // --- STAFF & AJUSTES ---
+        async function fetchS() {
+            document.getElementById('staff-list').innerHTML = getStaffSkeleton();
+            try {
+                const d = await gasRequest("getStaff"); allStaffCache = Array.isArray(d) ? d : [];
+                document.getElementById('staff-list').innerHTML = d.map(s => `
+                    <div class="bg-slate-50 p-6 rounded-3xl border shadow-sm fade-in">
+                        <h4 class="font-black text-xl">${s.full_name}</h4>
+                        <p class="text-xs text-slate-400 font-bold mt-1">${s.email}</p>
+                        <span class="text-[10px] bg-slate-200 px-2 py-1 rounded mt-2 inline-block uppercase">${s.role}</span>
+                    </div>`).join('');
+                
+                document.getElementById('cfg-res').value = window.systemSettings.max_resolution.toString();
+                document.getElementById('cfg-qual').value = window.systemSettings.jpeg_quality;
+                document.getElementById('cfg-qual-lbl').innerText = window.systemSettings.jpeg_quality;
+            } catch(e) { document.getElementById('staff-list').innerHTML = `<p class="text-red-500 font-bold">Error de red.</p>`; }
+        }
+
+        async function apiS() { 
+            const n = document.getElementById('sN').value; const e = document.getElementById('sE').value; const p = document.getElementById('sP').value;
+            if(!n || !e || !p) return alert("Llena todos los campos");
+            const btn = document.getElementById('btn-create-staff'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; btn.disabled = true;
+            await gasRequest("createStaff", { full_name: n, email: e, password: p, actor: sessionUser.email });
+            document.getElementById('m-u').classList.add('hidden'); showToast("Staff Creado"); fetchS(); btn.innerHTML = "CREAR STAFF"; btn.disabled = false;
+        }
+
+        async function saveSystemSettings() {
+            const resVal = parseInt(document.getElementById('cfg-res').value);
+            const qualVal = parseInt(document.getElementById('cfg-qual').value);
+            const btn = document.getElementById('btn-save-settings');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true;
+            try {
+                const res = await gasRequest("updateSettings", { max_resolution: resVal, jpeg_quality: qualVal, actor: sessionUser.email });
+                if (res.error) { alert("Error: " + res.error); } 
+                else { window.systemSettings = { max_resolution: resVal, jpeg_quality: qualVal }; showToast("Configuración Global de Compresión Actualizada"); }
+            } catch(e) { alert("Error de red"); }
+            btn.innerHTML = "GUARDAR AJUSTES"; btn.disabled = false;
+        }
+
+        // --- GALERÍAS Y WORKSPACE ---
         async function fetchG() {
             document.getElementById('galleries-grid').innerHTML = getGallerySkeleton();
             try {
@@ -905,15 +957,313 @@
             } catch(e) { document.getElementById('ws-photos').innerHTML = `<p class="text-red-500 text-center font-bold">Error cargando fotos.</p>`; }
         }
 
-        // ==========================================
-        // CLIENTE FRONTEND (PREMIUM)
-        // ==========================================
+        async function updateStorageProgressBar() {
+            if (sessionRole === 'admin' || sessionRole === 'photographer') {
+                try {
+                    const d = await gasRequest("getPhotographer", null, sessionUser.id);
+                    if (d && d.length > 0) {
+                        const p = d[0]; Object.assign(sessionUser, p);
+                        const used = p.storage_used || 0;
+                        const limit = p.storage_limit || 53687091200; 
+                        const pct = Math.min(100, (used / limit) * 100);
+                        
+                        document.getElementById('storage-lbl').innerText = `${(used / 1073741824).toFixed(2)} GB / ${(limit / 1073741824).toFixed(0)} GB`;
+                        document.getElementById('storage-bar').style.width = `${pct}%`;
+                        document.getElementById('nav-storage-container').classList.remove('hidden');
+
+                        if (pct >= 95) { document.getElementById('storage-bar').className = "h-full bg-red-500 transition-all duration-500"; } 
+                        else { document.getElementById('storage-bar').className = "h-full bg-cyan-lf transition-all duration-500"; }
+                    }
+                } catch(e) {}
+            } else { document.getElementById('nav-storage-container').classList.add('hidden'); }
+        }
+
+        function openGalleryModal() {
+            if (sessionRole === 'admin') {
+                document.getElementById('staff-select-container').classList.remove('hidden');
+                document.getElementById('sel-staff').innerHTML = '<option value="">Selecciona Fotógrafo...</option>' + allStaffCache.map(s => `<option value="${s.id}">${s.full_name}</option>`).join('');
+            }
+            document.getElementById('m-g').classList.remove('hidden');
+        }
+
+        async function apiG() { 
+            let s_id = sessionRole === 'admin' ? document.getElementById('sel-staff').value : sessionUser.id;
+            const cN = document.getElementById('cN').value; const sl = document.getElementById('sl').value; 
+            const isPort = document.getElementById('chk-portfolio').checked;
+            const desc = document.getElementById('gDesc').value; const sound = document.getElementById('gSound').value;
+
+            if(!s_id || !cN || !sl) return alert("Llena los campos obligatorios.");
+            const btn = document.getElementById('btn-create-vault'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; btn.disabled = true;
+            
+            await gasRequest("createGallery", { photographer_id: s_id, client_name: cN, slug: sl, is_portfolio: isPort, can_download: true, description: desc, soundtrack_url: sound });
+            
+            document.getElementById('m-g').classList.add('hidden'); 
+            ['cN','sl','gDesc','gSound'].forEach(id => document.getElementById(id).value = '');
+            fetchG(); btn.innerHTML = "CREAR CONTENEDOR"; btn.disabled = false;
+            
+            setTimeout(() => { if(!isPort) { openAccessManager(); showToast("Contenedor listo. Ahora asígnale un cliente."); } }, 1000);
+        }
+
+        function openEditModal(galleryObj) {
+            activeEditGalleryId = galleryObj.id;
+            document.getElementById('edit-cN').value = galleryObj.client_name;
+            document.getElementById('edit-gDesc').value = galleryObj.description || "";
+            document.getElementById('edit-gSound').value = galleryObj.soundtrack_url || "";
+            document.getElementById('edit-chk-wm').checked = galleryObj.watermark_enabled !== false;
+            document.getElementById('m-edit-g').classList.remove('hidden');
+        }
+
+        async function updateGallery() {
+            const newName = document.getElementById('edit-cN').value; 
+            const newDesc = document.getElementById('edit-gDesc').value;
+            const newSound = document.getElementById('edit-gSound').value;
+            const newWm = document.getElementById('edit-chk-wm').checked;
+            
+            if(!newName) return alert("El nombre no puede estar vacío");
+
+            const btn = document.getElementById('btn-update-vault');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true;
+
+            try {
+                const res = await gasRequest("updateGallery", { 
+                    gallery_id: activeEditGalleryId, client_name: newName, description: newDesc, soundtrack_url: newSound, watermark_enabled: newWm, actor: sessionUser.email 
+                });
+                if (res.error) { alert("Error: " + res.error); } else { showToast("Bóveda Actualizada"); document.getElementById('m-edit-g').classList.add('hidden'); fetchG(); }
+            } catch(e) { alert("Error de red al actualizar"); }
+            btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
+        }
+
+        async function deleteGallery(galleryId) {
+            if(!confirm("PELIGRO: ¿Eliminar esta bóveda completa?\n\nSe borrará la carpeta de Google Drive y todo el historial de la base de datos.")) return;
+            showToast("Eliminando bóveda...");
+            try { await gasRequest("deleteGallery", { gallery_id: galleryId, actor: sessionUser.email }); showToast("Bóveda eliminada con éxito"); fetchG(); } 
+            catch(e) { alert("Error eliminando bóveda"); }
+        }
+
+        async function createSet() {
+            const name = document.getElementById('set-name').value.trim();
+            if(!name) return alert("Escribe un nombre.");
+            const btn = document.getElementById('btn-save-set');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; btn.disabled = true;
+            try {
+                await gasRequest("createSet", { parent_folder_id: currentGallery.drive_folder_id, set_name: name, actor: sessionUser.email });
+                document.getElementById('m-set').classList.add('hidden'); showToast("Categoría creada"); openWorkspace(currentGallery);
+            } catch(e) { alert("Error."); }
+            btn.innerHTML = "CREAR CATEGORÍA"; btn.disabled = false;
+        }
+
+        async function renameSet(setId, oldName) {
+            const newN = prompt("Ingresa el nuevo nombre para la categoría:", oldName);
+            if (!newN || newN.trim() === "" || newN === oldName) return;
+            showToast("Renombrando categoría...");
+            try { await gasRequest("renameSet", { set_id: setId, new_name: newN, actor: sessionUser.email }); showToast("Categoría actualizada"); openWorkspace(currentGallery); } 
+            catch(e) { alert("Error."); }
+        }
+
+        async function deleteSet(setId) {
+            if(!confirm("¿Estás seguro de eliminar esta categoría completa?")) return;
+            showToast("Eliminando categoría...");
+            try { await gasRequest("deleteSet", { set_id: setId, actor: sessionUser.email }); showToast("Categoría eliminada"); openWorkspace(currentGallery); } 
+            catch(e) { alert("Error."); }
+        }
+
+        function triggerUpload(galleryId) {
+            const setFolderId = document.getElementById('ws-sel-folder').value;
+            if(!setFolderId) return alert("Por favor crea un set primero.");
+            const input = document.createElement('input'); input.type = 'file'; input.multiple = true; input.accept = "image/*,video/mp4,video/quicktime";
+            input.onchange = async e => {
+                const btn = document.getElementById('btn-ws-upload'); const files = e.target.files; if(files.length === 0) return;
+                
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Procesando...`; btn.disabled = true;
+
+                for(let i=0; i<files.length; i++) {
+                    let file = files[i];
+                    let isVideo = file.type.startsWith('video/');
+
+                    if (!isVideo) {
+                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> OPTIMIZANDO ${i+1}/${files.length}`;
+                        try { file = await compressFile(file); } catch(err) { console.error(err); }
+                    }
+
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> SUBIENDO ${i+1}/${files.length}`;
+                    const reader = new FileReader(); 
+                    const b64 = await new Promise(res => { reader.onload = () => res(reader.result.split(',')[1]); reader.readAsDataURL(file); });
+                    const cleanName = files[i].name;
+
+                    const uploadResult = await gasRequest("uploadPhoto", { folder_id: setFolderId, gallery_id: galleryId, filename: cleanName, mimeType: file.type, base64Data: b64, actor: sessionUser.email });
+                    
+                    if (uploadResult.error) {
+                        alert(uploadResult.error); btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR MEDIOS`; btn.disabled = false; openWorkspace(currentGallery); return;
+                    }
+                }
+                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ¡LISTO!`; showToast("Archivos publicados");
+                setTimeout(() => { btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR MEDIOS`; btn.disabled = false; openWorkspace(currentGallery); }, 2000);
+            }; input.click();
+        }
+
+        function compressFile(file) {
+            const targetWidth = window.systemSettings ? window.systemSettings.max_resolution : 3000;
+            const targetQuality = window.systemSettings ? (window.systemSettings.jpeg_quality / 100) : 0.82;
+            return new Promise((resolve, reject) => {
+                new Compressor(file, { quality: targetQuality, maxWidth: targetWidth, maxHeight: targetWidth, mimeType: 'image/jpeg', success(result) { resolve(result); }, error(err) { reject(err); } });
+            });
+        }
+
+        async function triggerReplace(oldFid) {
+            const input = document.createElement('input'); input.type = 'file'; input.accept = "image/*,video/mp4,video/quicktime";
+            input.onchange = async e => {
+                const file = e.target.files[0]; if(!file) return;
+                let finalFile = file;
+                let isVideo = file.type.startsWith('video/');
+                
+                if(!isVideo) {
+                    showToast("Optimizando reemplazo...");
+                    finalFile = await compressFile(file);
+                }
+                showToast("Sustituyendo en caliente...");
+
+                const reader = new FileReader();
+                const b64 = await new Promise(res => { reader.onload = () => res(reader.result.split(',')[1]); reader.readAsDataURL(finalFile); });
+                const cleanName = file.name;
+
+                const res = await gasRequest("replacePhoto", { old_file_id: oldFid, filename: cleanName, mimeType: file.type, base64Data: b64, actor: sessionUser.email });
+                if (res.error) { alert("Error: " + res.error); } else { showToast("Archivo sustituido con éxito"); openWorkspace(currentGallery); }
+            }; input.click();
+        }
+
+        async function deletePhoto(fileId) { 
+            if(!confirm("¿Borrar este archivo de Google Drive definitivamente?")) return; 
+            document.getElementById(`card-${fileId}`).style.opacity = '0.3'; 
+            await gasRequest("deletePhoto", { file_id: fileId, actor: sessionUser.email }); 
+            document.getElementById(`card-${fileId}`).remove(); showToast("Archivo Eliminado"); updateStorageProgressBar(); 
+        }
+
+        // --- GESTIÓN DE CROPPER (PORTADAS) ---
+        function openCropper(imageUrl, fileId, galleryId) {
+            fileIdToCrop = fileId; galleryIdToCrop = galleryId;
+            const img = document.getElementById('cropper-image'); img.src = imageUrl;
+            document.getElementById('m-cropper').classList.remove('hidden');
+
+            if (cropperInstance) cropperInstance.destroy();
+            cropperInstance = new Cropper(img, { aspectRatio: window.innerWidth > 768 ? 16 / 9 : 9 / 16, viewMode: 1, background: false, autoCropArea: 0.8 });
+        }
+
+        function closeCropper() {
+            document.getElementById('m-cropper').classList.add('hidden');
+            if (cropperInstance) cropperInstance.destroy();
+            fileIdToCrop = null; galleryIdToCrop = null;
+        }
+
+        async function saveCoverCrop() {
+            if(!cropperInstance) return;
+            const btn = document.getElementById('btn-save-crop');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> APLICANDO...`; btn.disabled = true;
+            
+            const canvasData = cropperInstance.getCanvasData();
+            const cropBoxData = cropperInstance.getCropBoxData();
+            const percentX = ((cropBoxData.left - canvasData.left) / canvasData.width) * 100;
+            const percentY = ((cropBoxData.top - canvasData.top) / canvasData.height) * 100;
+            const cropDataStr = JSON.stringify({ x: percentX, y: percentY });
+
+            try {
+                await gasRequest("setCover", { gallery_id: galleryIdToCrop, file_id: fileIdToCrop, crop_data: cropDataStr });
+                currentGallery.cover_photo_id = fileIdToCrop;
+                currentGallery.cover_crop_data = cropDataStr;
+                showToast("Portada y reencuadre actualizados"); closeCropper(); openWorkspace(currentGallery);
+            } catch(e) { alert("Error guardando portada"); }
+            btn.innerHTML = `APLICAR PORTADA`; btn.disabled = false;
+        }
+
+        // --- GESTIÓN DE CLIENTES Y ACCESOS (RBAC) ---
+        async function openAccessManager() {
+            document.getElementById('m-access').classList.remove('hidden');
+            
+            const galSelect = document.getElementById('acc-gal-id');
+            galSelect.innerHTML = '<option value="">1. Selecciona la Galería / Sesión</option>' + globalGalleriesCache.map(g => `<option value="${g.id}">${g.client_name} (/${g.slug})</option>`).join('');
+                
+            const clientSelect = document.getElementById('acc-client-id');
+            clientSelect.innerHTML = '<option value="">Cargando clientes...</option>';
+            try {
+                const clients = await gasRequest("getClients");
+                if(clients && clients.length > 0) {
+                    clientSelect.innerHTML = '<option value="">2. Selecciona al Cliente (Juanita, etc)</option>' + clients.map(c => `<option value="${c.id}">${c.full_name} (${c.email || c.phone})</option>`).join('');
+                } else { clientSelect.innerHTML = '<option value="">No hay clientes. Crea uno abajo.</option>'; }
+            } catch(e) { clientSelect.innerHTML = '<option value="">Error cargando clientes.</option>'; }
+        }
+
+        async function createClient() {
+            const name = document.getElementById('nc-name').value; const email = document.getElementById('nc-email').value;
+            const phone = document.getElementById('nc-phone').value; const pass = document.getElementById('nc-pass').value;
+            
+            if(!name || !pass || (!email && !phone)) return alert("El nombre, la contraseña y un método de contacto son obligatorios.");
+            
+            const btn = document.getElementById('btn-create-client');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; btn.disabled = true;
+            
+            try {
+                await gasRequest("createClient", { full_name: name, email: email, phone: phone, password: pass });
+                showToast("Cliente registrado exitosamente.");
+                ['nc-name', 'nc-email', 'nc-phone', 'nc-pass'].forEach(id => document.getElementById(id).value = '');
+                openAccessManager(); 
+            } catch(e) { alert("Error creando cliente. Posiblemente el correo o teléfono ya existe."); }
+            btn.innerHTML = "REGISTRAR EN DIRECTORIO"; btn.disabled = false;
+        }
+
+        async function grantAccess() {
+            const galId = document.getElementById('acc-gal-id').value; const clientId = document.getElementById('acc-client-id').value;
+            const canDl = document.getElementById('acc-can-dl').checked;
+            
+            if(!galId || !clientId) return alert("Selecciona galería y cliente.");
+            
+            const btn = document.getElementById('btn-grant');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> OTORGANDO...`; btn.disabled = true;
+            
+            try {
+                await gasRequest("grantAccess", { client_id: clientId, gallery_id: galId, can_download: canDl });
+                showToast("¡Acceso otorgado al cliente!"); document.getElementById('m-access').classList.add('hidden');
+            } catch(e) { alert("Error al otorgar acceso."); }
+            btn.innerHTML = "OTORGAR ACCESO"; btn.disabled = false;
+        }
+
+        // --- INBOX Y COMENTARIOS ---
+        async function fetchInbox() {
+            document.getElementById('inbox-list').innerHTML = getInboxSkeleton();
+            try {
+                const d = await gasRequest("getComments", null, sessionUser.id);
+                const list = document.getElementById('inbox-list');
+                if(!Array.isArray(d) || d.length === 0) { list.innerHTML = `<p class="text-slate-400 font-bold text-center mt-10"><i class="fa-solid fa-check-double text-4xl mb-3 block text-slate-200"></i>Bandeja limpia. Todo al día.</p>`; return; }
+                
+                list.innerHTML = d.map(c => `
+                    <div id="comment-card-${c.id}" class="bg-white p-6 rounded-2xl border flex flex-col sm:flex-row gap-6 items-start shadow-sm transition-all duration-300">
+                        <img src="https://lh3.googleusercontent.com/d/${c.file_id}=s200" class="w-24 h-24 object-cover rounded-xl bg-slate-100">
+                        <div class="flex-1">
+                            <div class="flex gap-2 mb-2"><span class="bg-cyan-lf text-white text-[10px] px-3 py-1 rounded-full font-bold tracking-widest">${c.galleries.client_name}</span></div>
+                            <p class="text-lg font-bold">"${c.comment_text}"</p>
+                        </div>
+                        <button onclick="resolveComment('${c.id}')" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl text-xs tracking-widest shadow-md transition-colors flex items-center justify-center gap-2 mt-4 sm:mt-0">
+                            <i class="fa-solid fa-check-double"></i> RESUELTO
+                        </button>
+                    </div>`).join('');
+            } catch(e) { document.getElementById('inbox-list').innerHTML = `<p class="text-red-500 font-bold">Error de red.</p>`; }
+        }
+
+        async function resolveComment(commentId) {
+            const card = document.getElementById(`comment-card-${commentId}`); const btn = card.querySelector('button');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`; btn.disabled = true;
+            try {
+                await gasRequest("resolveComment", { comment_id: commentId });
+                card.style.opacity = '0'; card.style.transform = 'scale(0.95)';
+                setTimeout(() => { card.remove(); if(document.getElementById('inbox-list').children.length === 0) { document.getElementById('inbox-list').innerHTML = `<p class="text-slate-400 font-bold text-center mt-10"><i class="fa-solid fa-check-double text-4xl mb-3 block text-slate-200"></i>Bandeja limpia. Todo al día.</p>`; } }, 300);
+                showToast("Marcado como resuelto");
+            } catch(e) { btn.innerHTML = `<i class="fa-solid fa-check-double"></i> RESUELTO`; btn.disabled = false; alert("Error al marcar como resuelto"); }
+        }
+
+        // --- CLIENTE FRONTEND (PREMIUM) ---
         async function fetchClientPhotos() {
             document.getElementById('client-photos').innerHTML = getPhotoSkeleton();
             const isPort = sessionUser.active_gallery.is_portfolio;
             
-            downloadSelectionCache = [];
-            filterFavoritesActive = false;
+            downloadSelectionCache = []; filterFavoritesActive = false;
 
             if(isPort) {
                 document.getElementById('client-hero-subtitle').innerText = "Portafolio Oficial";
@@ -975,9 +1325,7 @@
                         return `<button onclick="filterClientTab('${set.id}', this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn ${activeClass}">${set.name}</button>`;
                     }).join('');
                     
-                    if(!isPort) {
-                        tabsHtml += `<button onclick="toggleFavoritesFilter(this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-200 ml-auto flex items-center gap-2"><i class="fa-solid fa-heart"></i> MIS FAVORITAS</button>`;
-                    }
+                    if(!isPort) { tabsHtml += `<button onclick="toggleFavoritesFilter(this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-200 ml-auto flex items-center gap-2"><i class="fa-solid fa-heart"></i> MIS FAVORITAS</button>`; }
                     tabsContainer.innerHTML = tabsHtml;
                 }
                 
@@ -987,28 +1335,59 @@
             } catch(error) { document.getElementById('client-photos').innerHTML = `<p class="text-center text-red-500 font-bold">Error de red.</p>`; }
         }
 
+        async function fetchPhotographerDetails(photoId) {
+            try {
+                const d = await gasRequest("getPhotographer", null, photoId);
+                if (d && d.length > 0) {
+                    const p = d[0];
+                    document.getElementById('c-photo-name').innerText = p.full_name;
+                    document.getElementById('c-photo-bio').innerText = p.bio || "Persiguiendo momentos honestos y capturando fragmentos de vida a través de la lente.";
+                    
+                    let socialsHtml = "";
+                    if(p.whatsapp) socialsHtml += `<a href="https://wa.me/${p.whatsapp}?text=Hola%20${p.full_name.replace(/ /g, '%20')}!%20Vi%20tu%20trabajo%20en%20LenteFr%C3%ADa..." target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-whatsapp text-2xl"></i></a>`;
+                    if(p.instagram) socialsHtml += `<a href="${p.instagram}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-instagram text-2xl"></i></a>`;
+                    if(p.tiktok) socialsHtml += `<a href="${p.tiktok}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-tiktok text-2xl"></i></a>`;
+                    if(p.facebook) socialsHtml += `<a href="${p.facebook}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-facebook-f text-2xl"></i></a>`;
+                    if(p.adobe_portfolio) socialsHtml += `<a href="${p.adobe_portfolio}" target="_blank" class="bg-black text-white text-[10px] font-black px-4 py-2 rounded-full tracking-widest hover:bg-cyan-lf transition-colors"><i class="fa-solid fa-globe mr-2"></i>PORTAFOLIO</a>`;
+                    
+                    document.getElementById('c-photo-socials').innerHTML = socialsHtml;
+                    document.getElementById('client-photographer-card').classList.remove('hidden');
+                }
+            } catch(e) {}
+        }
+
+        function filterClientTab(setId, btnObj) {
+            filterFavoritesActive = false; activeClientTabId = setId;
+            document.querySelectorAll('#client-tabs .tab-btn').forEach(b => {
+                if(b.innerText.includes('FAVORITAS')) { b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-200 ml-auto flex items-center gap-2'; } 
+                else { b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-slate-100 text-slate-400 hover:text-black'; }
+            });
+            btnObj.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-black text-white';
+            renderClientGrid(sessionUser.active_gallery.is_portfolio);
+        }
+
+        function toggleFavoritesFilter(btnObj) {
+            filterFavoritesActive = true;
+            document.querySelectorAll('#client-tabs .tab-btn').forEach(b => {
+                if(!b.innerText.includes('FAVORITAS')) { b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-slate-100 text-slate-400 hover:text-black'; }
+            });
+            btnObj.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-500 text-white ml-auto flex items-center gap-2 shadow-lg';
+            renderClientGrid(sessionUser.active_gallery.is_portfolio);
+        }
+
         function renderClientGrid(isPort) {
             const container = document.getElementById('client-photos');
             
-            if (filterFavoritesActive) {
-                currentDisplayPhotos = photosCache.flatMap(s => s.photos).filter(p => favoritesCache.includes(p.id));
-            } else {
-                const activeSet = photosCache.find(s => s.id === activeClientTabId);
-                currentDisplayPhotos = activeSet ? activeSet.photos : [];
-            }
+            if (filterFavoritesActive) { currentDisplayPhotos = photosCache.flatMap(s => s.photos).filter(p => favoritesCache.includes(p.id)); } 
+            else { const activeSet = photosCache.find(s => s.id === activeClientTabId); currentDisplayPhotos = activeSet ? activeSet.photos : []; }
 
-            if (currentDisplayPhotos.length === 0) {
-                container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold text-lg"><i class="fa-solid fa-folder-open text-3xl mb-3"></i><br>Aún no hay fotos en esta vista.</div>`; return;
-            }
+            if (currentDisplayPhotos.length === 0) { container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold text-lg"><i class="fa-solid fa-folder-open text-3xl mb-3"></i><br>Aún no hay fotos en esta vista.</div>`; return; }
 
             const showWatermark = sessionUser.active_gallery.watermark_enabled !== false; 
             const isSelectLocked = sessionUser.active_gallery.favorites_locked === true;
 
             container.innerHTML = currentDisplayPhotos.map((p, index) => {
-                const isFav = favoritesCache.includes(p.id);
-                const isSelectedForDl = downloadSelectionCache.includes(p.id);
-                const isVideo = p.type === 'video';
-                
+                const isFav = favoritesCache.includes(p.id); const isSelectedForDl = downloadSelectionCache.includes(p.id); const isVideo = p.type === 'video';
                 const heartIcon = isFav ? "fa-solid text-red-500" : "fa-regular text-white";
                 const checkIcon = isSelectedForDl ? "fa-solid fa-square-check text-cyan-lf" : "fa-regular fa-square text-white";
                 const wmLayer = showWatermark && !isVideo ? `<div class="watermark-overlay"></div>` : '';
@@ -1031,9 +1410,7 @@
                 return `
                 <div class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 fade-in">
                     <img src="${p.thumb}" class="w-full h-auto object-cover cursor-pointer protect-img" onclick="openCarousel(${index})" loading="lazy" oncontextmenu="return false;" draggable="false">
-                    ${videoBadge}
-                    ${wmLayer}
-                    ${gridActions}
+                    ${videoBadge} ${wmLayer} ${gridActions}
                     <button onclick="openCarousel(${index})" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/40 backdrop-blur-md text-white text-[10px] font-black px-6 py-2 rounded-full border border-white/20 uppercase tracking-widest z-20 hover:bg-white hover:text-black transition-colors pointer-events-auto shadow-lg">VER DETALLE</button>
                 </div>`;
             }).join('');
@@ -1041,31 +1418,36 @@
             updateDownloadBtnText();
         }
 
-        // DESCARGA POR CORREO (PUNTO 4)
-        async function requestEmailDownload() {
-            const photosToDownload = downloadSelectionCache.length > 0 
-                ? photosCache.flatMap(s => s.photos).filter(p => downloadSelectionCache.includes(p.id))
-                : photosCache.flatMap(s => s.photos);
+        async function toggleFavorite(fileId) {
+            if (sessionUser.active_gallery.favorites_locked) return;
+            const icon = document.getElementById(`fav-${fileId}`);
+            if (favoritesCache.includes(fileId)) { favoritesCache = favoritesCache.filter(id => id !== fileId); icon.className = "fa-regular text-white fa-heart text-xl"; } 
+            else { favoritesCache.push(fileId); icon.className = "fa-solid text-red-500 fa-heart text-xl animate-bounce"; setTimeout(()=> icon.classList.remove('animate-bounce'), 1000); }
+            if(filterFavoritesActive) renderClientGrid(sessionUser.active_gallery.is_portfolio);
+            await gasRequest("toggleFavorite", { gallery_id: sessionUser.active_gallery.id, file_id: fileId });
+        }
 
-            if (photosToDownload.length === 0) return alert("No hay fotos en la galería para descargar.");
-            
-            if(!confirm(`Vamos a preparar tu selección de ${photosToDownload.length} fotos.\n\nRecibirás un correo electrónico (a ${sessionUser.email || 'tu cuenta vinculada'}) con el enlace de descarga directa en unos minutos.\n¿Continuar?`)) return;
+        async function lockFavorites() {
+            if (sessionUser.active_gallery.favorites_locked) return;
+            if (favoritesCache.length === 0) return alert("Selecciona al menos una foto favorita (❤️).");
+            if (!confirm(`¿Enviar tu selección final de ${favoritesCache.length} fotos favoritas? Se bloqueará tu galería.`)) return;
 
-            const btn = document.getElementById('btn-download-zip');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PREPARANDO CARPETA...`; btn.disabled = true;
-
+            const btn = document.getElementById('btn-lock-selection');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`; btn.disabled = true;
             try {
-                const photoIds = photosToDownload.map(p => p.id);
-                await gasRequest("sendDownloadEmail", { email: sessionUser.email, client_name: sessionUser.full_name, photo_ids: photoIds });
-                
-                btn.innerHTML = `<i class="fa-solid fa-check"></i> ¡ENVIADO A TU CORREO!`;
-                btn.classList.replace('bg-black', 'bg-green-500'); btn.classList.replace('bg-cyan-lf', 'bg-green-500');
-                showToast("Revisa tu bandeja de entrada en breve.");
-                setTimeout(() => { updateDownloadBtnText(); btn.disabled = false; }, 4000);
-            } catch(e) {
-                alert("Hubo un error al preparar el correo de descarga. Intenta de nuevo.");
-                updateDownloadBtnText(); btn.disabled = false;
-            }
+                await gasRequest("lockFavorites", { gallery_id: sessionUser.active_gallery.id, actor: sessionUser.full_name });
+                sessionUser.active_gallery.favorites_locked = true;
+                const saved = sessionStorage.getItem('lf_session') ? sessionStorage : localStorage;
+                saved.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
+                showToast("Selección enviada con éxito"); fetchClientPhotos();
+            } catch(e) { btn.innerHTML = `ENVIAR SELECCIÓN FINAL`; btn.disabled = false; }
+        }
+
+        function toggleDownloadSelect(fileId) {
+            const icon = document.getElementById(`dl-sel-${fileId}`);
+            if (downloadSelectionCache.includes(fileId)) { downloadSelectionCache = downloadSelectionCache.filter(id => id !== fileId); icon.className = "fa-regular fa-square text-white text-2xl"; } 
+            else { downloadSelectionCache.push(fileId); icon.className = "fa-solid fa-square-check text-cyan-lf text-2xl animate-pulse"; setTimeout(()=> icon.classList.remove('animate-pulse'), 1000); }
+            updateDownloadBtnText();
         }
 
         function updateDownloadBtnText() {
@@ -1081,26 +1463,70 @@
             }
         }
 
-        // CARRUSEL CON VIDEO
-        async function openCarousel(index) {
-            currentCarouselIndex = index;
-            const item = currentDisplayPhotos[index];
-            currentPhotoId = item.id;
+        async function requestEmailDownload() {
+            const photosToDownload = downloadSelectionCache.length > 0 ? photosCache.flatMap(s => s.photos).filter(p => downloadSelectionCache.includes(p.id)) : photosCache.flatMap(s => s.photos);
+            if (photosToDownload.length === 0) return alert("No hay fotos en la galería para descargar.");
             
+            if(!confirm(`Vamos a preparar tu selección de ${photosToDownload.length} fotos.\n\nRecibirás un correo electrónico a tu cuenta vinculada con el enlace de descarga directa en unos minutos.\n¿Continuar?`)) return;
+
+            const btn = document.getElementById('btn-download-zip');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PREPARANDO CARPETA...`; btn.disabled = true;
+
+            try {
+                const photoIds = photosToDownload.map(p => p.id);
+                await gasRequest("sendDownloadEmail", { email: sessionUser.email, client_name: sessionUser.full_name, photo_ids: photoIds });
+                
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> ¡ENVIADO A TU CORREO!`;
+                btn.classList.replace('bg-black', 'bg-green-500'); btn.classList.replace('bg-cyan-lf', 'bg-green-500');
+                showToast("Revisa tu bandeja de entrada en breve.");
+                setTimeout(() => { updateDownloadBtnText(); btn.disabled = false; }, 4000);
+            } catch(e) { alert("Hubo un error al preparar el correo de descarga. Intenta de nuevo."); updateDownloadBtnText(); btn.disabled = false; }
+        }
+
+        // --- CONTROLES DE MÚSICA Y CARRUSEL ---
+        function toggleMusic(status) {
+            const audio = document.getElementById('audio-soundtrack'); const promptCard = document.getElementById('music-prompt-card');
+            const eqBtn = document.getElementById('btn-eq-toggle'); const ytFrame = document.getElementById('yt-player');
+            promptCard.classList.add('hidden');
+
+            if (status) {
+                eqBtn.classList.remove('hidden'); document.getElementById('eq-lbl').innerText = "SOUNDTRACK ON"; showToast("Banda sonora activada 🎵");
+                if (ytFrame) { ytFrame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); ytFrame.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*'); } 
+                else { audio.play().catch(e => console.error(e)); }
+            } else {
+                if (ytFrame) ytFrame.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); else audio.pause();
+                eqBtn.classList.add('hidden');
+            }
+        }
+
+        function toggleMute() {
+            const audio = document.getElementById('audio-soundtrack'); const bars = document.querySelectorAll('.eq-bar');
+            const lbl = document.getElementById('eq-lbl'); const ytFrame = document.getElementById('yt-player');
+
+            if (ytFrame) {
+                if (lbl.innerText === "SOUNDTRACK ON") { ytFrame.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*'); lbl.innerText = "SOUNDTRACK MUTED"; bars.forEach(b => b.style.animationPlayState = 'paused'); } 
+                else { ytFrame.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*'); lbl.innerText = "SOUNDTRACK ON"; bars.forEach(b => b.style.animationPlayState = 'running'); }
+                return;
+            }
+
+            if (audio.paused) { audio.play(); lbl.innerText = "SOUNDTRACK ON"; bars.forEach(b => b.style.animationPlayState = 'running'); } 
+            else { audio.pause(); lbl.innerText = "SOUNDTRACK MUTED"; bars.forEach(b => b.style.animationPlayState = 'paused'); }
+        }
+
+        function toggleMobileSidebar() { document.getElementById('carousel-sidebar').classList.toggle('active'); }
+
+        async function openCarousel(index) {
+            currentCarouselIndex = index; const item = currentDisplayPhotos[index]; currentPhotoId = item.id;
             window.history.pushState({ modal: true }, "");
 
-            const imgEl = document.getElementById('carousel-img');
-            const vidEl = document.getElementById('carousel-vid');
+            const imgEl = document.getElementById('carousel-img'); const vidEl = document.getElementById('carousel-vid');
             
             if(item.type === 'video') {
-                imgEl.classList.add('hidden');
-                vidEl.classList.remove('hidden');
-                vidEl.src = item.download; // El link directo de drive
-                vidEl.play().catch(e => console.error("Auto-play prevented", e));
+                imgEl.classList.add('hidden'); vidEl.classList.remove('hidden');
+                vidEl.src = item.download; vidEl.play().catch(e => console.error("Auto-play prevented", e));
             } else {
                 vidEl.pause(); vidEl.classList.add('hidden');
-                imgEl.classList.remove('hidden');
-                imgEl.src = `https://lh3.googleusercontent.com/d/${item.id}=s2000`;
+                imgEl.classList.remove('hidden'); imgEl.src = `https://lh3.googleusercontent.com/d/${item.id}=s2000`;
             }
 
             document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
@@ -1119,127 +1545,52 @@
                 document.getElementById('btn-mobile-comment').classList.remove('hidden');
                 document.getElementById('carousel-media-container').classList.replace('w-full', 'md:w-2/3');
                 document.getElementById('comment-text').value = '';
+                
+                resetStars();
+                try {
+                    const ratings = await gasRequest("getRatings", null, sessionUser.active_gallery.id);
+                    const match = ratings.find(r => r.file_id === currentPhotoId);
+                    if(match) paintStars(match.rating_value);
+                } catch(e){}
             }
-
             document.getElementById('m-carousel').classList.remove('hidden');
         }
 
         function closeCarousel() { 
-            document.getElementById('m-carousel').classList.add('hidden'); 
-            document.getElementById('carousel-sidebar').classList.remove('active'); 
-            const vidEl = document.getElementById('carousel-vid');
-            vidEl.pause(); vidEl.src = "";
-            currentPhotoId = null; 
+            document.getElementById('m-carousel').classList.add('hidden'); document.getElementById('carousel-sidebar').classList.remove('active'); 
+            const vidEl = document.getElementById('carousel-vid'); vidEl.pause(); vidEl.src = ""; currentPhotoId = null; 
         }
         
         function nextPhoto() { if(currentCarouselIndex < currentDisplayPhotos.length - 1) openCarousel(currentCarouselIndex + 1); }
         function prevPhoto() { if(currentCarouselIndex > 0) openCarousel(currentCarouselIndex - 1); }
 
-        // ==========================================
-        // GESTIÓN DE CLIENTES Y ACCESOS (RBAC)
-        // ==========================================
-        async function openAccessManager() {
-            document.getElementById('m-access').classList.remove('hidden');
-            
-            // Llenar selector de galerías
-            const galSelect = document.getElementById('acc-gal-id');
-            galSelect.innerHTML = '<option value="">1. Selecciona la Galería / Sesión</option>' + 
-                globalGalleriesCache.map(g => `<option value="${g.id}">${g.client_name} (/${g.slug})</option>`).join('');
-                
-            // Llenar selector de clientes
-            const clientSelect = document.getElementById('acc-client-id');
-            clientSelect.innerHTML = '<option value="">Cargando clientes...</option>';
+        document.addEventListener('keydown', (e) => {
+            if(!document.getElementById('m-carousel').classList.contains('hidden')) {
+                if(e.key === 'ArrowRight') nextPhoto(); 
+                if(e.key === 'ArrowLeft') prevPhoto(); 
+                if(e.key === 'Escape') { window.history.back(); closeCarousel(); }
+            }
+        });
+
+        function resetStars() { document.querySelectorAll('#carousel-rating-box i').forEach(star => { star.className = "fa-solid fa-star star-btn text-slate-300 hover:text-yellow-400 transition-colors"; }); }
+        function paintStars(val) { const stars = document.querySelectorAll('#carousel-rating-box i'); for(let i=0; i<val; i++) { stars[i].className = "fa-solid fa-star star-btn text-yellow-400 transition-colors"; } }
+        async function ratePhoto(val) { resetStars(); paintStars(val); await gasRequest("toggleRating", { gallery_id: sessionUser.active_gallery.id, file_id: currentPhotoId, rating_value: val }); }
+
+        async function sendComment() {
+            const txt = document.getElementById('comment-text').value; if(!txt.trim()) return alert("Escribe un comentario.");
+            const btn = document.getElementById('btn-send-comment'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`; btn.disabled = true;
             try {
-                // Requiere el endpoint añadido en GAS: if (action === "getClients") return jsonResponse(fetchSupabase("clients?order=full_name.asc"));
-                const clients = await gasRequest("getClients");
-                if(clients && clients.length > 0) {
-                    clientSelect.innerHTML = '<option value="">2. Selecciona al Cliente (Juanita, etc)</option>' + 
-                        clients.map(c => `<option value="${c.id}">${c.full_name} (${c.email || c.phone})</option>`).join('');
-                } else {
-                    clientSelect.innerHTML = '<option value="">No hay clientes. Crea uno abajo.</option>';
-                }
-            } catch(e) { clientSelect.innerHTML = '<option value="">Error cargando clientes.</option>'; }
+                await gasRequest("addComment", { gallery_id: sessionUser.active_gallery.id, file_id: currentPhotoId, comment: txt });
+                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ENVIADO`; btn.classList.replace('bg-black', 'bg-green-500'); showToast("Comentario enviado");
+                setTimeout(() => { window.history.back(); closeCarousel(); btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO`; btn.classList.replace('bg-green-500', 'bg-black'); btn.disabled = false; }, 1500);
+            } catch(e) { btn.innerHTML = `ENVIAR`; btn.disabled = false; }
         }
-
-        async function createClient() {
-            const name = document.getElementById('nc-name').value;
-            const email = document.getElementById('nc-email').value;
-            const phone = document.getElementById('nc-phone').value;
-            const pass = document.getElementById('nc-pass').value;
-            
-            if(!name || !pass || (!email && !phone)) return alert("El nombre, la contraseña y un método de contacto son obligatorios.");
-            
-            const btn = document.getElementById('btn-create-client');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; btn.disabled = true;
-            
-            try {
-                await gasRequest("createClient", { full_name: name, email: email, phone: phone, password: pass });
-                showToast("Cliente registrado exitosamente.");
-                ['nc-name', 'nc-email', 'nc-phone', 'nc-pass'].forEach(id => document.getElementById(id).value = '');
-                openAccessManager(); // Recargar lista
-            } catch(e) { alert("Error creando cliente. Posiblemente el correo o teléfono ya existe."); }
-            
-            btn.innerHTML = "REGISTRAR EN DIRECTORIO"; btn.disabled = false;
-        }
-
-        async function grantAccess() {
-            const galId = document.getElementById('acc-gal-id').value;
-            const clientId = document.getElementById('acc-client-id').value;
-            const canDl = document.getElementById('acc-can-dl').checked;
-            
-            if(!galId || !clientId) return alert("Selecciona galería y cliente.");
-            
-            const btn = document.getElementById('btn-grant');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> OTORGANDO...`; btn.disabled = true;
-            
-            try {
-                await gasRequest("grantAccess", { client_id: clientId, gallery_id: galId, can_download: canDl });
-                showToast("¡Acceso otorgado al cliente!");
-                document.getElementById('m-access').classList.add('hidden');
-            } catch(e) { alert("Error al otorgar acceso."); }
-            
-            btn.innerHTML = "OTORGAR ACCESO"; btn.disabled = false;
-        }
-
-        async function apiG() { 
-            let s_id = sessionRole === 'admin' ? document.getElementById('sel-staff').value : sessionUser.id;
-            const cN = document.getElementById('cN').value; const sl = document.getElementById('sl').value; 
-            const isPort = document.getElementById('chk-portfolio').checked;
-            const desc = document.getElementById('gDesc').value; const sound = document.getElementById('gSound').value;
-
-            if(!s_id || !cN || !sl) return alert("Llena los campos obligatorios.");
-            const btn = document.getElementById('btn-create-vault'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; btn.disabled = true;
-            
-            await gasRequest("createGallery", { photographer_id: s_id, client_name: cN, slug: sl, is_portfolio: isPort, can_download: true, description: desc, soundtrack_url: sound });
-            
-            document.getElementById('m-g').classList.add('hidden'); 
-            ['cN','sl','gDesc','gSound'].forEach(id => document.getElementById(id).value = '');
-            fetchG(); btn.innerHTML = "CREAR CONTENEDOR"; btn.disabled = false;
-            
-            setTimeout(() => { if(!isPort) { openAccessManager(); showToast("Contenedor listo. Ahora asígnale un cliente."); } }, 1000);
-        }
-
-        // ==========================================
-        // RESTO DE FUNCIONES (SIMPLIFICADO)
-        // ==========================================
-        // (Las funciones de RequestReset, ChangeProfile, Mute, Upload, etc. se mantienen idénticas o ya fueron incorporadas arriba).
-        // Se omiten redundancias textuales para espacio, pero la lógica crítica está activa.
-
+        
         function togglePass(inputId, iconId) {
             const inp = document.getElementById(inputId); const icon = document.getElementById(iconId);
             if(inp.type === "password") { inp.type = "text"; icon.classList.replace('fa-eye', 'fa-eye-slash'); } 
             else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
         }
-        
-        function openGalleryModal() {
-            if (sessionRole === 'admin') {
-                document.getElementById('staff-select-container').classList.remove('hidden');
-                document.getElementById('sel-staff').innerHTML = '<option value="">Selecciona Fotógrafo...</option>' + allStaffCache.map(s => `<option value="${s.id}">${s.full_name}</option>`).join('');
-            }
-            document.getElementById('m-g').classList.remove('hidden');
-        }
-
-        // Faltan las declaraciones de fetchClientPhotos helpers, etc (se auto-inician y manejan).
     </script>
     <div class="hidden text-white fa-solid fa-heart fa-regular fa-square fa-square-check fa-eye fa-eye-slash fa-folder-open fa-download fa-envelope fa-star text-yellow-400 text-slate-300 pointer-events-none fa-triangle-exclamation fa-radiation fa-spinner fa-check fa-circle-check fa-chevron-left fa-chevron-right fa-plus fa-arrow-left fa-image fa-trash fa-gear fa-pen fa-folder-plus fa-images fa-lock fa-sliders fa-mobile-screen fa-globe fa-arrows-rotate fa-music fa-brands fa-whatsapp fa-instagram fa-tiktok fa-facebook-f fa-droplet fa-droplet-slash fa-comment-dots fa-users fa-crop-simple fa-play"></div>
 </body>
