@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LenteFría DAM - Premium Enterprise</title>
     
-    <!-- LIBRERÍAS DE RENDIMIENTO Y UI -->
+    <!-- LIBRERÍAS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
@@ -23,53 +23,40 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700;900&display=swap'); 
-        
         :root { --brand-color: #00B7F1; }
-        
         body { font-family: 'Noto Sans', sans-serif; background: #fff; color: #0f172a; scroll-behavior: smooth; overflow-x: hidden; } 
         
-        /* CLASES DINÁMICAS WHITE-LABEL */
         .text-cyan-lf { color: var(--brand-color) !important; } 
         .bg-cyan-lf { background-color: var(--brand-color) !important; }
         .border-cyan-lf { border-color: var(--brand-color) !important; } 
         .accent-cyan-lf { accent-color: var(--brand-color) !important; }
         .focus\:ring-cyan-lf:focus { --tw-ring-color: var(--brand-color) !important; }
         
-        /* GRID MASONRY */
         .masonry { column-count: 1; column-gap: 1.5rem; } 
         @media (min-width: 640px) { .masonry { column-count: 2; } } 
         @media (min-width: 1024px) { .masonry { column-count: 3; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; position: relative; }
         
-        /* LAZY LOADING EFFECT */
         .lazy-image { opacity: 0; transition: opacity 0.5s ease-in-out; } 
         .lazy-loaded { opacity: 1; }
-        
-        /* CLIENT HERO COVER */
         .hero-cover { height: 100vh; width: 100%; object-fit: cover; background-color: #0f172a; background-repeat: no-repeat; background-size: cover; position: relative; transition: background-position 0.3s; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%); }
         .protect-img { -webkit-user-select: none; user-select: none; pointer-events: auto; }
-        
-        /* MARCA DE AGUA CSS */
         .watermark-overlay { position: absolute; inset: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 150 150'><text x='10' y='100' fill='rgba(255, 255, 255, 0.15)' font-family='Noto Sans' font-size='11' font-weight='bold' transform='rotate(-45 75 75)'>LENTE FRÍA</text></svg>"); background-repeat: repeat; pointer-events: none; z-index: 10; }
         
-        /* ANIMACIONES Y COMPONENTES */
         #toast { transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); } 
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
         .splash-exit { animation: splashExit 0.8s ease-in-out forwards; pointer-events: none; } 
         @keyframes splashExit { 0% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
         
         .carousel-btn { transition: transform 0.2s, background 0.2s; } 
         .carousel-btn:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
-        
         .eq-bar { display: inline-block; width: 3px; background-color: var(--brand-color); animation: bounce-eq 0.8s ease-in-out infinite alternate; } 
         @keyframes bounce-eq { 0% { height: 3px; } 100% { height: 16px; } }
         
         .carousel-container { display: flex; flex-direction: column; height: 100vh; width: 100vw; } 
         @media (min-width: 768px) { .carousel-container { flex-direction: row; } }
-        
         .carousel-sidebar { background: white; height: auto; border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease-out; position: absolute; bottom: 0; width: 100%; z-index: 520; }
         .carousel-sidebar.active { transform: translateY(0); } 
         @media (min-width: 768px) { .carousel-sidebar { position: relative; width: 33.333333%; height: 100vh; transform: none; border-radius: 0; } }
@@ -102,7 +89,7 @@
         <span id="toast-msg">Mensaje</span>
     </div>
 
-    <!-- PANTALLA LOGIN Y FORMULARIOS -->
+    <!-- PANTALLA LOGIN -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-500">
         <div class="bg-white p-12 rounded-3xl w-full max-w-md shadow-2xl mx-4 fade-in">
             <h1 class="font-black text-4xl tracking-tighter text-center mb-8 brand-logo-container">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
@@ -367,6 +354,7 @@
         <span id="eq-lbl" class="text-[10px] font-black uppercase tracking-widest text-slate-300">SOUNDTRACK ON</span>
     </button>
 
+    <!-- CAROUSEL MODAL -->
     <div id="m-carousel" class="hidden fixed inset-0 bg-black/95 z-[500] carousel-container backdrop-blur-xl transition-opacity fade-in">
         <button onclick="closeCarousel()" class="absolute top-6 right-6 text-white/50 hover:text-white z-[530] text-4xl transition-colors md:fixed md:top-6 md:right-6"><i class="fa-solid fa-xmark drop-shadow-md"></i></button>
         <div id="carousel-media-container" class="flex-1 flex items-center justify-center relative protect-img p-2 sm:p-10 w-full md:w-2/3 h-[70vh] md:h-full">
@@ -402,6 +390,7 @@
         </div>
     </div>
 
+    <!-- MODAL CROPPER -->
     <div id="m-cropper" class="hidden fixed inset-0 z-[600] bg-black/95 flex flex-col backdrop-blur-md fade-in">
         <div class="flex justify-between items-center p-6 text-white bg-black/50 z-10">
             <div>
@@ -418,6 +407,7 @@
         </div>
     </div>
     
+    <!-- MODAL MOVER -->
     <div id="m-move" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-2">Mover Archivo</h3>
@@ -428,6 +418,7 @@
         </div>
     </div>
 
+    <!-- MODAL PORTAFOLIO -->
     <div id="m-portfolio" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
             <h3 class="font-black text-2xl mb-2">Añadir a Portafolio</h3>
@@ -438,6 +429,7 @@
         </div>
     </div>
     
+    <!-- MODAL ACCESOS -->
     <div id="m-access" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-3xl mb-2 tracking-tight">Directorio & Accesos</h3>
@@ -479,7 +471,7 @@
         </div>
     </div>
 
-    <!-- MODAL PERFIL ACTUALIZADO PARA DATOS DE CONTACTO (2FA) -->
+    <!-- MODAL PERFIL Y 2FA -->
     <div id="m-profile" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-2xl mb-2">Mi Perfil Profesional</h3>
@@ -522,7 +514,7 @@
         </div>
     </div>
 
-    <!-- NUEVO MODAL 2FA MULTIFACTOR -->
+    <!-- MODAL 2FA MULTIFACTOR -->
     <div id="m-2fa" class="hidden fixed inset-0 bg-black/60 z-[700] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden">
             
@@ -554,8 +546,84 @@
             
         </div>
     </div>
+    
+    <!-- MODAL EDITAR ENTREGA -->
+    <div id="m-edit-g" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
+            <h3 class="font-black text-2xl mb-2">Editar Entrega</h3>
+            <input id="edit-cN" placeholder="Nombre Galería" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <textarea id="edit-gDesc" rows="3" placeholder="Descripción poética" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf transition-all"></textarea>
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-2">Avanzadas</h4>
+            <input id="edit-gSound" placeholder="MP3 o YouTube Link" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
+                <input type="checkbox" id="edit-chk-wm" class="w-5 h-5 accent-cyan-lf">
+                <span class="font-bold text-sm">Aplicar Marca de Agua</span>
+            </label>
+            <button id="btn-update-vault" onclick="updateGallery()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest shadow-lg">GUARDAR</button>
+            <button onclick="document.getElementById('m-edit-g').classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+        </div>
+    </div>
 
-    <!-- CORE SCRIPT -->
+    <!-- MODAL CREAR SET -->
+    <div id="m-set" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
+            <h3 class="font-black text-2xl mb-2">Nueva Categoría (Set)</h3>
+            <input id="set-name" placeholder="Nombre" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <button id="btn-save-set" onclick="createSet()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest shadow-lg">CREAR</button>
+            <button onclick="document.getElementById('m-set').classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+        </div>
+    </div>
+
+    <!-- MODAL CREAR STAFF -->
+    <div id="m-u" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl">
+            <h3 class="font-black text-2xl mb-6">Nuevo Staff</h3>
+            <input id="sN" placeholder="Nombre completo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <input id="sE" placeholder="Email del fotógrafo" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <div class="relative mb-8">
+                <input id="sP" placeholder="Contraseña de acceso" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+                <button onclick="togglePass('sP', 'eye-staff')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-staff" class="fa-solid fa-eye"></i></button>
+            </div>
+            <button id="btn-create-staff" onclick="apiS()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all shadow-lg tracking-widest">CREAR STAFF</button>
+            <button onclick="document.getElementById('m-u').classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+        </div>
+    </div>
+
+    <!-- MODAL CREAR ENTREGA -->
+    <div id="m-g" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
+            <h3 class="font-black text-2xl mb-2">Crear Entrega</h3>
+            <div id="staff-select-container" class="hidden mb-4">
+                <label class="text-xs font-bold text-slate-400 ml-2">Asignar a Fotógrafo:</label>
+                <select id="sel-staff" class="mt-1 p-4 bg-slate-100 rounded-xl w-full outline-none font-bold text-sm focus:ring-2 focus:ring-cyan-lf"></select>
+            </div>
+            <input id="cN" placeholder="Título de la Sesión" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <textarea id="gDesc" rows="2" placeholder="Dedicatoria (Opcional)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf transition-all"></textarea>
+            <input id="sl" placeholder="Ruta web interna (Ej: boda-ana)" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <h4 class="text-xs font-bold text-slate-400 ml-2 mb-2 uppercase tracking-widest">Soundtrack</h4>
+            <input id="gSound" placeholder="MP3 o YouTube (Opcional)" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all">
+            <label class="flex items-center gap-3 mb-6 p-4 border rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
+                <input type="checkbox" id="chk-portfolio" class="w-5 h-5 accent-cyan-lf">
+                <span class="font-bold text-sm">Es un Portafolio Público</span>
+            </label>
+            <button id="btn-create-vault" onclick="apiG()" class="w-full bg-cyan-lf text-white p-4 rounded-xl font-bold hover:bg-black transition-colors tracking-widest shadow-lg">CREAR CONTENEDOR</button>
+            <button onclick="document.getElementById('m-g').classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+        </div>
+    </div>
+
+    <!-- MODAL REINICIO DE FÁBRICA -->
+    <div id="m-reset" class="hidden fixed inset-0 bg-black/80 z-[200] flex items-center justify-center p-4 backdrop-blur-md fade-in">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl border-4 border-red-500">
+            <h3 class="font-black text-3xl mb-4 text-red-600"><i class="fa-solid fa-radiation mr-2"></i> Factory Reset</h3>
+            <div class="relative mb-8">
+                <input id="reset-pass" placeholder="Contraseña Admin" type="password" class="p-4 bg-slate-100 rounded-xl w-full outline-none border border-red-200 focus:ring-2 focus:ring-red-500 transition-all">
+            </div>
+            <button onclick="executeHardReset()" class="w-full bg-red-600 text-white p-4 rounded-xl font-bold hover:bg-red-800 transition-colors tracking-widest mb-3 shadow-lg">EJECUTAR PURGA</button>
+            <button onclick="document.getElementById('m-reset').classList.add('hidden')" class="w-full text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+        </div>
+    </div>
+
+    <!-- CORE SCRIPT (100% COMPLETO Y REVISADO) -->
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzAEygb5pHlQ08emz8KqvEnYFl9uMv_4WhzYTEk8tqxdxfIxc8IYKq9c5iFv7EicfO4/exec";
 
@@ -898,6 +966,9 @@
             btn.disabled = false; 
         }
 
+        // ==========================================
+        // UI & NAVIGATION
+        // ==========================================
         async function applyRoleUI() {
             document.getElementById('splash-screen').classList.add('splash-exit'); 
             document.getElementById('login-screen').classList.add('opacity-0'); 
@@ -1004,6 +1075,54 @@
                 window.history.pushState({view: n}, "", url); 
             } 
             window.scrollTo(0,0);
+        }
+
+        // ==========================================
+        // HELPERS PARA VISTAS Y ENLACES (ESTABAN FALTANDO)
+        // ==========================================
+        function openWorkspaceById(id) {
+            const g = globalGalleriesCache.find(x => x.id === id);
+            if (g) openWorkspace(g);
+        }
+
+        function previewGalleryById(id) {
+            const g = globalGalleriesCache.find(x => x.id === id);
+            if (g) previewGallery(g);
+        }
+
+        function openEditModalById(id) {
+            const g = globalGalleriesCache.find(x => x.id === id);
+            if (g) openEditModal(g);
+        }
+
+        function previewGallery(g) { 
+            sessionUser.active_gallery = g; 
+            sessionUser.can_download = g.can_download; 
+            document.getElementById('preview-banner').classList.remove('hidden'); 
+            showSection('client-view'); 
+        }
+
+        function exitPreviewMode() { 
+            document.getElementById('preview-banner').classList.add('hidden'); 
+            showSection('galleries'); 
+        }
+
+        function copyShareLink(slug, isPortfolio) { 
+            let link = window.location.origin + window.location.pathname; 
+            if (isPortfolio) { 
+                link += `?p=${slug}`; 
+                showToast("Enlace de Portafolio copiado. Es público."); 
+            } else { 
+                showToast("Enlace copiado. Dile al cliente que inicie sesión."); 
+            } 
+            navigator.clipboard.writeText(link); 
+        }
+
+        function copyMyProfileLink() { 
+            let link = window.location.origin + window.location.pathname + `?f=${sessionUser.id}`; 
+            navigator.clipboard.writeText(link).then(() => { 
+                showToast("¡Enlace de tu Perfil Público copiado!"); 
+            }); 
         }
 
         // ==========================================
@@ -1264,25 +1383,7 @@
         }
 
         // ==========================================
-        // HELPERS PARA EVITAR JSON.STRINGIFY INLINE
-        // ==========================================
-        function openWorkspaceById(id) {
-            const g = globalGalleriesCache.find(x => x.id === id);
-            if (g) openWorkspace(g);
-        }
-
-        function previewGalleryById(id) {
-            const g = globalGalleriesCache.find(x => x.id === id);
-            if (g) previewGallery(g);
-        }
-
-        function openEditModalById(id) {
-            const g = globalGalleriesCache.find(x => x.id === id);
-            if (g) openEditModal(g);
-        }
-
-        // ==========================================
-        // GESTIÓN DE STAFF Y DIRECTORIO (ELIMINAR / REVOCAR)
+        // GESTIÓN DE STAFF Y DIRECTORIO
         // ==========================================
         async function fetchS() { 
             document.getElementById('staff-list').innerHTML = getStaffSkeleton(); 
