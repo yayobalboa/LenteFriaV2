@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LenteFría DAM - Premium Enterprise</title>
     
-    <!-- LIBRERÍAS DE RENDIMIENTO Y UI -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     
-    <!-- GOOGLE ANALYTICS -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7CD1BCMB0"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -23,53 +21,40 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700;900&display=swap'); 
-        
         :root { --brand-color: #00B7F1; }
-        
         body { font-family: 'Noto Sans', sans-serif; background: #fff; color: #0f172a; scroll-behavior: smooth; overflow-x: hidden; } 
         
-        /* CLASES DINÁMICAS WHITE-LABEL */
         .text-cyan-lf { color: var(--brand-color) !important; } 
         .bg-cyan-lf { background-color: var(--brand-color) !important; }
         .border-cyan-lf { border-color: var(--brand-color) !important; } 
         .accent-cyan-lf { accent-color: var(--brand-color) !important; }
         .focus\:ring-cyan-lf:focus { --tw-ring-color: var(--brand-color) !important; }
         
-        /* GRID MASONRY */
         .masonry { column-count: 1; column-gap: 1.5rem; } 
         @media (min-width: 640px) { .masonry { column-count: 2; } } 
         @media (min-width: 1024px) { .masonry { column-count: 3; } }
         .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; position: relative; }
         
-        /* LAZY LOADING EFFECT */
         .lazy-image { opacity: 0; transition: opacity 0.5s ease-in-out; } 
         .lazy-loaded { opacity: 1; }
-        
-        /* CLIENT HERO COVER */
         .hero-cover { height: 100vh; width: 100%; object-fit: cover; background-color: #0f172a; background-repeat: no-repeat; background-size: cover; position: relative; transition: background-position 0.3s; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%); }
         .protect-img { -webkit-user-select: none; user-select: none; pointer-events: auto; }
-        
-        /* MARCA DE AGUA CSS */
         .watermark-overlay { position: absolute; inset: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 150 150'><text x='10' y='100' fill='rgba(255, 255, 255, 0.15)' font-family='Noto Sans' font-size='11' font-weight='bold' transform='rotate(-45 75 75)'>LENTE FRÍA</text></svg>"); background-repeat: repeat; pointer-events: none; z-index: 10; }
         
-        /* ANIMACIONES Y COMPONENTES */
         #toast { transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); } 
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
         .splash-exit { animation: splashExit 0.8s ease-in-out forwards; pointer-events: none; } 
         @keyframes splashExit { 0% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
         
         .carousel-btn { transition: transform 0.2s, background 0.2s; } 
         .carousel-btn:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
-        
         .eq-bar { display: inline-block; width: 3px; background-color: var(--brand-color); animation: bounce-eq 0.8s ease-in-out infinite alternate; } 
         @keyframes bounce-eq { 0% { height: 3px; } 100% { height: 16px; } }
         
         .carousel-container { display: flex; flex-direction: column; height: 100vh; width: 100vw; } 
         @media (min-width: 768px) { .carousel-container { flex-direction: row; } }
-        
         .carousel-sidebar { background: white; height: auto; border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease-out; position: absolute; bottom: 0; width: 100%; z-index: 520; }
         .carousel-sidebar.active { transform: translateY(0); } 
         @media (min-width: 768px) { .carousel-sidebar { position: relative; width: 33.333333%; height: 100vh; transform: none; border-radius: 0; } }
@@ -82,13 +67,11 @@
     <div class="hidden"><div id="yt-player-container"></div></div>
     <audio id="audio-soundtrack" loop></audio>
 
-    <!-- BANNER DE VISTA PREVIA -->
     <div id="preview-banner" class="hidden fixed top-0 left-0 w-full bg-red-500 text-white text-center py-3 z-[999] font-black text-xs tracking-widest flex flex-col sm:flex-row justify-center items-center gap-4 shadow-2xl">
         <span><i class="fa-solid fa-eye animate-pulse mr-2"></i> MODO VISTA PREVIA DE CLIENTE</span>
         <button onclick="exitPreviewMode()" class="bg-white text-red-600 px-6 py-2 rounded-full hover:bg-black hover:text-white transition-colors">VOLVER AL PANEL</button>
     </div>
 
-    <!-- SPLASH SCREEN -->
     <div id="splash-screen" class="fixed inset-0 bg-slate-900 z-[300] flex flex-col items-center justify-center text-white">
         <h1 id="splash-logo" class="font-black text-5xl tracking-tighter mb-4 animate-pulse">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
         <div class="w-16 h-1 bg-slate-800 rounded overflow-hidden">
@@ -96,13 +79,12 @@
         </div>
     </div>
     
-    <!-- TOAST NOTIFICATIONS -->
     <div id="toast" class="fixed -bottom-24 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-3 rounded-full font-bold tracking-widest text-sm shadow-2xl z-[999] flex items-center gap-3">
         <i class="fa-solid fa-circle-check text-cyan-lf"></i>
         <span id="toast-msg">Mensaje</span>
     </div>
 
-    <!-- PANTALLA LOGIN Y FORMULARIOS -->
+    <!-- PANTALLA LOGIN -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-500">
         <div class="bg-white p-12 rounded-3xl w-full max-w-md shadow-2xl mx-4 fade-in">
             <h1 class="font-black text-4xl tracking-tighter text-center mb-8 brand-logo-container">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
@@ -118,7 +100,6 @@
                 <button onclick="login()" id="btn-login" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all tracking-widest shadow-lg">INICIAR SESIÓN</button>
             </div>
             
-            <!-- FORZAR CAMBIO DE CONTRASEÑA -->
             <div id="form-force-pass" class="hidden">
                 <h2 class="text-2xl font-black text-center mb-2">Cambio Obligatorio</h2>
                 <p class="text-sm font-bold text-slate-400 mb-6 text-center">Por seguridad, debes crear una nueva contraseña en tu primer inicio de sesión.</p>
@@ -147,7 +128,7 @@
         </div>
     </div>
 
-    <!-- BOTONES GLOBALES Y NAVEGACIÓN -->
+    <!-- UI GLOBALES -->
     <a id="cta-hire-me" href="#" target="_blank" class="hidden fixed bottom-6 right-6 z-[200] bg-green-500 text-white px-6 py-4 rounded-full font-black tracking-widest shadow-2xl hover:scale-105 transition-transform flex items-center gap-3">
         <i class="fa-brands fa-whatsapp text-2xl animate-pulse"></i> CONTRÁTAME
     </a>
@@ -194,7 +175,7 @@
             </div>
         </section>
 
-        <!-- SECCIONES STAFF / ADMIN -->
+        <!-- SECCIONES STAFF -->
         <section id="section-admin" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="bg-slate-900 p-8 sm:p-10 rounded-3xl text-white flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4 shadow-xl">
                 <div>
@@ -236,7 +217,6 @@
             </div>
         </section>
 
-        <!-- SECCIÓN ENTREGAS GLOBALES -->
         <section id="section-galleries" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
                 <div>
@@ -252,7 +232,6 @@
             <div id="galleries-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8"></div>
         </section>
 
-        <!-- SECCIÓN WORKSPACE -->
         <section id="section-workspace" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <div class="flex items-center gap-4 mb-6">
                 <button onclick="showSection('galleries')" class="text-slate-400 hover:text-black font-bold bg-slate-100 px-4 py-2 rounded-full transition-colors"><i class="fa-solid fa-arrow-left mr-2"></i> VOLVER</button>
@@ -276,7 +255,6 @@
             <div id="ws-photos" class="masonry"></div>
         </section>
 
-        <!-- SECCIÓN INBOX -->
         <section id="section-inbox" class="max-w-7xl mx-auto p-6 sm:p-10 hidden fade-in">
             <h2 class="text-4xl font-black mb-8 tracking-tight">Bandeja de Entrada</h2>
             <div class="bg-slate-50 border rounded-3xl p-6 sm:p-10 min-h-[50vh] shadow-inner">
@@ -284,7 +262,6 @@
             </div>
         </section>
 
-        <!-- SECCIÓN CLIENTE / VISTA PREVIA -->
         <section id="section-client-view" class="hidden fade-in">
             <div id="client-hero" class="hero-cover flex items-center justify-center text-center">
                 <div class="hero-overlay"></div>
@@ -383,7 +360,7 @@
         </div>
     </div>
 
-    <!-- MODALES DE CONTROL -->
+    <!-- MODALES VARIOS -->
     <div id="m-cropper" class="hidden fixed inset-0 z-[600] bg-black/95 flex flex-col backdrop-blur-md fade-in">
         <div class="flex justify-between items-center p-6 text-white bg-black/50 z-10">
             <div>
@@ -454,11 +431,23 @@
         </div>
     </div>
 
+    <!-- MODAL PERFIL ACTUALIZADO PARA DATOS DE CONTACTO (2FA) -->
     <div id="m-profile" class="hidden fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white p-10 rounded-3xl w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
             <h3 class="font-black text-2xl mb-2">Mi Perfil Profesional</h3>
-            <p class="text-slate-400 text-sm font-bold mb-6">Administra tus datos, biografía y canales de contacto.</p>
+            <p class="text-slate-400 text-sm font-bold mb-6">Administra tus datos y canales de contacto.</p>
             <div class="flex flex-col gap-4">
+                
+                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Datos de Contacto (Requiere 2FA)</h4>
+                <input id="p-email" placeholder="Correo electrónico" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="p-phone" placeholder="Teléfono" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <div class="relative">
+                    <input id="p-new-pass" type="password" placeholder="Nueva Contraseña (Opcional)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                    <button onclick="togglePass('p-new-pass', 'eye-prof')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-prof" class="fa-solid fa-eye"></i></button>
+                </div>
+
+                <div class="border-t my-2"></div>
+
                 <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Marca Personal</h4>
                 <div class="flex gap-4 items-center">
                     <div class="flex flex-col">
@@ -466,23 +455,53 @@
                         <input type="color" id="p-brand-color" value="#00B7F1" class="w-16 h-12 p-1 bg-slate-100 rounded-xl cursor-pointer">
                     </div>
                     <div class="flex-1">
-                        <label class="text-[10px] font-bold text-slate-400 mb-1">URL Logo (Opcional)</label>
+                        <label class="text-[10px] font-bold text-slate-400 mb-1">URL Logo</label>
                         <input id="p-brand-logo" placeholder="https://..." class="p-3 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
                     </div>
                 </div>
+                
                 <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2 mt-2">Biografía & Redes</h4>
-                <textarea id="p-bio" rows="3" placeholder="Si dejas este campo vacío, no se mostrará nada." class="p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf"></textarea>
-                <input id="p-ig" placeholder="Enlace Instagram (vacío para ocultar)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-                <input id="p-wa" placeholder="WhatsApp (Ej: 52199923485) (vacío para ocultar)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-                <input id="p-ap" placeholder="Enlace Portafolio Externo (vacío para ocultar)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-2 mt-2">Seguridad</h4>
-                <div class="relative mb-2">
-                    <input id="p-new-pass" type="password" placeholder="Nueva Contraseña (Opcional)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
-                    <button onclick="togglePass('p-new-pass', 'eye-prof')" class="absolute right-4 top-4 text-slate-400 hover:text-black"><i id="eye-prof" class="fa-solid fa-eye"></i></button>
-                </div>
+                <textarea id="p-bio" rows="3" placeholder="Si dejas este campo vacío, no se mostrará." class="p-4 bg-slate-100 rounded-xl w-full outline-none resize-none focus:ring-2 focus:ring-cyan-lf"></textarea>
+                <input id="p-ig" placeholder="Enlace Instagram" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="p-wa" placeholder="WhatsApp (Ej: 52199923485)" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
+                <input id="p-ap" placeholder="Enlace Portafolio Externo" class="p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf">
             </div>
-            <button id="btn-change-pass" onclick="saveProfileChanges()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all shadow-lg tracking-widest mt-4">GUARDAR CAMBIOS</button>
+            
+            <button id="btn-change-pass" onclick="saveProfileChanges()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-all shadow-lg tracking-widest mt-6">GUARDAR CAMBIOS</button>
             <button onclick="document.getElementById('m-profile').classList.add('hidden')" class="w-full mt-4 text-slate-400 font-bold hover:text-black transition-colors">CERRAR</button>
+        </div>
+    </div>
+
+    <!-- NUEVO MODAL 2FA MULTIFACTOR -->
+    <div id="m-2fa" class="hidden fixed inset-0 bg-black/60 z-[700] flex items-center justify-center p-4 backdrop-blur-sm fade-in">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden">
+            
+            <!-- Step 1 -->
+            <div id="2fa-step-1">
+                <h3 class="font-black text-2xl mb-2">Verificación de Seguridad</h3>
+                <p class="text-slate-400 text-sm font-bold mb-6">Elige dónde quieres recibir tu código temporal.</p>
+                <div id="2fa-methods" class="flex flex-col gap-3 mb-6"></div>
+                <button onclick="close2FAModal()" class="w-full text-slate-400 font-bold hover:text-black transition-colors">CANCELAR</button>
+            </div>
+            
+            <!-- Step 2 -->
+            <div id="2fa-step-2" class="hidden">
+                <h3 class="font-black text-2xl mb-2">Confirma el dato</h3>
+                <p class="text-slate-400 text-sm font-bold mb-6">Para proteger tu cuenta, escribe el <span id="2fa-type-lbl"></span> completo.</p>
+                <input id="2fa-full-input" class="mb-4 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all text-center font-bold tracking-widest">
+                <button id="btn-2fa-send" onclick="send2FACode()" class="w-full bg-black text-white p-4 rounded-xl font-bold hover:bg-cyan-lf transition-colors tracking-widest shadow-lg mb-4">ENVIAR CÓDIGO</button>
+                <button onclick="backTo2FAStep1()" class="w-full text-slate-400 font-bold hover:text-black transition-colors">ATRÁS</button>
+            </div>
+            
+            <!-- Step 3 -->
+            <div id="2fa-step-3" class="hidden">
+                <h3 class="font-black text-2xl mb-2">Ingresa el Código</h3>
+                <p class="text-slate-400 text-sm font-bold mb-6">Revisa tu bandeja de entrada o mensajes y anota el código (vigente por 10 minutos).</p>
+                <input id="2fa-code-input" maxlength="4" placeholder="0000" class="mb-6 p-4 bg-slate-100 rounded-xl w-full outline-none focus:ring-2 focus:ring-cyan-lf transition-all text-center font-black text-3xl tracking-[1em]">
+                <button id="btn-2fa-verify" onclick="verify2FACode()" class="w-full bg-green-500 text-white p-4 rounded-xl font-bold hover:bg-green-600 transition-colors tracking-widest shadow-lg mb-4">AUTORIZAR Y GUARDAR</button>
+                <button onclick="close2FAModal()" class="w-full text-slate-400 font-bold hover:text-black transition-colors">CANCELAR TODO</button>
+            </div>
+            
         </div>
     </div>
     
@@ -583,6 +602,9 @@
         let galleryIdToCrop = null; 
         let moveFileIdCache = null;
         let copyFileIdCache = null;
+        
+        let target2FAPayload = null;
+        let current2FAMethod = null; // 'email' or 'phone'
 
         window.systemSettings = { max_resolution: 3000, jpeg_quality: 82 };
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -602,46 +624,23 @@
             silentErrorLog({ message, source, line: lineno, stack: error ? error.stack : "" }); 
             return false; 
         };
-        
         window.onunhandledrejection = function(event) { 
             silentErrorLog({ message: "Promise Rejection: " + event.reason }); 
         };
         
         async function silentErrorLog(details) { 
-            try { 
-                await gasRequest("logError", { actor: sessionUser ? sessionUser.email : "ANONYMOUS", error_details: details }); 
-            } catch(e) {} 
+            try { await gasRequest("logError", { actor: sessionUser ? sessionUser.email : "ANONYMOUS", error_details: details }); } catch(e) {} 
         }
 
-        function getStaffSkeleton() { 
-            return Array(3).fill(`<div class="bg-slate-50 p-6 rounded-3xl border shadow-sm animate-pulse"><div class="h-6 bg-slate-200 rounded w-2/3 mb-4"></div><div class="h-3 bg-slate-200 rounded w-1/2"></div></div>`).join(''); 
-        }
-        
-        function getGallerySkeleton() { 
-            return Array(3).fill(`<div class="border p-8 rounded-3xl flex flex-col justify-between shadow-sm bg-white animate-pulse"><div class="mb-6"><div class="h-8 bg-slate-200 rounded w-3/4 mb-4"></div><div class="h-3 bg-slate-200 rounded w-1/3"></div></div><div class="h-12 bg-slate-200 rounded-xl w-full mt-4"></div></div>`).join(''); 
-        }
-        
-        function getPhotoSkeleton() { 
-            return Array(6).fill(`<div class="masonry-item rounded-2xl bg-slate-200 animate-pulse" style="height: ${Math.floor(Math.random() * (400 - 200 + 1) + 200)}px;"></div>`).join(''); 
-        }
-        
-        function getInboxSkeleton() { 
-            return Array(2).fill(`<div class="bg-white p-6 rounded-2xl border flex gap-6 items-start animate-pulse"><div class="w-24 h-24 bg-slate-200 rounded-xl"></div><div class="flex-1"><div class="h-4 bg-slate-200 rounded w-1/4 mb-4"></div><div class="h-4 bg-slate-200 rounded w-3/4"></div></div></div>`).join(''); 
-        }
-        
-        function getYouTubeId(url) { 
-            if(!url) return null; 
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/; 
-            const match = url.match(regExp); 
-            return (match && match[2].length === 11) ? match[2] : null; 
-        }
+        function getStaffSkeleton() { return Array(3).fill(`<div class="bg-slate-50 p-6 rounded-3xl border shadow-sm animate-pulse"><div class="h-6 bg-slate-200 rounded w-2/3 mb-4"></div><div class="h-3 bg-slate-200 rounded w-1/2"></div></div>`).join(''); }
+        function getGallerySkeleton() { return Array(3).fill(`<div class="border p-8 rounded-3xl flex flex-col justify-between shadow-sm bg-white animate-pulse"><div class="mb-6"><div class="h-8 bg-slate-200 rounded w-3/4 mb-4"></div><div class="h-3 bg-slate-200 rounded w-1/3"></div></div><div class="h-12 bg-slate-200 rounded-xl w-full mt-4"></div></div>`).join(''); }
+        function getPhotoSkeleton() { return Array(6).fill(`<div class="masonry-item rounded-2xl bg-slate-200 animate-pulse" style="height: ${Math.floor(Math.random() * (400 - 200 + 1) + 200)}px;"></div>`).join(''); }
+        function getInboxSkeleton() { return Array(2).fill(`<div class="bg-white p-6 rounded-2xl border flex gap-6 items-start animate-pulse"><div class="w-24 h-24 bg-slate-200 rounded-xl"></div><div class="flex-1"><div class="h-4 bg-slate-200 rounded w-1/4 mb-4"></div><div class="h-4 bg-slate-200 rounded w-3/4"></div></div></div>`).join(''); }
+        function getYouTubeId(url) { if(!url) return null; const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/; const match = url.match(regExp); return (match && match[2].length === 11) ? match[2] : null; }
 
         async function initApp() {
             window.addEventListener('popstate', (e) => {
-                if(!document.getElementById('m-carousel').classList.contains('hidden')) { 
-                    closeCarousel(); 
-                    return; 
-                }
+                if(!document.getElementById('m-carousel').classList.contains('hidden')) { closeCarousel(); return; }
                 const urlParams = new URLSearchParams(window.location.search);
                 if(urlParams.get('p')) { loadPublicPortfolio(urlParams.get('p')); }
                 else if(urlParams.get('f')) { loadPublicProfile(urlParams.get('f')); }
@@ -650,9 +649,7 @@
 
             try { 
                 const settings = await gasRequest("getSettings"); 
-                if (settings && settings.length > 0) {
-                    window.systemSettings = { max_resolution: parseInt(settings[0].max_resolution), jpeg_quality: parseInt(settings[0].jpeg_quality) }; 
-                }
+                if (settings && settings.length > 0) window.systemSettings = { max_resolution: parseInt(settings[0].max_resolution), jpeg_quality: parseInt(settings[0].jpeg_quality) }; 
             } catch(e) {}
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -662,8 +659,7 @@
             const savedSession = localStorage.getItem('lf_session');
             if (savedSession) {
                 const data = JSON.parse(savedSession); 
-                sessionUser = data.user; 
-                sessionRole = data.role; 
+                sessionUser = data.user; sessionRole = data.role; 
                 applyRoleUI();
             } else {
                 document.getElementById('splash-screen').classList.add('splash-exit'); 
@@ -678,9 +674,7 @@
                 const r = await fetch(GAS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(bodyData) }); 
                 if (!r.ok) throw new Error(`Error ${r.status}`); 
                 return await r.json(); 
-            } catch (error) { 
-                throw error; 
-            }
+            } catch (error) { throw error; }
         }
 
         function showToast(msg) { 
@@ -691,97 +685,52 @@
         }
 
         function applyBranding(color, logoUrl) {
-            if (color) { 
-                document.documentElement.style.setProperty('--brand-color', color); 
-            }
+            if (color) document.documentElement.style.setProperty('--brand-color', color); 
             if (logoUrl) { 
                 const logoContainers = document.querySelectorAll('.brand-logo-container, #splash-logo, #pub-brand-logo'); 
-                logoContainers.forEach(container => { 
-                    container.innerHTML = `<img src="${logoUrl}" class="h-full object-contain mx-auto max-h-16">`; 
-                }); 
+                logoContainers.forEach(container => { container.innerHTML = `<img src="${logoUrl}" class="h-full object-contain mx-auto max-h-16">`; }); 
             }
         }
 
         async function loadPublicPortfolio(slug) {
-            document.getElementById('splash-screen').classList.add('splash-exit'); 
-            document.getElementById('login-screen').classList.add('hidden');
-            
+            document.getElementById('splash-screen').classList.add('splash-exit'); document.getElementById('login-screen').classList.add('hidden');
             try {
-                const res = await gasRequest("getPublicPortfolio", { slug: slug }); 
-                if (res.error) throw new Error(res.error);
-                
-                sessionRole = 'guest'; 
-                sessionUser = { id: 'guest', full_name: 'Invitado', active_gallery: res.gallery, can_download: false };
-                photosCache = res.structure; 
-                favoritesCache = [];
-                
+                const res = await gasRequest("getPublicPortfolio", { slug: slug }); if (res.error) throw new Error(res.error);
+                sessionRole = 'guest'; sessionUser = { id: 'guest', full_name: 'Invitado', active_gallery: res.gallery, can_download: false };
+                photosCache = res.structure; favoritesCache = [];
                 applyBranding(res.photographer.brand_color, res.photographer.brand_logo_url);
-                document.getElementById('main-nav').classList.add('hidden'); 
-                document.getElementById('main-content').classList.remove('hidden'); 
-                showSection('client-view');
-            } catch(e) { 
-                alert("Portafolio no disponible."); 
-                window.location.href = window.location.origin + window.location.pathname; 
-            }
+                document.getElementById('main-nav').classList.add('hidden'); document.getElementById('main-content').classList.remove('hidden'); showSection('client-view');
+            } catch(e) { alert("Portafolio no disponible."); window.location.href = window.location.origin + window.location.pathname; }
         }
 
         async function loadPublicProfile(photographerId) {
-            document.getElementById('splash-screen').classList.add('splash-exit'); 
-            document.getElementById('login-screen').classList.add('hidden');
-            
+            document.getElementById('splash-screen').classList.add('splash-exit'); document.getElementById('login-screen').classList.add('hidden');
             try {
-                const res = await gasRequest("getPhotographerProfile", { id: photographerId }); 
-                if (res.error) throw new Error(res.error);
-                
-                const p = res.photographer; 
-                applyBranding(p.brand_color, p.brand_logo_url);
-                
-                document.getElementById('pub-name').innerText = p.full_name; 
-                document.getElementById('pub-bio').innerText = p.bio || "Fotografía Profesional";
-                
+                const res = await gasRequest("getPhotographerProfile", { id: photographerId }); if (res.error) throw new Error(res.error);
+                const p = res.photographer; applyBranding(p.brand_color, p.brand_logo_url);
+                document.getElementById('pub-name').innerText = p.full_name; document.getElementById('pub-bio').innerText = p.bio || "Fotografía Profesional";
                 let socialsHtml = "";
                 if(p.whatsapp) socialsHtml += `<a href="https://wa.me/${p.whatsapp}?text=Hola..." target="_blank" class="hover:text-white transition-colors"><i class="fa-brands fa-whatsapp"></i></a>`;
                 if(p.instagram) socialsHtml += `<a href="${p.instagram}" target="_blank" class="hover:text-white transition-colors"><i class="fa-brands fa-instagram"></i></a>`;
                 if(p.adobe_portfolio) socialsHtml += `<a href="${p.adobe_portfolio}" target="_blank" class="hover:text-white transition-colors"><i class="fa-solid fa-globe"></i></a>`;
                 document.getElementById('pub-socials').innerHTML = socialsHtml;
-                
                 const grid = document.getElementById('pub-portfolios-grid');
                 if(res.portfolios.length > 0) { 
-                    grid.innerHTML = res.portfolios.map(g => `
-                        <a href="?p=${g.slug}" class="block group relative rounded-3xl overflow-hidden shadow-2xl h-80 bg-slate-800 hover:-translate-y-2 transition-transform">
-                            <img src="${g.cover_photo_id ? `https://lh3.googleusercontent.com/d/${g.cover_photo_id}=s800` : ''}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent flex flex-col justify-end p-8">
-                                <h4 class="text-white font-black text-2xl">${g.client_name}</h4>
-                                <span class="text-cyan-lf text-xs font-bold tracking-widest uppercase mt-2 group-hover:text-white transition-colors">VER GALERÍA <i class="fa-solid fa-arrow-right ml-1"></i></span>
-                            </div>
-                        </a>
-                    `).join(''); 
+                    grid.innerHTML = res.portfolios.map(g => `<a href="?p=${g.slug}" class="block group relative rounded-3xl overflow-hidden shadow-2xl h-80 bg-slate-800 hover:-translate-y-2 transition-transform"><img src="${g.cover_photo_id ? `https://lh3.googleusercontent.com/d/${g.cover_photo_id}=s800` : ''}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent flex flex-col justify-end p-8"><h4 class="text-white font-black text-2xl">${g.client_name}</h4><span class="text-cyan-lf text-xs font-bold tracking-widest uppercase mt-2 group-hover:text-white transition-colors">VER GALERÍA <i class="fa-solid fa-arrow-right ml-1"></i></span></div></a>`).join(''); 
                 } else { 
                     grid.innerHTML = `<p class="text-slate-500 text-center col-span-full py-10">Aún no hay portafolios públicos.</p>`; 
                 }
-                
-                document.getElementById('main-nav').classList.add('hidden'); 
-                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('main-nav').classList.add('hidden'); document.getElementById('main-content').classList.remove('hidden');
                 ['section-admin', 'section-galleries', 'section-workspace', 'section-inbox', 'section-client-view'].forEach(id => document.getElementById(id).classList.add('hidden')); 
                 document.getElementById('section-public-profile').classList.remove('hidden');
-            } catch(e) { 
-                alert("Perfil no disponible."); 
-                window.location.href = window.location.origin + window.location.pathname; 
-            }
+            } catch(e) { alert("Perfil no disponible."); window.location.href = window.location.origin + window.location.pathname; }
         }
 
         async function login() {
-            const u = document.getElementById('l-user').value; 
-            const p = document.getElementById('l-pass').value; 
-            const btn = document.getElementById('btn-login'); 
-            const err = document.getElementById('login-error');
-            
+            const u = document.getElementById('l-user').value; const p = document.getElementById('l-pass').value; 
+            const btn = document.getElementById('btn-login'); const err = document.getElementById('login-error');
             if(!u || !p) return; 
-            
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> VERIFICANDO...`; 
-            btn.disabled = true; 
-            err.classList.add('hidden');
-            
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> VERIFICANDO...`; btn.disabled = true; err.classList.add('hidden');
             try { 
                 const res = await gasRequest("login", { identifier: u, password: p }); 
                 if(res.success) { 
@@ -789,270 +738,147 @@
                         pendingLoginUser = { id: res.user_id, role: res.role };
                         switchForm('force-pass');
                     } else {
-                        sessionUser = res.user; 
-                        sessionRole = res.role; 
+                        sessionUser = res.user; sessionRole = res.role; 
                         localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole })); 
                         applyRoleUI(); 
                     }
                 } else { 
-                    err.innerText = res.message; 
-                    err.classList.remove('hidden'); 
-                    btn.innerText = "INICIAR SESIÓN"; 
-                    btn.disabled = false; 
+                    err.innerText = res.message; err.classList.remove('hidden'); btn.innerText = "INICIAR SESIÓN"; btn.disabled = false; 
                 } 
             } catch (error) { 
-                err.innerText = "Error de red."; 
-                err.classList.remove('hidden'); 
-                btn.innerText = "INICIAR SESIÓN"; 
-                btn.disabled = false; 
+                err.innerText = "Error de red."; err.classList.remove('hidden'); btn.innerText = "INICIAR SESIÓN"; btn.disabled = false; 
             }
         }
 
         async function executeForcePassChange() {
             const newP = document.getElementById('new-force-pass').value;
             if(!newP || newP.length < 4) return alert("Ingresa una contraseña válida");
-            
             const btn = document.getElementById('btn-force-pass');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; 
-            btn.disabled = true;
-            
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true;
             try {
                 const res = await gasRequest("forceChangePassword", { user_id: pendingLoginUser.id, role: pendingLoginUser.role, new_password: newP });
                 if(res.success) {
-                    sessionUser = res.user;
-                    sessionRole = res.role;
+                    sessionUser = res.user; sessionRole = res.role;
                     localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
-                    showToast("Contraseña guardada con éxito");
-                    applyRoleUI();
-                } else {
-                    alert("Error guardando la contraseña.");
-                }
-            } catch (e) { 
-                alert("Error de red."); 
-            }
-            btn.innerHTML = "GUARDAR Y ENTRAR"; 
-            btn.disabled = false;
+                    showToast("Contraseña guardada con éxito"); applyRoleUI();
+                } else alert("Error guardando la contraseña.");
+            } catch (e) { alert("Error de red."); }
+            btn.innerHTML = "GUARDAR Y ENTRAR"; btn.disabled = false;
         }
 
         function logout() { 
-            localStorage.removeItem('lf_session'); 
-            localStorage.removeItem('lf_route_gallery'); 
-            sessionUser = null; 
-            sessionRole = null; 
-            pendingLoginUser = null;
-            document.getElementById('l-user').value = ''; 
-            document.getElementById('l-pass').value = ''; 
-            toggleMusic(false); 
+            localStorage.removeItem('lf_session'); localStorage.removeItem('lf_route_gallery'); 
+            sessionUser = null; sessionRole = null; pendingLoginUser = null;
+            document.getElementById('l-user').value = ''; document.getElementById('l-pass').value = ''; toggleMusic(false); 
             window.history.pushState({}, "", window.location.pathname); 
-            document.getElementById('main-nav').classList.add('hidden'); 
-            document.getElementById('btn-client-logout').classList.add('hidden'); 
-            document.getElementById('main-content').classList.add('hidden'); 
+            document.getElementById('main-nav').classList.add('hidden'); document.getElementById('btn-client-logout').classList.add('hidden'); document.getElementById('main-content').classList.add('hidden'); 
             ['section-admin', 'section-galleries', 'section-workspace', 'section-inbox', 'section-client-view', 'section-public-profile'].forEach(id => document.getElementById(id).classList.add('hidden')); 
-            
-            document.documentElement.style.setProperty('--brand-color', '#00B7F1'); 
-            const logoContainers = document.querySelectorAll('.brand-logo-container, #splash-logo'); 
-            logoContainers.forEach(container => { container.innerHTML = `LENTE<span class="text-cyan-lf">FRÍA</span>`; }); 
-            
-            document.getElementById('login-screen').classList.remove('hidden'); 
-            switchForm('login');
-            setTimeout(() => document.getElementById('login-screen').classList.remove('opacity-0'), 50); 
-            const btn = document.getElementById('btn-login'); 
-            btn.innerText = "INICIAR SESIÓN"; 
-            btn.disabled = false; 
+            document.documentElement.style.setProperty('--brand-color', '#00B7F1'); const logoContainers = document.querySelectorAll('.brand-logo-container, #splash-logo'); logoContainers.forEach(container => { container.innerHTML = `LENTE<span class="text-cyan-lf">FRÍA</span>`; }); 
+            document.getElementById('login-screen').classList.remove('hidden'); switchForm('login'); setTimeout(() => document.getElementById('login-screen').classList.remove('opacity-0'), 50); 
+            const btn = document.getElementById('btn-login'); btn.innerText = "INICIAR SESIÓN"; btn.disabled = false; 
         }
 
         function switchForm(target) { 
             ['form-login', 'form-forgot', 'form-reset', 'form-force-pass'].forEach(id => document.getElementById(id).classList.add('hidden')); 
-            document.getElementById(`form-${target}`).classList.remove('hidden'); 
-            document.getElementById('login-error').classList.add('hidden'); 
+            document.getElementById(`form-${target}`).classList.remove('hidden'); document.getElementById('login-error').classList.add('hidden'); 
         }
 
         async function requestReset() { 
-            const email = document.getElementById('f-email').value; 
-            if(!email) return alert("Ingresa tu correo o teléfono"); 
-            
-            resetEmailStore = email; 
-            const btn = document.getElementById('btn-request-reset'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                await gasRequest("requestPasswordReset", { email: email }); 
-                switchForm('reset'); 
-                showToast("Revisa tu correo"); 
-            } catch(e) { 
-                switchForm('reset'); 
-                showToast("Revisa tu correo"); 
-            } 
-            btn.innerHTML = `ENVIAR CÓDIGO`; 
-            btn.disabled = false; 
+            const email = document.getElementById('f-email').value; if(!email) return alert("Ingresa tu correo o teléfono"); 
+            resetEmailStore = email; const btn = document.getElementById('btn-request-reset'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`; btn.disabled = true; 
+            try { await gasRequest("requestPasswordReset", { email: email }); switchForm('reset'); showToast("Revisa tu correo"); } catch(e) { switchForm('reset'); showToast("Revisa tu correo"); } 
+            btn.innerHTML = `ENVIAR CÓDIGO`; btn.disabled = false; 
         }
 
         async function verifyReset() { 
-            const code = document.getElementById('r-code').value; 
-            const newP = document.getElementById('r-new-pass').value; 
-            if(!code || !newP) return alert("Llena todos los campos"); 
-            
-            const btn = document.getElementById('btn-verify-reset'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> VERIFICANDO...`; 
-            btn.disabled = true; 
-            
+            const code = document.getElementById('r-code').value; const newP = document.getElementById('r-new-pass').value; if(!code || !newP) return alert("Llena todos los campos"); 
+            const btn = document.getElementById('btn-verify-reset'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> VERIFICANDO...`; btn.disabled = true; 
             try { 
                 const res = await gasRequest("verifyResetToken", { email: resetEmailStore, token: code, new_password: newP }); 
-                if(res.error) { 
-                    alert(res.error); 
-                } else { 
-                    showToast("Contraseña Actualizada"); 
-                    switchForm('login'); 
-                } 
-            } catch(e) { 
-                alert("Error de red"); 
-            } 
-            btn.innerHTML = `ACTUALIZAR CONTRASEÑA`; 
-            btn.disabled = false; 
+                if(res.error) alert(res.error); else { showToast("Contraseña Actualizada"); switchForm('login'); } 
+            } catch(e) { alert("Error de red"); } 
+            btn.innerHTML = `ACTUALIZAR CONTRASEÑA`; btn.disabled = false; 
         }
 
         async function applyRoleUI() {
-            document.getElementById('splash-screen').classList.add('splash-exit'); 
-            document.getElementById('login-screen').classList.add('opacity-0'); 
-            setTimeout(() => document.getElementById('login-screen').classList.add('hidden'), 500);
+            document.getElementById('splash-screen').classList.add('splash-exit'); document.getElementById('login-screen').classList.add('opacity-0'); setTimeout(() => document.getElementById('login-screen').classList.add('hidden'), 500);
             
             if(sessionRole === 'client') {
-                document.getElementById('main-nav').classList.add('hidden'); 
-                document.getElementById('btn-client-logout').classList.remove('hidden'); 
-                document.getElementById('main-content').classList.remove('hidden'); 
-                
+                document.getElementById('main-nav').classList.add('hidden'); document.getElementById('btn-client-logout').classList.remove('hidden'); document.getElementById('main-content').classList.remove('hidden'); 
                 try {
                     const permissions = await gasRequest("getClientAccess", null, sessionUser.id);
                     if(permissions.length > 0) { 
-                        const targetGalId = permissions[0].gallery_id; 
-                        const galleriesInfo = await gasRequest("getGalleries"); 
-                        const galData = galleriesInfo.find(g => g.id === targetGalId); 
-                        
-                        if(galData) { 
-                            sessionUser.active_gallery = galData; 
-                            sessionUser.can_download = permissions[0].can_download; 
-                            gasRequest("incrementView", { gallery_id: galData.id }); 
-                            showSection('client-view'); 
-                        } else { 
-                            alert("No tienes galerías."); 
-                        } 
-                    } else { 
-                        alert("Aún no tienes fotos asignadas."); 
-                    }
-                } catch(e) { 
-                    console.error("Error accesos"); 
-                }
+                        const targetGalId = permissions[0].gallery_id; const galleriesInfo = await gasRequest("getGalleries"); const galData = galleriesInfo.find(g => g.id === targetGalId); 
+                        if(galData) { sessionUser.active_gallery = galData; sessionUser.can_download = permissions[0].can_download; gasRequest("incrementView", { gallery_id: galData.id }); showSection('client-view'); } else alert("No tienes galerías."); 
+                    } else alert("Aún no tienes fotos asignadas."); 
+                } catch(e) { console.error("Error accesos"); }
             } else {
                 applyBranding(sessionUser.brand_color, sessionUser.brand_logo_url);
-                document.getElementById('btn-client-logout').classList.add('hidden'); 
-                document.getElementById('main-nav').classList.remove('hidden'); 
-                document.getElementById('main-content').classList.remove('hidden'); 
-                document.getElementById('user-greeting').innerText = `HOLA, ${sessionUser.full_name.toUpperCase()}`;
-                
+                document.getElementById('btn-client-logout').classList.add('hidden'); document.getElementById('main-nav').classList.remove('hidden'); document.getElementById('main-content').classList.remove('hidden'); document.getElementById('user-greeting').innerText = `HOLA, ${sessionUser.full_name.toUpperCase()}`;
                 ['nav-staff-btn', 'nav-gal-btn', 'nav-inbox-btn'].forEach(id => document.getElementById(id).classList.add('hidden'));
                 
-                const urlParams = new URLSearchParams(window.location.search); 
-                const view = urlParams.get('view');
-                
+                const urlParams = new URLSearchParams(window.location.search); const view = urlParams.get('view');
                 if (sessionRole === 'admin') { 
-                    document.getElementById('nav-staff-btn').classList.remove('hidden'); 
-                    document.getElementById('nav-gal-btn').classList.remove('hidden'); 
-                    document.getElementById('nav-inbox-btn').classList.remove('hidden'); 
-                    if(view && view !== 'client-view') showSection(view); 
-                    else showSection('admin'); 
+                    document.getElementById('nav-staff-btn').classList.remove('hidden'); document.getElementById('nav-gal-btn').classList.remove('hidden'); document.getElementById('nav-inbox-btn').classList.remove('hidden'); 
+                    if(view && view !== 'client-view') showSection(view); else showSection('admin'); 
                 } else if (sessionRole === 'photographer') { 
-                    document.getElementById('nav-gal-btn').classList.remove('hidden'); 
-                    document.getElementById('nav-inbox-btn').classList.remove('hidden'); 
-                    if(view === 'workspace') { 
-                        const savedGal = localStorage.getItem('lf_route_gallery'); 
-                        if(savedGal) openWorkspace(JSON.parse(savedGal), true); 
-                        else showSection('galleries'); 
-                    } else if(view && view !== 'admin' && view !== 'client-view') { 
-                        showSection(view); 
-                    } else {
-                        showSection('galleries'); 
-                    }
+                    document.getElementById('nav-gal-btn').classList.remove('hidden'); document.getElementById('nav-inbox-btn').classList.remove('hidden'); 
+                    if(view === 'workspace') { const savedGal = localStorage.getItem('lf_route_gallery'); if(savedGal) openWorkspace(JSON.parse(savedGal), true); else showSection('galleries'); } 
+                    else if(view && view !== 'admin' && view !== 'client-view') showSection(view); else showSection('galleries'); 
                 }
             }
         }
 
         function showSection(n, isPopState = false) { 
             ['section-admin', 'section-galleries', 'section-workspace', 'section-inbox', 'section-client-view', 'section-public-profile'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            
             if(n !== 'client-view' && n !== 'workspace' && n !== 'public-profile') { 
                 ['nav-staff-btn', 'nav-gal-btn', 'nav-inbox-btn'].forEach(id => document.getElementById(id).classList.replace('text-black', 'text-slate-400')); 
                 if(n === 'admin') document.getElementById('nav-staff-btn').classList.replace('text-slate-400', 'text-black'); 
                 if(n === 'galleries') document.getElementById('nav-gal-btn').classList.replace('text-slate-400', 'text-black'); 
                 if(n === 'inbox') document.getElementById('nav-inbox-btn').classList.replace('text-slate-400', 'text-black'); 
             }
-            
             if(n === 'admin') { document.getElementById('section-admin').classList.remove('hidden'); fetchS(); }
             if(n === 'galleries') { document.getElementById('section-galleries').classList.remove('hidden'); fetchG(); }
             if(n === 'inbox') { document.getElementById('section-inbox').classList.remove('hidden'); fetchInbox(); }
             if(n === 'workspace') { document.getElementById('section-workspace').classList.remove('hidden'); }
-            if(n === 'client-view') { 
-                document.getElementById('section-client-view').classList.remove('hidden'); 
-                document.getElementById('client-hero-title').innerText = sessionUser.active_gallery.client_name; 
-                document.getElementById('client-hero-desc').innerText = sessionUser.active_gallery.description || ""; 
-                fetchClientPhotos(); 
-            }
-            
-            if(!isPopState && sessionRole !== 'guest') { 
-                const url = new URL(window.location); 
-                url.searchParams.set('view', n); 
-                window.history.pushState({view: n}, "", url); 
-            } 
+            if(n === 'client-view') { document.getElementById('section-client-view').classList.remove('hidden'); document.getElementById('client-hero-title').innerText = sessionUser.active_gallery.client_name; document.getElementById('client-hero-desc').innerText = sessionUser.active_gallery.description || ""; fetchClientPhotos(); }
+            if(!isPopState && sessionRole !== 'guest') { const url = new URL(window.location); url.searchParams.set('view', n); window.history.pushState({view: n}, "", url); } 
             window.scrollTo(0,0);
         }
 
-        function previewGallery(g) { 
-            sessionUser.active_gallery = g; 
-            sessionUser.can_download = g.can_download; 
-            document.getElementById('preview-banner').classList.remove('hidden'); 
-            showSection('client-view'); 
-        }
+        function previewGallery(g) { sessionUser.active_gallery = g; sessionUser.can_download = g.can_download; document.getElementById('preview-banner').classList.remove('hidden'); showSection('client-view'); }
+        function exitPreviewMode() { document.getElementById('preview-banner').classList.add('hidden'); showSection('galleries'); }
+        function copyShareLink(slug, isPortfolio) { let link = window.location.origin + window.location.pathname; if (isPortfolio) { link += `?p=${slug}`; showToast("Enlace de Portafolio copiado. Es público."); } else showToast("Enlace copiado. Dile al cliente que inicie sesión."); navigator.clipboard.writeText(link); }
+        function copyMyProfileLink() { let link = window.location.origin + window.location.pathname + `?f=${sessionUser.id}`; navigator.clipboard.writeText(link).then(() => { showToast("¡Enlace de tu Perfil Público copiado!"); }); }
 
-        function exitPreviewMode() { 
-            document.getElementById('preview-banner').classList.add('hidden'); 
-            showSection('galleries'); 
-        }
-
-        function copyShareLink(slug, isPortfolio) { 
-            let link = window.location.origin + window.location.pathname; 
-            if (isPortfolio) { 
-                link += `?p=${slug}`; 
-                showToast("Enlace de Portafolio copiado. Es público."); 
-            } else { 
-                showToast("Enlace copiado. Dile al cliente que inicie sesión."); 
-            } 
-            navigator.clipboard.writeText(link); 
-        }
-
-        function copyMyProfileLink() { 
-            let link = window.location.origin + window.location.pathname + `?f=${sessionUser.id}`; 
-            navigator.clipboard.writeText(link).then(() => { 
-                showToast("¡Enlace de tu Perfil Público copiado!"); 
-            }); 
-        }
-
+        // ==========================================
+        // FUNCIONES DE PERFIL Y 2FA
+        // ==========================================
         function openProfileModal() { 
+            document.getElementById('p-email').value = sessionUser.email || '';
+            document.getElementById('p-phone').value = sessionUser.phone || '';
+            document.getElementById('p-new-pass').value = '';
             document.getElementById('p-bio').value = sessionUser.bio || ''; 
             document.getElementById('p-ig').value = sessionUser.instagram || ''; 
             document.getElementById('p-wa').value = sessionUser.whatsapp || ''; 
             document.getElementById('p-ap').value = sessionUser.adobe_portfolio || ''; 
             document.getElementById('p-brand-color').value = sessionUser.brand_color || '#00B7F1'; 
             document.getElementById('p-brand-logo').value = sessionUser.brand_logo_url || ''; 
-            document.getElementById('p-new-pass').value = ''; 
             document.getElementById('m-profile').classList.remove('hidden'); 
         }
 
         async function saveProfileChanges() { 
-            const btn = document.getElementById('btn-change-pass'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; 
-            btn.disabled = true; 
-            
-            const payload = { 
+            let updates = {};
+            // Evaluar campos sensibles
+            if (document.getElementById('p-email').value.trim() !== (sessionUser.email || "")) updates.email = document.getElementById('p-email').value.trim() || null;
+            if (document.getElementById('p-phone').value.trim() !== (sessionUser.phone || "")) updates.phone = document.getElementById('p-phone').value.trim() || null;
+            if (document.getElementById('p-new-pass').value) {
+                if (sessionRole === 'client') updates.password_hash = document.getElementById('p-new-pass').value;
+                else updates.password = document.getElementById('p-new-pass').value;
+            }
+
+            // Datos normales que no requieren 2FA
+            let normalPayload = { 
                 user_id: sessionUser.id, 
                 bio: document.getElementById('p-bio').value, 
                 instagram: document.getElementById('p-ig').value, 
@@ -1060,125 +886,209 @@
                 adobe_portfolio: document.getElementById('p-ap').value, 
                 brand_color: document.getElementById('p-brand-color').value, 
                 brand_logo_url: document.getElementById('p-brand-logo').value 
-            }; 
-            
+            };
+
+            const btn = document.getElementById('btn-change-pass'); 
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; 
+            btn.disabled = true; 
+
+            // Actualización Normal (Silenciosa)
             try { 
-                await gasRequest("updateProfile", payload); 
-                const newP = document.getElementById('p-new-pass').value; 
-                if (newP) { 
-                    await gasRequest("changePassword", { user_id: sessionUser.id, role: sessionRole, new_password: newP }); 
-                    sessionUser.password = newP; 
-                } 
-                Object.assign(sessionUser, payload); 
+                await gasRequest("updateProfile", normalPayload); 
+                Object.assign(sessionUser, normalPayload); 
                 localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole })); 
-                applyBranding(payload.brand_color, payload.brand_logo_url); 
-                showToast("Perfil actualizado"); 
-                document.getElementById('m-profile').classList.add('hidden'); 
+                applyBranding(normalPayload.brand_color, normalPayload.brand_logo_url); 
+                
+                if (Object.keys(updates).length === 0) {
+                    showToast("Perfil actualizado"); 
+                    document.getElementById('m-profile').classList.add('hidden'); 
+                    btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false; 
+                    return;
+                }
             } catch(e) { 
-                alert("Error al guardar el perfil"); 
-            } 
-            btn.innerHTML = "GUARDAR CAMBIOS"; 
-            btn.disabled = false; 
+                alert("Error al guardar el perfil general."); 
+                btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false; 
+                return;
+            }
+
+            btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false;
+            
+            // Si llegamos aquí, hay cambios sensibles que requieren 2FA
+            start2FAFlow(updates);
+        }
+
+        function maskContact(type, val) {
+            if (!val) return "";
+            if (type === 'email') {
+                const parts = val.split('@');
+                if(parts.length < 2) return val;
+                const name = parts[0]; const domain = parts[1];
+                return name[0] + '*'.repeat(name.length > 2 ? name.length - 2 : 1) + (name.length > 1 ? name.slice(-1) : '') + '@' + domain[0] + '*'.repeat(domain.split('.')[0].length - 1) + '.' + domain.split('.')[1];
+            } else {
+                return val.length > 4 ? val.slice(0,2) + '*'.repeat(val.length - 4) + val.slice(-2) : val;
+            }
+        }
+
+        function start2FAFlow(sensitiveUpdates) {
+            target2FAPayload = sensitiveUpdates;
+
+            // Lógica de Validación Cruzada Fuerte
+            if (sensitiveUpdates.email && sensitiveUpdates.phone) return alert("Por seguridad, solo puedes modificar un dato de contacto a la vez. Intenta cambiar uno primero y luego el otro.");
+            
+            let requiredMethod = 'any';
+            if (sensitiveUpdates.email) requiredMethod = 'phone';
+            else if (sensitiveUpdates.phone) requiredMethod = 'email';
+
+            if (requiredMethod === 'phone' && !sessionUser.phone) return alert("Por seguridad, no puedes cambiar tu correo porque no tienes un número de teléfono registrado para validar tu identidad. Contacta a Yair Maximiliano Balboa García.");
+            if (requiredMethod === 'email' && !sessionUser.email) return alert("Por seguridad, no puedes cambiar tu teléfono porque no tienes un correo registrado para validar tu identidad. Contacta a Yair Maximiliano Balboa García.");
+            if (!sessionUser.email && !sessionUser.phone) return alert("No tienes métodos de contacto registrados para validar tu identidad. Contacta a Yair Maximiliano Balboa García.");
+
+            const methodsContainer = document.getElementById('2fa-methods');
+            methodsContainer.innerHTML = '';
+
+            if (sessionUser.email && (requiredMethod === 'any' || requiredMethod === 'email')) {
+                methodsContainer.innerHTML += `<button onclick="confirm2FADestination('email')" class="w-full bg-slate-100 hover:bg-slate-200 text-black p-4 rounded-xl font-bold flex items-center justify-between transition-colors"><span><i class="fa-solid fa-envelope mr-3 text-cyan-lf"></i> Enviar al Correo</span><span class="text-xs text-slate-400 font-normal">${maskContact('email', sessionUser.email)}</span></button>`;
+            }
+            if (sessionUser.phone && (requiredMethod === 'any' || requiredMethod === 'phone')) {
+                methodsContainer.innerHTML += `<button onclick="confirm2FADestination('phone')" class="w-full bg-slate-100 hover:bg-slate-200 text-black p-4 rounded-xl font-bold flex items-center justify-between transition-colors"><span><i class="fa-solid fa-mobile-screen mr-3 text-cyan-lf"></i> Enviar SMS</span><span class="text-xs text-slate-400 font-normal">${maskContact('phone', sessionUser.phone)}</span></button>`;
+            }
+
+            document.getElementById('m-profile').classList.add('hidden');
+            document.getElementById('m-2fa').classList.remove('hidden');
+            document.getElementById('2fa-step-1').classList.remove('hidden');
+            document.getElementById('2fa-step-2').classList.add('hidden');
+            document.getElementById('2fa-step-3').classList.add('hidden');
+        }
+
+        function confirm2FADestination(method) {
+            current2FAMethod = method;
+            document.getElementById('2fa-step-1').classList.add('hidden');
+            document.getElementById('2fa-step-2').classList.remove('hidden');
+            document.getElementById('2fa-type-lbl').innerText = method === 'email' ? 'correo electrónico' : 'teléfono';
+            document.getElementById('2fa-full-input').value = '';
+            document.getElementById('2fa-full-input').placeholder = method === 'email' ? 'Ej: juan@gmail.com' : 'Ej: 5512345678';
+        }
+
+        function backTo2FAStep1() {
+            document.getElementById('2fa-step-2').classList.add('hidden');
+            document.getElementById('2fa-step-1').classList.remove('hidden');
+        }
+
+        function close2FAModal() {
+            document.getElementById('m-2fa').classList.add('hidden');
+            target2FAPayload = null; current2FAMethod = null;
+        }
+
+        async function send2FACode() {
+            const inputVal = document.getElementById('2fa-full-input').value.trim();
+            if (!inputVal) return alert("Por favor ingresa el dato completo.");
+
+            const btn = document.getElementById('btn-2fa-send');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> VERIFICANDO...`; btn.disabled = true;
+
+            try {
+                const res = await gasRequest("request2FA", {
+                    user_id: sessionUser.id,
+                    role: sessionRole,
+                    auth_action: "security_update",
+                    contact_type: current2FAMethod,
+                    input_contact: inputVal,
+                    target_payload: target2FAPayload
+                });
+                
+                if (res.error) {
+                    alert(res.error);
+                } else {
+                    if (res.simulated_sms) showToast("Simulación de SMS enviada al admin (Yair) para pruebas.");
+                    else showToast("Código enviado exitosamente.");
+                    
+                    document.getElementById('2fa-step-2').classList.add('hidden');
+                    document.getElementById('2fa-step-3').classList.remove('hidden');
+                    document.getElementById('2fa-code-input').value = '';
+                }
+            } catch(e) {
+                alert("Error validando el dato. Verifica que lo escribiste correctamente.");
+            }
+            btn.innerHTML = `ENVIAR CÓDIGO`; btn.disabled = false;
+        }
+
+        async function verify2FACode() {
+            const code = document.getElementById('2fa-code-input').value.trim();
+            if(code.length !== 4) return alert("Ingresa el código de 4 dígitos.");
+
+            const btn = document.getElementById('btn-2fa-verify');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> VALIDANDO...`; btn.disabled = true;
+
+            try {
+                const res = await gasRequest("verify2FA", {
+                    user_id: sessionUser.id,
+                    token: code
+                });
+
+                if (res.error) {
+                    alert(res.error);
+                } else {
+                    showToast("¡Seguridad superada! Datos actualizados.");
+                    Object.assign(sessionUser, res.updated_data);
+                    localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole }));
+                    close2FAModal();
+                }
+            } catch (e) {
+                alert("Error interno al verificar el código.");
+            }
+            btn.innerHTML = `AUTORIZAR Y GUARDAR`; btn.disabled = false;
         }
 
         async function fetchS() { 
             document.getElementById('staff-list').innerHTML = getStaffSkeleton(); 
             try { 
-                const d = await gasRequest("getStaff"); 
-                allStaffCache = Array.isArray(d) ? d : []; 
+                const d = await gasRequest("getStaff"); allStaffCache = Array.isArray(d) ? d : []; 
                 document.getElementById('staff-list').innerHTML = d.map(s => `
                     <div class="bg-slate-50 p-6 rounded-3xl border shadow-sm fade-in">
                         <h4 class="font-black text-xl">${s.full_name}</h4>
                         <p class="text-xs text-slate-400 font-bold mt-1">${s.email}</p>
                         <span class="text-[10px] bg-slate-200 px-2 py-1 rounded mt-2 inline-block uppercase">${s.role}</span>
-                    </div>
-                `).join(''); 
-                document.getElementById('cfg-res').value = window.systemSettings.max_resolution.toString(); 
-                document.getElementById('cfg-qual').value = window.systemSettings.jpeg_quality; 
-                document.getElementById('cfg-qual-lbl').innerText = window.systemSettings.jpeg_quality; 
-            } catch(e) { 
-                document.getElementById('staff-list').innerHTML = `<p class="text-red-500 font-bold">Error al cargar.</p>`; 
-            } 
+                    </div>`).join(''); 
+                document.getElementById('cfg-res').value = window.systemSettings.max_resolution.toString(); document.getElementById('cfg-qual').value = window.systemSettings.jpeg_quality; document.getElementById('cfg-qual-lbl').innerText = window.systemSettings.jpeg_quality; 
+            } catch(e) { document.getElementById('staff-list').innerHTML = `<p class="text-red-500 font-bold">Error al cargar.</p>`; } 
         }
 
         async function apiS() { 
-            const n = document.getElementById('sN').value; 
-            const e = document.getElementById('sE').value; 
-            const p = document.getElementById('sP').value; 
+            const n = document.getElementById('sN').value; const e = document.getElementById('sE').value; const p = document.getElementById('sP').value; 
             if(!n || !e || !p) return alert("Llena todos los campos"); 
-            
-            const btn = document.getElementById('btn-create-staff'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; 
-            btn.disabled = true; 
-            
+            const btn = document.getElementById('btn-create-staff'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; btn.disabled = true; 
             try {
                 const res = await gasRequest("createStaff", { full_name: n, email: e, password: p, actor: sessionUser.email }); 
-                if (res.error) {
-                    alert(res.error);
-                } else {
-                    document.getElementById('m-u').classList.add('hidden'); 
-                    showToast("Staff Creado"); 
-                    fetchS(); 
-                }
-            } catch(e) {
-                alert("Error de red");
-            }
-            btn.innerHTML = "CREAR STAFF"; 
-            btn.disabled = false; 
+                if (res.error) alert(res.error); else { document.getElementById('m-u').classList.add('hidden'); showToast("Staff Creado"); fetchS(); }
+            } catch(e) { alert("Error de red"); }
+            btn.innerHTML = "CREAR STAFF"; btn.disabled = false; 
         }
 
         async function saveSystemSettings() { 
-            const resVal = parseInt(document.getElementById('cfg-res').value); 
-            const qualVal = parseInt(document.getElementById('cfg-qual').value); 
-            const btn = document.getElementById('btn-save-settings'); 
-            
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; 
-            btn.disabled = true; 
-            
+            const resVal = parseInt(document.getElementById('cfg-res').value); const qualVal = parseInt(document.getElementById('cfg-qual').value); 
+            const btn = document.getElementById('btn-save-settings'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true; 
             try { 
                 const res = await gasRequest("updateSettings", { max_resolution: resVal, jpeg_quality: qualVal, actor: sessionUser.email }); 
-                if (res.error) { 
-                    alert("Error"); 
-                } else { 
-                    window.systemSettings = { max_resolution: resVal, jpeg_quality: qualVal }; 
-                    showToast("Ajustes guardados"); 
-                } 
-            } catch(e) { 
-                alert("Error de red"); 
-            } 
-            btn.innerHTML = "GUARDAR"; 
-            btn.disabled = false; 
+                if (res.error) alert("Error"); else { window.systemSettings = { max_resolution: resVal, jpeg_quality: qualVal }; showToast("Ajustes guardados"); } 
+            } catch(e) { alert("Error de red"); } 
+            btn.innerHTML = "GUARDAR"; btn.disabled = false; 
         }
 
         async function fetchG() {
             document.getElementById('galleries-grid').innerHTML = getGallerySkeleton();
             try {
                 const extra = sessionRole === 'admin' ? null : sessionUser.id; 
-                const d = await gasRequest("getGalleries", null, extra); 
-                globalGalleriesCache = Array.isArray(d) ? d : [];
-                
-                if(globalGalleriesCache.length === 0) { 
-                    document.getElementById('galleries-grid').innerHTML = `<p class="text-slate-400 font-bold">No hay entregas creadas.</p>`; 
-                    return; 
-                }
-                
+                const d = await gasRequest("getGalleries", null, extra); globalGalleriesCache = Array.isArray(d) ? d : [];
+                if(globalGalleriesCache.length === 0) { document.getElementById('galleries-grid').innerHTML = `<p class="text-slate-400 font-bold">No hay entregas creadas.</p>`; return; }
                 updateStorageProgressBar();
-                
                 document.getElementById('galleries-grid').innerHTML = globalGalleriesCache.map(g => {
                     const badge = g.is_portfolio ? `<span class="bg-black text-white text-[10px] px-3 py-1 rounded-full absolute top-4 right-4 font-bold tracking-widest shadow-md">PORTAFOLIO</span>` : '';
                     const wmStatus = g.watermark_enabled !== false ? `<i class="fa-solid fa-droplet text-blue-500 ml-2" title="Marca activa"></i>` : `<i class="fa-solid fa-droplet-slash text-slate-300 ml-2" title="Sin marca"></i>`;
-                    
                     return `
                     <div class="border p-8 rounded-3xl flex flex-col justify-between shadow-sm bg-white relative hover:shadow-2xl transition-all duration-300 fade-in translate-y-2">
                         ${badge}
-                        <div class="absolute top-4 left-4 flex gap-3 z-10">
-                            <button onclick='openEditModal(${JSON.stringify(g)})' class="text-slate-400 hover:text-black transition-colors" title="Editar Info"><i class="fa-solid fa-pen text-sm"></i></button>
-                            <button onclick="deleteGallery(${g.id})" class="text-red-300 hover:text-red-600 transition-colors" title="Eliminar"><i class="fa-solid fa-trash text-sm"></i></button>
-                        </div>
-                        <div class="mb-6 mt-4">
-                            <h3 class="font-black text-2xl pr-10 leading-tight">${g.client_name} ${wmStatus}</h3>
-                            <p class="text-xs font-bold text-cyan-lf mt-1 tracking-widest uppercase">/${g.slug} <span class="text-slate-300 ml-2"><i class="fa-solid fa-eye"></i> ${g.view_count || 0}</span></p>
-                        </div>
+                        <div class="absolute top-4 left-4 flex gap-3 z-10"><button onclick='openEditModal(${JSON.stringify(g)})' class="text-slate-400 hover:text-black transition-colors" title="Editar Info"><i class="fa-solid fa-pen text-sm"></i></button><button onclick="deleteGallery(${g.id})" class="text-red-300 hover:text-red-600 transition-colors" title="Eliminar"><i class="fa-solid fa-trash text-sm"></i></button></div>
+                        <div class="mb-6 mt-4"><h3 class="font-black text-2xl pr-10 leading-tight">${g.client_name} ${wmStatus}</h3><p class="text-xs font-bold text-cyan-lf mt-1 tracking-widest uppercase">/${g.slug} <span class="text-slate-300 ml-2"><i class="fa-solid fa-eye"></i> ${g.view_count || 0}</span></p></div>
                         <div class="flex gap-2">
                             <button onclick='openWorkspace(${JSON.stringify(g)})' class="flex-1 bg-black text-white p-3 rounded-xl hover:bg-cyan-lf transition-colors font-bold tracking-widest text-[10px]"><i class="fa-solid fa-folder-open mr-1"></i> WORKSPACE</button>
                             <button onclick='previewGallery(${JSON.stringify(g)})' class="bg-blue-50 text-blue-600 p-3 rounded-xl hover:bg-blue-500 hover:text-white transition-colors shadow-sm text-[10px] font-bold" title="Ver como cliente"><i class="fa-solid fa-eye"></i></button>
@@ -1186,1116 +1096,192 @@
                         </div>
                     </div>`;
                 }).join('');
-            } catch(e) { 
-                document.getElementById('galleries-grid').innerHTML = `<p class="text-red-500 font-bold">Error.</p>`; 
-            }
+            } catch(e) { document.getElementById('galleries-grid').innerHTML = `<p class="text-red-500 font-bold">Error.</p>`; }
         }
 
         async function openWorkspace(galleryObj, isPopState = false) {
-            currentGallery = galleryObj; 
-            localStorage.setItem('lf_route_gallery', JSON.stringify(galleryObj)); 
-            document.getElementById('ws-title').innerText = currentGallery.client_name; 
-            document.getElementById('ws-photos').innerHTML = getPhotoSkeleton(); 
-            document.getElementById('btn-ws-upload').onclick = () => triggerUpload(currentGallery.id); 
-            showSection('workspace', isPopState);
-            
+            currentGallery = galleryObj; localStorage.setItem('lf_route_gallery', JSON.stringify(galleryObj)); 
+            document.getElementById('ws-title').innerText = currentGallery.client_name; document.getElementById('ws-photos').innerHTML = getPhotoSkeleton(); document.getElementById('btn-ws-upload').onclick = () => triggerUpload(currentGallery.id); showSection('workspace', isPopState);
             try {
-                const [structure, favs] = await Promise.all([ 
-                    gasRequest("getPhotos", null, currentGallery.drive_folder_id), 
-                    gasRequest("getFavorites", null, currentGallery.id) 
-                ]);
-                
-                photosCache = structure || []; 
-                const favSet = new Set(Array.isArray(favs) ? favs.map(f => f.file_id) : []); 
-                document.getElementById('ws-fav-count').innerHTML = `<i class="fa-solid fa-heart"></i> ${favSet.size} Favoritos`;
-                
-                const sel = document.getElementById('ws-sel-folder'); 
-                sel.innerHTML = photosCache.map(set => `<option value="${set.id}">${set.name}</option>`).join('');
-                
+                const [structure, favs] = await Promise.all([ gasRequest("getPhotos", null, currentGallery.drive_folder_id), gasRequest("getFavorites", null, currentGallery.id) ]);
+                photosCache = structure || []; const favSet = new Set(Array.isArray(favs) ? favs.map(f => f.file_id) : []); document.getElementById('ws-fav-count').innerHTML = `<i class="fa-solid fa-heart"></i> ${favSet.size} Favoritos`;
+                const sel = document.getElementById('ws-sel-folder'); sel.innerHTML = photosCache.map(set => `<option value="${set.id}">${set.name}</option>`).join('');
                 let html = "";
                 photosCache.forEach(set => {
-                    const controls = set.name === "General" ? "" : `
-                        <div class="flex gap-3">
-                            <button onclick="renameSet('${set.id}', '${set.name}')" class="text-slate-400 hover:text-black transition-colors" title="Renombrar Categoría"><i class="fa-solid fa-pen text-sm"></i></button>
-                            <button onclick="deleteSet('${set.id}')" class="text-red-300 hover:text-red-500 transition-colors" title="Eliminar Categoría y fotos"><i class="fa-solid fa-trash text-sm"></i></button>
-                        </div>`;
-                        
+                    const controls = set.name === "General" ? "" : `<div class="flex gap-3"><button onclick="renameSet('${set.id}', '${set.name}')" class="text-slate-400 hover:text-black transition-colors" title="Renombrar Categoría"><i class="fa-solid fa-pen text-sm"></i></button><button onclick="deleteSet('${set.id}')" class="text-red-300 hover:text-red-500 transition-colors" title="Eliminar Categoría y fotos"><i class="fa-solid fa-trash text-sm"></i></button></div>`;
                     html += `<div class="col-span-full border-b pb-4 mb-6 mt-8 flex justify-between items-end fade-in"><div><h3 class="text-2xl font-black tracking-tight">${set.name.toUpperCase()}</h3><p class="text-slate-400 text-[10px] font-bold">Categoría vinculada a Drive</p></div>${controls}</div>`;
-                    
-                    if (set.photos.length === 0) { 
-                        html += `<div class="col-span-full p-10 border border-dashed rounded-3xl text-center text-slate-400 font-bold fade-in"><i class="fa-solid fa-images text-2xl mb-2"></i> Sin archivos en este set</div>`; 
-                    } else {
+                    if (set.photos.length === 0) { html += `<div class="col-span-full p-10 border border-dashed rounded-3xl text-center text-slate-400 font-bold fade-in"><i class="fa-solid fa-images text-2xl mb-2"></i> Sin archivos en este set</div>`; } else {
                         html += set.photos.map(p => {
-                            const isCover = currentGallery.cover_photo_id === p.id; 
-                            const isVideo = p.type === 'video';
+                            const isCover = currentGallery.cover_photo_id === p.id; const isVideo = p.type === 'video';
                             const coverBadge = isCover ? `<div class="absolute top-4 left-4 bg-yellow-400 text-black text-[10px] font-black px-3 py-1 rounded-full shadow-lg z-10"><i class="fa-solid fa-star mr-1"></i>PORTADA</div>` : '';
                             const favBadge = favSet.has(p.id) ? `<div class="absolute top-4 right-4 text-red-500 text-2xl drop-shadow-md z-10"><i class="fa-solid fa-heart"></i></div>` : '';
                             const videoBadge = isVideo ? `<div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10"><i class="fa-solid fa-play text-white text-5xl drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"></i></div>` : '';
-                            
-                            return `
-                                <div id="card-${p.id}" class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 fade-in min-h-[200px]">
-                                    ${coverBadge} ${favBadge} ${videoBadge}
-                                    <img data-src="${p.thumb}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" class="w-full h-auto object-cover lazy-image">
-                                    <div class="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center gap-2 backdrop-blur-sm z-20">
-                                        ${!isVideo ? `<button onclick="openCropper('${p.thumb.replace('=s800', '=s2000')}', '${p.id}', ${currentGallery.id})" class="bg-white text-black px-6 py-2 rounded-full font-bold text-[10px] hover:bg-yellow-400 transition-colors tracking-widest"><i class="fa-solid fa-crop-simple mr-2"></i> PORTADA</button>` : ''}
-                                        <button onclick="openMoveModal('${p.id}')" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold text-[10px] hover:bg-blue-700 transition-colors tracking-widest"><i class="fa-solid fa-folder-tree mr-2"></i> MOVER</button>
-                                        <button onclick="openPortfolioModal('${p.id}')" class="bg-purple-500 text-white px-6 py-2 rounded-full font-bold text-[10px] hover:bg-purple-600 transition-colors tracking-widest"><i class="fa-solid fa-briefcase mr-1"></i> A PORTAFOLIO</button>
-                                        <button onclick="triggerReplace('${p.id}')" class="bg-yellow-500 text-black px-6 py-2 rounded-full font-bold text-[10px] hover:bg-yellow-600 transition-colors tracking-widest"><i class="fa-solid fa-arrows-rotate mr-1"></i> SUSTITUIR</button>
-                                        <button onclick="deletePhoto('${p.id}')" class="bg-red-500 text-white px-6 py-2 rounded-full font-bold text-[10px] hover:bg-red-600 transition-colors tracking-widest"><i class="fa-solid fa-trash mr-2"></i> BORRAR</button>
-                                    </div>
-                                </div>`;
+                            return `<div id="card-${p.id}" class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 fade-in min-h-[200px]">${coverBadge} ${favBadge} ${videoBadge}<img data-src="${p.thumb}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" class="w-full h-auto object-cover lazy-image"><div class="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center gap-2 backdrop-blur-sm z-20">${!isVideo ? `<button onclick="openCropper('${p.thumb.replace('=s800', '=s2000')}', '${p.id}', ${currentGallery.id})" class="bg-white text-black px-6 py-2 rounded-full font-bold text-[10px] hover:bg-yellow-400 transition-colors tracking-widest"><i class="fa-solid fa-crop-simple mr-2"></i> PORTADA</button>` : ''}<button onclick="openMoveModal('${p.id}')" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold text-[10px] hover:bg-blue-700 transition-colors tracking-widest"><i class="fa-solid fa-folder-tree mr-2"></i> MOVER</button><button onclick="openPortfolioModal('${p.id}')" class="bg-purple-500 text-white px-6 py-2 rounded-full font-bold text-[10px] hover:bg-purple-600 transition-colors tracking-widest"><i class="fa-solid fa-briefcase mr-1"></i> A PORTAFOLIO</button><button onclick="triggerReplace('${p.id}')" class="bg-yellow-500 text-black px-6 py-2 rounded-full font-bold text-[10px] hover:bg-yellow-600 transition-colors tracking-widest"><i class="fa-solid fa-arrows-rotate mr-1"></i> SUSTITUIR</button><button onclick="deletePhoto('${p.id}')" class="bg-red-500 text-white px-6 py-2 rounded-full font-bold text-[10px] hover:bg-red-600 transition-colors tracking-widest"><i class="fa-solid fa-trash mr-2"></i> BORRAR</button></div></div>`;
                         }).join('');
                     }
                 });
-                document.getElementById('ws-photos').innerHTML = html; 
-                document.querySelectorAll('.lazy-image').forEach(img => lazyObserver.observe(img));
-            } catch(e) { 
-                document.getElementById('ws-photos').innerHTML = `<p class="text-red-500 text-center font-bold">Error cargando fotos.</p>`; 
-            }
+                document.getElementById('ws-photos').innerHTML = html; document.querySelectorAll('.lazy-image').forEach(img => lazyObserver.observe(img));
+            } catch(e) { document.getElementById('ws-photos').innerHTML = `<p class="text-red-500 text-center font-bold">Error cargando fotos.</p>`; }
         }
 
-        function openMoveModal(fileId) { 
-            moveFileIdCache = fileId; 
-            const sel = document.getElementById('move-folder-sel'); 
-            sel.innerHTML = photosCache.map(s => `<option value="${s.id}">${s.name}</option>`).join(''); 
-            document.getElementById('m-move').classList.remove('hidden'); 
-        }
+        function openMoveModal(fileId) { moveFileIdCache = fileId; const sel = document.getElementById('move-folder-sel'); sel.innerHTML = photosCache.map(s => `<option value="${s.id}">${s.name}</option>`).join(''); document.getElementById('m-move').classList.remove('hidden'); }
+        async function executeMove() { const destFolder = document.getElementById('move-folder-sel').value; if(!destFolder || !moveFileIdCache) return; const btn = document.getElementById('btn-execute-move'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> MOVIENDO...`; btn.disabled = true; try { await gasRequest("movePhoto", { file_id: moveFileIdCache, target_folder_id: destFolder, actor: sessionUser.email }); showToast("Archivo movido con éxito"); document.getElementById('m-move').classList.add('hidden'); openWorkspace(currentGallery); } catch(e) { alert("Error moviendo archivo"); } btn.innerHTML = `MOVER AHORA`; btn.disabled = false; }
 
-        async function executeMove() { 
-            const destFolder = document.getElementById('move-folder-sel').value; 
-            if(!destFolder || !moveFileIdCache) return; 
-            
-            const btn = document.getElementById('btn-execute-move'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> MOVIENDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                await gasRequest("movePhoto", { file_id: moveFileIdCache, target_folder_id: destFolder, actor: sessionUser.email }); 
-                showToast("Archivo movido con éxito"); 
-                document.getElementById('m-move').classList.add('hidden'); 
-                openWorkspace(currentGallery); 
-            } catch(e) { 
-                alert("Error moviendo archivo"); 
-            } 
-            btn.innerHTML = `MOVER AHORA`; 
-            btn.disabled = false; 
-        }
+        function openPortfolioModal(fileId) { copyFileIdCache = fileId; const sel = document.getElementById('portfolio-sel'); const btn = document.getElementById('btn-execute-portfolio'); sel.innerHTML = '<option value="">Cargando portafolios...</option>'; document.getElementById('m-portfolio').classList.remove('hidden'); const portfolios = globalGalleriesCache.filter(g => g.is_portfolio === true); if (portfolios.length === 0) { sel.innerHTML = '<option value="">No tienes portafolios creados.</option>'; btn.disabled = true; btn.classList.replace('bg-purple-500', 'bg-slate-300'); } else { btn.disabled = false; btn.classList.replace('bg-slate-300', 'bg-purple-500'); sel.innerHTML = portfolios.map(p => `<option value="${p.drive_folder_id}">${p.client_name}</option>`).join(''); } }
+        async function executeCopyToPortfolio() { const destFolder = document.getElementById('portfolio-sel').value; if(!destFolder || !copyFileIdCache) return; const btn = document.getElementById('btn-execute-portfolio'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> COPIANDO...`; btn.disabled = true; try { await gasRequest("copyToPortfolio", { file_id: copyFileIdCache, portfolio_folder_id: destFolder, photographer_id: sessionUser.id }); showToast("¡Foto añadida al portafolio!"); document.getElementById('m-portfolio').classList.add('hidden'); updateStorageProgressBar(); } catch(e) { alert("Error copiando la foto."); } btn.innerHTML = `COPIAR AL PORTAFOLIO`; btn.disabled = false; }
 
-        function openPortfolioModal(fileId) { 
-            copyFileIdCache = fileId; 
-            const sel = document.getElementById('portfolio-sel'); 
-            const btn = document.getElementById('btn-execute-portfolio');
-            
-            sel.innerHTML = '<option value="">Cargando portafolios...</option>'; 
-            document.getElementById('m-portfolio').classList.remove('hidden'); 
-            
-            const portfolios = globalGalleriesCache.filter(g => g.is_portfolio === true);
-            
-            if (portfolios.length === 0) {
-                sel.innerHTML = '<option value="">No tienes portafolios creados.</option>';
-                btn.disabled = true;
-                btn.classList.replace('bg-purple-500', 'bg-slate-300');
-            } else {
-                btn.disabled = false;
-                btn.classList.replace('bg-slate-300', 'bg-purple-500');
-                sel.innerHTML = portfolios.map(p => `<option value="${p.drive_folder_id}">${p.client_name}</option>`).join(''); 
-            }
-        }
-
-        async function executeCopyToPortfolio() { 
-            const destFolder = document.getElementById('portfolio-sel').value; 
-            if(!destFolder || !copyFileIdCache) return; 
-            
-            const btn = document.getElementById('btn-execute-portfolio'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> COPIANDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                await gasRequest("copyToPortfolio", { file_id: copyFileIdCache, portfolio_folder_id: destFolder, photographer_id: sessionUser.id }); 
-                showToast("¡Foto añadida al portafolio!"); 
-                document.getElementById('m-portfolio').classList.add('hidden'); 
-                updateStorageProgressBar();
-            } catch(e) { 
-                alert("Error copiando la foto."); 
-            } 
-            btn.innerHTML = `COPIAR AL PORTAFOLIO`; 
-            btn.disabled = false; 
-        }
-
-        function openCropper(imageUrl, fileId, galleryId) { 
-            fileIdToCrop = fileId; 
-            galleryIdToCrop = galleryId; 
-            const img = document.getElementById('cropper-image'); 
-            img.src = imageUrl; 
-            document.getElementById('m-cropper').classList.remove('hidden'); 
-            
-            if (cropperInstance) cropperInstance.destroy(); 
-            cropperInstance = new Cropper(img, { aspectRatio: window.innerWidth > 768 ? 16 / 9 : 9 / 16, viewMode: 1, background: false, autoCropArea: 0.8 }); 
-        }
-
-        function closeCropper() { 
-            document.getElementById('m-cropper').classList.add('hidden'); 
-            if (cropperInstance) cropperInstance.destroy(); 
-            fileIdToCrop = null; 
-            galleryIdToCrop = null; 
-        }
-
-        async function saveCoverCrop() { 
-            if(!cropperInstance) return; 
-            const btn = document.getElementById('btn-save-crop'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> APLICANDO...`; 
-            btn.disabled = true; 
-            
-            const canvasData = cropperInstance.getCanvasData(); 
-            const cropBoxData = cropperInstance.getCropBoxData(); 
-            const percentX = ((cropBoxData.left - canvasData.left) / canvasData.width) * 100; 
-            const percentY = ((cropBoxData.top - canvasData.top) / canvasData.height) * 100; 
-            const cropDataStr = JSON.stringify({ x: percentX, y: percentY }); 
-            
-            try { 
-                await gasRequest("setCover", { gallery_id: galleryIdToCrop, file_id: fileIdToCrop, crop_data: cropDataStr }); 
-                currentGallery.cover_photo_id = fileIdToCrop; 
-                currentGallery.cover_crop_data = cropDataStr; 
-                showToast("Portada y reencuadre actualizados"); 
-                closeCropper(); 
-                openWorkspace(currentGallery); 
-            } catch(e) { 
-                alert("Error guardando portada"); 
-            } 
-            btn.innerHTML = `APLICAR PORTADA`; 
-            btn.disabled = false; 
-        }
+        function openCropper(imageUrl, fileId, galleryId) { fileIdToCrop = fileId; galleryIdToCrop = galleryId; const img = document.getElementById('cropper-image'); img.src = imageUrl; document.getElementById('m-cropper').classList.remove('hidden'); if (cropperInstance) cropperInstance.destroy(); cropperInstance = new Cropper(img, { aspectRatio: window.innerWidth > 768 ? 16 / 9 : 9 / 16, viewMode: 1, background: false, autoCropArea: 0.8 }); }
+        function closeCropper() { document.getElementById('m-cropper').classList.add('hidden'); if (cropperInstance) cropperInstance.destroy(); fileIdToCrop = null; galleryIdToCrop = null; }
+        async function saveCoverCrop() { if(!cropperInstance) return; const btn = document.getElementById('btn-save-crop'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> APLICANDO...`; btn.disabled = true; const canvasData = cropperInstance.getCanvasData(); const cropBoxData = cropperInstance.getCropBoxData(); const percentX = ((cropBoxData.left - canvasData.left) / canvasData.width) * 100; const percentY = ((cropBoxData.top - canvasData.top) / canvasData.height) * 100; const cropDataStr = JSON.stringify({ x: percentX, y: percentY }); try { await gasRequest("setCover", { gallery_id: galleryIdToCrop, file_id: fileIdToCrop, crop_data: cropDataStr }); currentGallery.cover_photo_id = fileIdToCrop; currentGallery.cover_crop_data = cropDataStr; showToast("Portada y reencuadre actualizados"); closeCropper(); openWorkspace(currentGallery); } catch(e) { alert("Error guardando portada"); } btn.innerHTML = `APLICAR PORTADA`; btn.disabled = false; }
 
         async function fetchClientPhotos() {
-            document.getElementById('client-photos').innerHTML = getPhotoSkeleton(); 
-            const isPort = sessionUser.active_gallery.is_portfolio; 
-            downloadSelectionCache = []; 
-            filterFavoritesActive = false;
-            
-            if(isPort) { 
-                document.getElementById('client-hero-subtitle').innerText = "Portafolio Oficial"; 
-                document.getElementById('client-instruction').innerText = "Haz clic en un archivo para verlo."; 
-                document.getElementById('btn-download-zip').classList.add('hidden'); 
-            } else { 
-                document.getElementById('client-instruction').innerText = "Selecciona tus favoritas (❤️) o elige cuáles deseas descargar."; 
-                if(sessionUser.can_download) document.getElementById('btn-download-zip').classList.remove('hidden'); 
-                else document.getElementById('btn-download-zip').classList.add('hidden'); 
-            }
-            
-            const audio = document.getElementById('audio-soundtrack'); 
-            const ytID = getYouTubeId(sessionUser.active_gallery.soundtrack_url || "");
-            
-            if (ytID) { 
-                document.getElementById('yt-player-container').innerHTML = `<iframe id="yt-player" src="https://www.youtube.com/embed/${ytID}?enablejsapi=1&autoplay=0&mute=1&loop=1&playlist=${ytID}" frameborder="0" allow="autoplay"></iframe>`; 
-                document.getElementById('music-prompt-card').classList.remove('hidden'); 
-            } else if (sessionUser.active_gallery.soundtrack_url && sessionUser.active_gallery.soundtrack_url.trim() !== "") { 
-                audio.src = sessionUser.active_gallery.soundtrack_url; 
-                audio.volume = 0.5; 
-                document.getElementById('music-prompt-card').classList.remove('hidden'); 
-            } else { 
-                document.getElementById('music-prompt-card').classList.add('hidden'); 
-                document.getElementById('btn-eq-toggle').classList.add('hidden'); 
-            }
-
+            document.getElementById('client-photos').innerHTML = getPhotoSkeleton(); const isPort = sessionUser.active_gallery.is_portfolio; downloadSelectionCache = []; filterFavoritesActive = false;
+            if(isPort) { document.getElementById('client-hero-subtitle').innerText = "Portafolio Oficial"; document.getElementById('client-instruction').innerText = "Haz clic en un archivo para verlo."; document.getElementById('btn-download-zip').classList.add('hidden'); } else { document.getElementById('client-instruction').innerText = "Selecciona tus favoritas (❤️) o elige cuáles deseas descargar."; if(sessionUser.can_download) document.getElementById('btn-download-zip').classList.remove('hidden'); else document.getElementById('btn-download-zip').classList.add('hidden'); }
+            const audio = document.getElementById('audio-soundtrack'); const ytID = getYouTubeId(sessionUser.active_gallery.soundtrack_url || "");
+            if (ytID) { document.getElementById('yt-player-container').innerHTML = `<iframe id="yt-player" src="https://www.youtube.com/embed/${ytID}?enablejsapi=1&autoplay=0&mute=1&loop=1&playlist=${ytID}" frameborder="0" allow="autoplay"></iframe>`; document.getElementById('music-prompt-card').classList.remove('hidden'); } else if (sessionUser.active_gallery.soundtrack_url && sessionUser.active_gallery.soundtrack_url.trim() !== "") { audio.src = sessionUser.active_gallery.soundtrack_url; audio.volume = 0.5; document.getElementById('music-prompt-card').classList.remove('hidden'); } else { document.getElementById('music-prompt-card').classList.add('hidden'); document.getElementById('btn-eq-toggle').classList.add('hidden'); }
             try {
                 const hero = document.getElementById('client-hero');
-                if (sessionUser.active_gallery.cover_photo_id) { 
-                    hero.style.backgroundImage = `url('https://lh3.googleusercontent.com/d/${sessionUser.active_gallery.cover_photo_id}=s2000')`; 
-                    if (sessionUser.active_gallery.cover_crop_data) { 
-                        const crop = JSON.parse(sessionUser.active_gallery.cover_crop_data); 
-                        hero.style.backgroundPosition = `${crop.x}% ${crop.y}%`; 
-                    } 
-                } else { 
-                    hero.style.backgroundColor = '#0f172a'; 
-                }
-                
-                if(sessionRole !== 'guest') {
-                    const [structure, favs] = await Promise.all([ 
-                        gasRequest("getPhotos", null, sessionUser.active_gallery.drive_folder_id), 
-                        gasRequest("getFavorites", null, sessionUser.active_gallery.id) 
-                    ]);
-                    photosCache = structure || []; 
-                    favoritesCache = Array.isArray(favs) ? favs.map(f => f.file_id) : [];
-                }
-
-                if (sessionUser.active_gallery.favorites_locked) { 
-                    document.getElementById('btn-lock-selection').classList.add('hidden'); 
-                    document.getElementById('badge-selection-locked').classList.remove('hidden'); 
-                } else if (!isPort) { 
-                    document.getElementById('btn-lock-selection').classList.remove('hidden'); 
-                    document.getElementById('badge-selection-locked').classList.add('hidden'); 
-                }
-
+                if (sessionUser.active_gallery.cover_photo_id) { hero.style.backgroundImage = `url('https://lh3.googleusercontent.com/d/${sessionUser.active_gallery.cover_photo_id}=s2000')`; if (sessionUser.active_gallery.cover_crop_data) { const crop = JSON.parse(sessionUser.active_gallery.cover_crop_data); hero.style.backgroundPosition = `${crop.x}% ${crop.y}%`; } } else { hero.style.backgroundColor = '#0f172a'; }
+                if(sessionRole !== 'guest') { const [structure, favs] = await Promise.all([ gasRequest("getPhotos", null, sessionUser.active_gallery.drive_folder_id), gasRequest("getFavorites", null, sessionUser.active_gallery.id) ]); photosCache = structure || []; favoritesCache = Array.isArray(favs) ? favs.map(f => f.file_id) : []; }
+                if (sessionUser.active_gallery.favorites_locked) { document.getElementById('btn-lock-selection').classList.add('hidden'); document.getElementById('badge-selection-locked').classList.remove('hidden'); } else if (!isPort) { document.getElementById('btn-lock-selection').classList.remove('hidden'); document.getElementById('badge-selection-locked').classList.add('hidden'); }
                 const tabsContainer = document.getElementById('client-tabs');
                 if (photosCache.length > 0) {
-                    tabsContainer.classList.remove('hidden'); 
-                    activeClientTabId = photosCache[0].id;
-                    let tabsHtml = photosCache.map((set, idx) => { 
-                        const activeClass = idx === 0 ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:text-black'; 
-                        return `<button onclick="filterClientTab('${set.id}', this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn ${activeClass}">${set.name}</button>`; 
-                    }).join('');
-                    
-                    if(!isPort) { 
-                        tabsHtml += `<button onclick="toggleFavoritesFilter(this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-200 ml-auto flex items-center gap-2"><i class="fa-solid fa-heart"></i> MIS FAVORITAS</button>`; 
-                    }
+                    tabsContainer.classList.remove('hidden'); activeClientTabId = photosCache[0].id;
+                    let tabsHtml = photosCache.map((set, idx) => { const activeClass = idx === 0 ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:text-black'; return `<button onclick="filterClientTab('${set.id}', this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn ${activeClass}">${set.name}</button>`; }).join('');
+                    if(!isPort) tabsHtml += `<button onclick="toggleFavoritesFilter(this)" class="px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-200 ml-auto flex items-center gap-2"><i class="fa-solid fa-heart"></i> MIS FAVORITAS</button>`; 
                     tabsContainer.innerHTML = tabsHtml;
                 }
-                
                 renderClientGrid(isPort);
-                if(sessionRole !== 'guest') { fetchPhotographerDetails(sessionUser.active_gallery.photographer_id); }
-            } catch(error) { 
-                document.getElementById('client-photos').innerHTML = `<p class="text-center text-red-500 font-bold">Error.</p>`; 
-            }
+                if(sessionRole !== 'guest') fetchPhotographerDetails(sessionUser.active_gallery.photographer_id); 
+            } catch(error) { document.getElementById('client-photos').innerHTML = `<p class="text-center text-red-500 font-bold">Error.</p>`; }
         }
 
         async function fetchPhotographerDetails(photoId) {
             try {
                 const d = await gasRequest("getPhotographer", null, photoId);
                 if (d && d.length > 0) {
-                    const p = d[0]; 
-                    document.getElementById('c-photo-name').innerText = p.full_name; 
-                    
-                    document.getElementById('c-photo-bio').innerText = p.bio || "Fotografía Profesional"; 
-                    
-                    applyBranding(p.brand_color, p.brand_logo_url);
-                    
-                    const ctaBtn = document.getElementById('cta-hire-me'); 
-                    if(sessionUser.active_gallery.is_portfolio && p.whatsapp) { 
-                        ctaBtn.href = `https://wa.me/${p.whatsapp}?text=Hola%20${p.full_name.replace(/ /g, '%20')}!%20Vi%20tu%20portafolio%20'${sessionUser.active_gallery.client_name}'%20y%20me%20interesa%20contratarte.`; 
-                        ctaBtn.classList.remove('hidden'); 
-                    } else { 
-                        ctaBtn.classList.add('hidden'); 
-                    }
-                    
+                    const p = d[0]; document.getElementById('c-photo-name').innerText = p.full_name; document.getElementById('c-photo-bio').innerText = p.bio || "Fotografía Profesional"; applyBranding(p.brand_color, p.brand_logo_url);
+                    const ctaBtn = document.getElementById('cta-hire-me'); if(sessionUser.active_gallery.is_portfolio && p.whatsapp) { ctaBtn.href = `https://wa.me/${p.whatsapp}?text=Hola%20${p.full_name.replace(/ /g, '%20')}!%20Vi%20tu%20portafolio%20'${sessionUser.active_gallery.client_name}'%20y%20me%20interesa%20contratarte.`; ctaBtn.classList.remove('hidden'); } else ctaBtn.classList.add('hidden'); 
                     let socialsHtml = "";
                     if(p.whatsapp) socialsHtml += `<a href="https://wa.me/${p.whatsapp}?text=Hola..." target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-whatsapp text-2xl"></i></a>`;
                     if(p.instagram) socialsHtml += `<a href="${p.instagram}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-instagram text-2xl"></i></a>`;
                     if(p.tiktok) socialsHtml += `<a href="${p.tiktok}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-tiktok text-2xl"></i></a>`;
                     if(p.facebook) socialsHtml += `<a href="${p.facebook}" target="_blank" class="hover:text-black transition-colors"><i class="fa-brands fa-facebook-f text-2xl"></i></a>`;
                     if(p.adobe_portfolio) socialsHtml += `<a href="${p.adobe_portfolio}" target="_blank" class="bg-black text-white text-[10px] font-black px-4 py-2 rounded-full tracking-widest hover:bg-cyan-lf transition-colors"><i class="fa-solid fa-globe mr-2"></i>PORTAFOLIO</a>`;
-                    
-                    document.getElementById('c-photo-socials').innerHTML = socialsHtml; 
-                    document.getElementById('client-photographer-card').classList.remove('hidden');
+                    document.getElementById('c-photo-socials').innerHTML = socialsHtml; document.getElementById('client-photographer-card').classList.remove('hidden');
                 }
             } catch(e) {}
         }
 
-        function filterClientTab(setId, btnObj) { 
-            filterFavoritesActive = false; 
-            activeClientTabId = setId; 
-            document.querySelectorAll('#client-tabs .tab-btn').forEach(b => { 
-                if(b.innerText.includes('FAVORITAS')) { 
-                    b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-200 ml-auto flex items-center gap-2'; 
-                } else { 
-                    b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-slate-100 text-slate-400 hover:text-black'; 
-                } 
-            }); 
-            btnObj.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-black text-white'; 
-            renderClientGrid(sessionUser.active_gallery.is_portfolio); 
-        }
-
-        function toggleFavoritesFilter(btnObj) { 
-            filterFavoritesActive = true; 
-            document.querySelectorAll('#client-tabs .tab-btn').forEach(b => { 
-                if(!b.innerText.includes('FAVORITAS')) { 
-                    b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-slate-100 text-slate-400 hover:text-black'; 
-                } 
-            }); 
-            btnObj.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-500 text-white ml-auto flex items-center gap-2 shadow-lg'; 
-            renderClientGrid(sessionUser.active_gallery.is_portfolio); 
-        }
+        function filterClientTab(setId, btnObj) { filterFavoritesActive = false; activeClientTabId = setId; document.querySelectorAll('#client-tabs .tab-btn').forEach(b => { if(b.innerText.includes('FAVORITAS')) b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-50 text-red-500 hover:bg-red-500 hover:text-white border border-red-200 ml-auto flex items-center gap-2'; else b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-slate-100 text-slate-400 hover:text-black'; }); btnObj.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-black text-white'; renderClientGrid(sessionUser.active_gallery.is_portfolio); }
+        function toggleFavoritesFilter(btnObj) { filterFavoritesActive = true; document.querySelectorAll('#client-tabs .tab-btn').forEach(b => { if(!b.innerText.includes('FAVORITAS')) b.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-slate-100 text-slate-400 hover:text-black'; }); btnObj.className = 'px-6 py-3 rounded-full font-black text-sm transition-all tracking-wider uppercase tab-btn bg-red-500 text-white ml-auto flex items-center gap-2 shadow-lg'; renderClientGrid(sessionUser.active_gallery.is_portfolio); }
 
         function renderClientGrid(isPort) {
             const container = document.getElementById('client-photos');
-            
-            if (filterFavoritesActive) { 
-                currentDisplayPhotos = photosCache.flatMap(s => s.photos).filter(p => favoritesCache.includes(p.id)); 
-            } else { 
-                const activeSet = photosCache.find(s => s.id === activeClientTabId); 
-                currentDisplayPhotos = activeSet ? activeSet.photos : []; 
-            }
-            
-            if (currentDisplayPhotos.length === 0) { 
-                container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold text-lg"><i class="fa-solid fa-folder-open text-3xl mb-3"></i><br>Aún no hay fotos en esta vista.</div>`; 
-                return; 
-            }
-
-            const showWatermark = sessionUser.active_gallery.watermark_enabled !== false; 
-            const isSelectLocked = sessionUser.active_gallery.favorites_locked === true;
-
+            if (filterFavoritesActive) currentDisplayPhotos = photosCache.flatMap(s => s.photos).filter(p => favoritesCache.includes(p.id)); else { const activeSet = photosCache.find(s => s.id === activeClientTabId); currentDisplayPhotos = activeSet ? activeSet.photos : []; }
+            if (currentDisplayPhotos.length === 0) { container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold text-lg"><i class="fa-solid fa-folder-open text-3xl mb-3"></i><br>Aún no hay fotos en esta vista.</div>`; return; }
+            const showWatermark = sessionUser.active_gallery.watermark_enabled !== false; const isSelectLocked = sessionUser.active_gallery.favorites_locked === true;
             container.innerHTML = currentDisplayPhotos.map((p, index) => {
-                const isFav = favoritesCache.includes(p.id); 
-                const isSelectedForDl = downloadSelectionCache.includes(p.id); 
-                const isVideo = p.type === 'video';
-                const heartIcon = isFav ? "fa-solid text-red-500" : "fa-regular text-white"; 
-                const checkIcon = isSelectedForDl ? "fa-solid fa-square-check text-cyan-lf" : "fa-regular fa-square text-white";
-                const wmLayer = showWatermark && !isVideo ? `<div class="watermark-overlay"></div>` : ''; 
-                const videoBadge = isVideo ? `<div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10"><i class="fa-solid fa-play text-white text-5xl drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"></i></div>` : '';
-
-                const gridActions = isPort || sessionRole === 'guest' ? '' : `
-                    <div class="absolute top-4 right-4 z-20 flex flex-col gap-3 pointer-events-auto">
-                        <button onclick="toggleFavorite('${p.id}')" class="bg-black/50 backdrop-blur-sm border border-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all ${isSelectLocked ? 'opacity-40 pointer-events-none' : 'hover:scale-110'}">
-                            <i id="fav-${p.id}" class="${heartIcon} fa-heart text-xl"></i>
-                        </button>
-                    </div>
-                    ${sessionUser.can_download ? `
-                    <div class="absolute top-4 left-4 z-20 flex flex-col gap-3 pointer-events-auto">
-                        <button onclick="toggleDownloadSelect('${p.id}')" class="bg-black/50 backdrop-blur-sm border border-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all hover:scale-110" title="Seleccionar para descargar">
-                            <i id="dl-sel-${p.id}" class="${checkIcon} text-2xl"></i>
-                        </button>
-                    </div>` : ''}`;
-                
-                return `
-                    <div class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 fade-in min-h-[200px]">
-                        <img data-src="${p.thumb}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" class="w-full h-auto object-cover cursor-pointer protect-img lazy-image" onclick="openCarousel(${index})" oncontextmenu="return false;" draggable="false">
-                        ${videoBadge} 
-                        ${wmLayer} 
-                        ${gridActions}
-                        <button onclick="openCarousel(${index})" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/40 backdrop-blur-md text-white text-[10px] font-black px-6 py-2 rounded-full border border-white/20 uppercase tracking-widest z-20 hover:bg-white hover:text-black transition-colors pointer-events-auto shadow-lg">VER</button>
-                    </div>`;
+                const isFav = favoritesCache.includes(p.id); const isSelectedForDl = downloadSelectionCache.includes(p.id); const isVideo = p.type === 'video';
+                const heartIcon = isFav ? "fa-solid text-red-500" : "fa-regular text-white"; const checkIcon = isSelectedForDl ? "fa-solid fa-square-check text-cyan-lf" : "fa-regular fa-square text-white";
+                const wmLayer = showWatermark && !isVideo ? `<div class="watermark-overlay"></div>` : ''; const videoBadge = isVideo ? `<div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10"><i class="fa-solid fa-play text-white text-5xl drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"></i></div>` : '';
+                const gridActions = isPort || sessionRole === 'guest' ? '' : `<div class="absolute top-4 right-4 z-20 flex flex-col gap-3 pointer-events-auto"><button onclick="toggleFavorite('${p.id}')" class="bg-black/50 backdrop-blur-sm border border-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all ${isSelectLocked ? 'opacity-40 pointer-events-none' : 'hover:scale-110'}"><i id="fav-${p.id}" class="${heartIcon} fa-heart text-xl"></i></button></div>${sessionUser.can_download ? `<div class="absolute top-4 left-4 z-20 flex flex-col gap-3 pointer-events-auto"><button onclick="toggleDownloadSelect('${p.id}')" class="bg-black/50 backdrop-blur-sm border border-white/20 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all hover:scale-110" title="Seleccionar para descargar"><i id="dl-sel-${p.id}" class="${checkIcon} text-2xl"></i></button></div>` : ''}`;
+                return `<div class="masonry-item relative group rounded-2xl overflow-hidden shadow-sm bg-slate-100 fade-in min-h-[200px]"><img data-src="${p.thumb}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" class="w-full h-auto object-cover cursor-pointer protect-img lazy-image" onclick="openCarousel(${index})" oncontextmenu="return false;" draggable="false">${videoBadge} ${wmLayer} ${gridActions}<button onclick="openCarousel(${index})" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/40 backdrop-blur-md text-white text-[10px] font-black px-6 py-2 rounded-full border border-white/20 uppercase tracking-widest z-20 hover:bg-white hover:text-black transition-colors pointer-events-auto shadow-lg">VER</button></div>`;
             }).join('');
-            
-            document.querySelectorAll('.lazy-image').forEach(img => lazyObserver.observe(img)); 
-            updateDownloadBtnText();
+            document.querySelectorAll('.lazy-image').forEach(img => lazyObserver.observe(img)); updateDownloadBtnText();
         }
 
         function renderCanvasWatermark(imageUrl, showWatermark) {
-            const canvas = document.getElementById('carousel-canvas'); 
-            const imgEl = document.getElementById('carousel-img'); 
-            const ctx = canvas.getContext('2d');
-            
-            canvas.classList.remove('hidden'); 
-            imgEl.classList.add('hidden');
-            
-            const img = new Image(); 
-            img.crossOrigin = "Anonymous";
+            const canvas = document.getElementById('carousel-canvas'); const imgEl = document.getElementById('carousel-img'); const ctx = canvas.getContext('2d');
+            canvas.classList.remove('hidden'); imgEl.classList.add('hidden');
+            const img = new Image(); img.crossOrigin = "Anonymous";
             img.onload = () => {
-                canvas.width = img.width; 
-                canvas.height = img.height; 
-                ctx.drawImage(img, 0, 0);
-                if(showWatermark) { 
-                    ctx.font = `bold ${img.width/15}px 'Noto Sans'`; 
-                    ctx.fillStyle = "rgba(255, 255, 255, 0.25)"; 
-                    ctx.textAlign = "center"; 
-                    ctx.textBaseline = "middle"; 
-                    ctx.translate(canvas.width/2, canvas.height/2); 
-                    ctx.rotate(-Math.PI/4); 
-                    ctx.fillText("LENTE FRÍA", 0, 0); 
-                }
+                canvas.width = img.width; canvas.height = img.height; ctx.drawImage(img, 0, 0);
+                if(showWatermark) { ctx.font = `bold ${img.width/15}px 'Noto Sans'`; ctx.fillStyle = "rgba(255, 255, 255, 0.25)"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.translate(canvas.width/2, canvas.height/2); ctx.rotate(-Math.PI/4); ctx.fillText("LENTE FRÍA", 0, 0); }
             };
-            img.onerror = () => { 
-                canvas.classList.add('hidden'); 
-                imgEl.classList.remove('hidden'); 
-                imgEl.src = imageUrl; 
-            }; 
-            img.src = imageUrl;
+            img.onerror = () => { canvas.classList.add('hidden'); imgEl.classList.remove('hidden'); imgEl.src = imageUrl; }; img.src = imageUrl;
         }
 
         async function openCarousel(index) {
-            currentCarouselIndex = index; 
-            const item = currentDisplayPhotos[index]; 
-            currentPhotoId = item.id; 
-            window.history.pushState({ modal: true }, "");
-            
-            const canvasEl = document.getElementById('carousel-canvas'); 
-            const imgEl = document.getElementById('carousel-img'); 
-            const vidEl = document.getElementById('carousel-vid');
-            const reqWatermark = (sessionRole === 'client' || sessionRole === 'guest') && sessionUser.active_gallery.watermark_enabled !== false;
-            
-            if(item.type === 'video') { 
-                canvasEl.classList.add('hidden'); 
-                imgEl.classList.add('hidden'); 
-                vidEl.classList.remove('hidden'); 
-                vidEl.src = item.download; 
-                vidEl.play().catch(e => console.error(e)); 
-            } else { 
-                vidEl.pause(); 
-                vidEl.classList.add('hidden'); 
-                renderCanvasWatermark(`https://lh3.googleusercontent.com/d/${item.id}=s2000`, reqWatermark); 
-            }
-
-            document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible'; 
-            document.getElementById('btn-next').style.visibility = index === currentDisplayPhotos.length - 1 ? 'hidden' : 'visible';
-
-            if (sessionUser.active_gallery.is_portfolio || sessionRole === 'guest') { 
-                document.getElementById('carousel-sidebar').classList.add('hidden'); 
-                document.getElementById('btn-mobile-comment').classList.add('hidden'); 
-                document.getElementById('carousel-media-container').classList.replace('md:w-2/3', 'w-full'); 
-            } else { 
-                document.getElementById('carousel-sidebar').classList.remove('hidden'); 
-                document.getElementById('btn-mobile-comment').classList.remove('hidden'); 
-                document.getElementById('carousel-media-container').classList.replace('w-full', 'md:w-2/3'); 
-                document.getElementById('comment-text').value = ''; 
-                resetStars(); 
-                
-                try { 
-                    const ratings = await gasRequest("getRatings", null, sessionUser.active_gallery.id); 
-                    const match = ratings.find(r => r.file_id === currentPhotoId); 
-                    if(match) paintStars(match.rating_value); 
-                } catch(e){} 
-            }
+            currentCarouselIndex = index; const item = currentDisplayPhotos[index]; currentPhotoId = item.id; window.history.pushState({ modal: true }, "");
+            const canvasEl = document.getElementById('carousel-canvas'); const imgEl = document.getElementById('carousel-img'); const vidEl = document.getElementById('carousel-vid'); const reqWatermark = (sessionRole === 'client' || sessionRole === 'guest') && sessionUser.active_gallery.watermark_enabled !== false;
+            if(item.type === 'video') { canvasEl.classList.add('hidden'); imgEl.classList.add('hidden'); vidEl.classList.remove('hidden'); vidEl.src = item.download; vidEl.play().catch(e => console.error(e)); } 
+            else { vidEl.pause(); vidEl.classList.add('hidden'); renderCanvasWatermark(`https://lh3.googleusercontent.com/d/${item.id}=s2000`, reqWatermark); }
+            document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible'; document.getElementById('btn-next').style.visibility = index === currentDisplayPhotos.length - 1 ? 'hidden' : 'visible';
+            if (sessionUser.active_gallery.is_portfolio || sessionRole === 'guest') { document.getElementById('carousel-sidebar').classList.add('hidden'); document.getElementById('btn-mobile-comment').classList.add('hidden'); document.getElementById('carousel-media-container').classList.replace('md:w-2/3', 'w-full'); } 
+            else { document.getElementById('carousel-sidebar').classList.remove('hidden'); document.getElementById('btn-mobile-comment').classList.remove('hidden'); document.getElementById('carousel-media-container').classList.replace('w-full', 'md:w-2/3'); document.getElementById('comment-text').value = ''; resetStars(); try { const ratings = await gasRequest("getRatings", null, sessionUser.active_gallery.id); const match = ratings.find(r => r.file_id === currentPhotoId); if(match) paintStars(match.rating_value); } catch(e){} }
             document.getElementById('m-carousel').classList.remove('hidden');
         }
 
-        function closeCarousel() { 
-            document.getElementById('m-carousel').classList.add('hidden'); 
-            document.getElementById('carousel-sidebar').classList.remove('active'); 
-            const vidEl = document.getElementById('carousel-vid'); 
-            vidEl.pause(); 
-            vidEl.src = ""; 
-            currentPhotoId = null; 
-        }
+        function closeCarousel() { document.getElementById('m-carousel').classList.add('hidden'); document.getElementById('carousel-sidebar').classList.remove('active'); const vidEl = document.getElementById('carousel-vid'); vidEl.pause(); vidEl.src = ""; currentPhotoId = null; }
+        function nextPhoto() { if(currentCarouselIndex < currentDisplayPhotos.length - 1) openCarousel(currentCarouselIndex + 1); } function prevPhoto() { if(currentCarouselIndex > 0) openCarousel(currentCarouselIndex - 1); }
+        document.addEventListener('keydown', (e) => { if(!document.getElementById('m-carousel').classList.contains('hidden')) { if(e.key === 'ArrowRight') nextPhoto(); if(e.key === 'ArrowLeft') prevPhoto(); if(e.key === 'Escape') { window.history.back(); closeCarousel(); } } });
 
-        function nextPhoto() { if(currentCarouselIndex < currentDisplayPhotos.length - 1) openCarousel(currentCarouselIndex + 1); } 
-        function prevPhoto() { if(currentCarouselIndex > 0) openCarousel(currentCarouselIndex - 1); }
-        
-        document.addEventListener('keydown', (e) => { 
-            if(!document.getElementById('m-carousel').classList.contains('hidden')) { 
-                if(e.key === 'ArrowRight') nextPhoto(); 
-                if(e.key === 'ArrowLeft') prevPhoto(); 
-                if(e.key === 'Escape') { window.history.back(); closeCarousel(); } 
-            } 
-        });
-
-        function toggleMusic(status) { 
-            const audio = document.getElementById('audio-soundtrack'); 
-            const promptCard = document.getElementById('music-prompt-card'); 
-            const eqBtn = document.getElementById('btn-eq-toggle'); 
-            const ytFrame = document.getElementById('yt-player'); 
-            
-            promptCard.classList.add('hidden'); 
-            if (status) { 
-                eqBtn.classList.remove('hidden'); 
-                document.getElementById('eq-lbl').innerText = "SOUNDTRACK ON"; 
-                showToast("Banda sonora activada 🎵"); 
-                if (ytFrame) { 
-                    ytFrame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); 
-                    ytFrame.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*'); 
-                } else { 
-                    audio.play().catch(e => {}); 
-                } 
-            } else { 
-                if (ytFrame) ytFrame.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); 
-                else audio.pause(); 
-                eqBtn.classList.add('hidden'); 
-            } 
-        }
-
-        function toggleMute() { 
-            const audio = document.getElementById('audio-soundtrack'); 
-            const bars = document.querySelectorAll('.eq-bar'); 
-            const lbl = document.getElementById('eq-lbl'); 
-            const ytFrame = document.getElementById('yt-player'); 
-            
-            if (ytFrame) { 
-                if (lbl.innerText === "SOUNDTRACK ON") { 
-                    ytFrame.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*'); 
-                    lbl.innerText = "SOUNDTRACK MUTED"; 
-                    bars.forEach(b => b.style.animationPlayState = 'paused'); 
-                } else { 
-                    ytFrame.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*'); 
-                    lbl.innerText = "SOUNDTRACK ON"; 
-                    bars.forEach(b => b.style.animationPlayState = 'running'); 
-                } 
-                return; 
-            } 
-            if (audio.paused) { 
-                audio.play(); 
-                lbl.innerText = "SOUNDTRACK ON"; 
-                bars.forEach(b => b.style.animationPlayState = 'running'); 
-            } else { 
-                audio.pause(); 
-                lbl.innerText = "SOUNDTRACK MUTED"; 
-                bars.forEach(b => b.style.animationPlayState = 'paused'); 
-            } 
-        }
-
+        function toggleMusic(status) { const audio = document.getElementById('audio-soundtrack'); const promptCard = document.getElementById('music-prompt-card'); const eqBtn = document.getElementById('btn-eq-toggle'); const ytFrame = document.getElementById('yt-player'); promptCard.classList.add('hidden'); if (status) { eqBtn.classList.remove('hidden'); document.getElementById('eq-lbl').innerText = "SOUNDTRACK ON"; showToast("Banda sonora activada 🎵"); if (ytFrame) { ytFrame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); ytFrame.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*'); } else { audio.play().catch(e => {}); } } else { if (ytFrame) ytFrame.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); else audio.pause(); eqBtn.classList.add('hidden'); } }
+        function toggleMute() { const audio = document.getElementById('audio-soundtrack'); const bars = document.querySelectorAll('.eq-bar'); const lbl = document.getElementById('eq-lbl'); const ytFrame = document.getElementById('yt-player'); if (ytFrame) { if (lbl.innerText === "SOUNDTRACK ON") { ytFrame.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*'); lbl.innerText = "SOUNDTRACK MUTED"; bars.forEach(b => b.style.animationPlayState = 'paused'); } else { ytFrame.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*'); lbl.innerText = "SOUNDTRACK ON"; bars.forEach(b => b.style.animationPlayState = 'running'); } return; } if (audio.paused) { audio.play(); lbl.innerText = "SOUNDTRACK ON"; bars.forEach(b => b.style.animationPlayState = 'running'); } else { audio.pause(); lbl.innerText = "SOUNDTRACK MUTED"; bars.forEach(b => b.style.animationPlayState = 'paused'); } }
         function toggleMobileSidebar() { document.getElementById('carousel-sidebar').classList.toggle('active'); }
         function resetStars() { document.querySelectorAll('#carousel-rating-box i').forEach(s => s.className = "fa-solid fa-star star-btn text-slate-300 hover:text-yellow-400 transition-colors"); }
         function paintStars(val) { const stars = document.querySelectorAll('#carousel-rating-box i'); for(let i=0; i<val; i++) stars[i].className = "fa-solid fa-star star-btn text-yellow-400 transition-colors"; }
+        async function ratePhoto(val) { resetStars(); paintStars(val); await gasRequest("toggleRating", { gallery_id: sessionUser.active_gallery.id, file_id: currentPhotoId, rating_value: val }); }
         
-        async function ratePhoto(val) { 
-            resetStars(); 
-            paintStars(val); 
-            await gasRequest("toggleRating", { gallery_id: sessionUser.active_gallery.id, file_id: currentPhotoId, rating_value: val }); 
-        }
+        async function sendComment() { const txt = document.getElementById('comment-text').value; if(!txt.trim()) return alert("Escribe un comentario."); const btn = document.getElementById('btn-send-comment'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`; btn.disabled = true; try { await gasRequest("addComment", { gallery_id: sessionUser.active_gallery.id, file_id: currentPhotoId, comment: txt }); btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ENVIADO`; btn.classList.replace('bg-black', 'bg-green-500'); showToast("Comentario enviado"); setTimeout(() => { window.history.back(); closeCarousel(); btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO`; btn.classList.replace('bg-green-500', 'bg-black'); btn.disabled = false; }, 1500); } catch(e) { btn.innerHTML = `ENVIAR COMENTARIO`; btn.disabled = false; } }
 
-        async function sendComment() { 
-            const txt = document.getElementById('comment-text').value; 
-            if(!txt.trim()) return alert("Escribe un comentario."); 
-            
-            const btn = document.getElementById('btn-send-comment'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                await gasRequest("addComment", { gallery_id: sessionUser.active_gallery.id, file_id: currentPhotoId, comment: txt }); 
-                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ENVIADO`; 
-                btn.classList.replace('bg-black', 'bg-green-500'); 
-                showToast("Comentario enviado"); 
-                
-                setTimeout(() => { 
-                    window.history.back(); 
-                    closeCarousel(); 
-                    btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-2"></i> ENVIAR COMENTARIO`; 
-                    btn.classList.replace('bg-green-500', 'bg-black'); 
-                    btn.disabled = false; 
-                }, 1500); 
-            } catch(e) { 
-                btn.innerHTML = `ENVIAR COMENTARIO`; 
-                btn.disabled = false; 
-            } 
-        }
-
-        async function updateStorageProgressBar() { 
-            if (sessionRole === 'admin' || sessionRole === 'photographer') { 
-                try { 
-                    const d = await gasRequest("getPhotographer", null, sessionUser.id); 
-                    if (d && d.length > 0) { 
-                        const p = d[0]; 
-                        Object.assign(sessionUser, p); 
-                        const used = p.storage_used || 0; 
-                        const limit = p.storage_limit || 53687091200; 
-                        const pct = Math.min(100, (used / limit) * 100); 
-                        document.getElementById('storage-lbl').innerText = `${(used / 1073741824).toFixed(2)} GB / ${(limit / 1073741824).toFixed(0)} GB`; 
-                        document.getElementById('storage-bar').style.width = `${pct}%`; 
-                        document.getElementById('nav-storage-container').classList.remove('hidden'); 
-                        if (pct >= 95) { 
-                            document.getElementById('storage-bar').className = "h-full bg-red-500 transition-all duration-500"; 
-                        } else { 
-                            document.getElementById('storage-bar').className = "h-full bg-cyan-lf transition-all duration-500"; 
-                        } 
-                    } 
-                } catch(e) {} 
-            } else { 
-                document.getElementById('nav-storage-container').classList.add('hidden'); 
-            } 
-        }
-
-        async function openGalleryModal() { 
-            if (sessionRole === 'admin') { 
-                document.getElementById('staff-select-container').classList.remove('hidden'); 
-                
-                if (allStaffCache.length === 0) {
-                    document.getElementById('sel-staff').innerHTML = '<option value="">Cargando fotógrafos...</option>';
-                    try {
-                        const d = await gasRequest("getStaff"); 
-                        allStaffCache = Array.isArray(d) ? d : []; 
-                    } catch(e) {
-                        console.error("Error cargando staff para el modal");
-                    }
-                }
-                document.getElementById('sel-staff').innerHTML = '<option value="">Selecciona Fotógrafo...</option>' + allStaffCache.map(s => `<option value="${s.id}">${s.full_name}</option>`).join(''); 
-            } 
-            document.getElementById('m-g').classList.remove('hidden'); 
-        }
-
-        async function apiG() { 
-            let s_id = sessionRole === 'admin' ? document.getElementById('sel-staff').value : sessionUser.id; 
-            const cN = document.getElementById('cN').value; 
-            const sl = document.getElementById('sl').value; 
-            const isPort = document.getElementById('chk-portfolio').checked; 
-            const desc = document.getElementById('gDesc').value; 
-            const sound = document.getElementById('gSound').value; 
-            
-            if(!s_id || !cN || !sl) return alert("Llena los campos obligatorios."); 
-            
-            const btn = document.getElementById('btn-create-vault'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; 
-            btn.disabled = true; 
-            
-            try {
-                const res = await gasRequest("createGallery", { 
-                    photographer_id: s_id, 
-                    client_name: cN, 
-                    slug: sl, 
-                    is_portfolio: isPort, 
-                    can_download: true, 
-                    description: desc, 
-                    soundtrack_url: sound 
-                }); 
-                
-                // ¡AQUÍ ESTÁ LA MAGIA DE DIAGNÓSTICO!
-                if (res.error) {
-                    alert("Supabase rechazó la entrega. Error: " + res.error);
-                } else {
-                    document.getElementById('m-g').classList.add('hidden'); 
-                    ['cN','sl','gDesc','gSound'].forEach(id => document.getElementById(id).value = ''); 
-                    fetchG(); 
-                    
-                    setTimeout(() => { 
-                        if(!isPort) { 
-                            openAccessManager(); 
-                            showToast("Contenedor listo. Ahora asígnale un cliente."); 
-                        } else {
-                            showToast("Portafolio creado exitosamente.");
-                        }
-                    }, 1000); 
-                }
-            } catch (e) {
-                alert("Falló la conexión con el servidor: " + e.message);
-            }
-            
-            btn.innerHTML = "CREAR CONTENEDOR"; 
-            btn.disabled = false; 
-        }
-
-        function openEditModal(galleryObj) { 
-            activeEditGalleryId = galleryObj.id; 
-            document.getElementById('edit-cN').value = galleryObj.client_name; 
-            document.getElementById('edit-gDesc').value = galleryObj.description || ""; 
-            document.getElementById('edit-gSound').value = galleryObj.soundtrack_url || ""; 
-            document.getElementById('edit-chk-wm').checked = galleryObj.watermark_enabled !== false; 
-            document.getElementById('m-edit-g').classList.remove('hidden'); 
-        }
-
-        async function updateGallery() { 
-            const newName = document.getElementById('edit-cN').value; 
-            const newDesc = document.getElementById('edit-gDesc').value; 
-            const newSound = document.getElementById('edit-gSound').value; 
-            const newWm = document.getElementById('edit-chk-wm').checked; 
-            
-            if(!newName) return alert("El nombre no puede estar vacío"); 
-            
-            const btn = document.getElementById('btn-update-vault'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                await gasRequest("updateGallery", { gallery_id: activeEditGalleryId, client_name: newName, description: newDesc, soundtrack_url: newSound, watermark_enabled: newWm, actor: sessionUser.email }); 
-                showToast("Bóveda Actualizada"); 
-                document.getElementById('m-edit-g').classList.add('hidden'); 
-                fetchG(); 
-            } catch(e) { 
-                alert("Error de red"); 
-            } 
-            btn.innerHTML = "GUARDAR CAMBIOS"; 
-            btn.disabled = false; 
-        }
-
-        async function deleteGallery(galleryId) { 
-            if(!confirm("PELIGRO: ¿Eliminar esta bóveda completa?")) return; 
-            showToast("Eliminando..."); 
-            try { 
-                await gasRequest("deleteGallery", { gallery_id: galleryId, actor: sessionUser.email }); 
-                showToast("Eliminada con éxito"); 
-                fetchG(); 
-            } catch(e) { 
-                alert("Error eliminando"); 
-            } 
-        }
-
-        async function createSet() { 
-            const name = document.getElementById('set-name').value.trim(); 
-            if(!name) return alert("Escribe un nombre."); 
-            
-            const btn = document.getElementById('btn-save-set'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                await gasRequest("createSet", { parent_folder_id: currentGallery.drive_folder_id, set_name: name, actor: sessionUser.email }); 
-                document.getElementById('m-set').classList.add('hidden'); 
-                showToast("Categoría creada"); 
-                openWorkspace(currentGallery); 
-            } catch(e) { 
-                alert("Error."); 
-            } 
-            btn.innerHTML = "CREAR CATEGORÍA"; 
-            btn.disabled = false; 
-        }
-
-        async function renameSet(setId, oldName) { 
-            const newN = prompt("Nuevo nombre:", oldName); 
-            if (!newN || newN.trim() === "" || newN === oldName) return; 
-            
-            showToast("Renombrando..."); 
-            try { 
-                await gasRequest("renameSet", { set_id: setId, new_name: newN, actor: sessionUser.email }); 
-                showToast("Actualizada"); 
-                openWorkspace(currentGallery); 
-            } catch(e) { 
-                alert("Error."); 
-            } 
-        }
-
-        async function deleteSet(setId) { 
-            if(!confirm("¿Eliminar categoría completa?")) return; 
-            showToast("Eliminando..."); 
-            try { 
-                await gasRequest("deleteSet", { set_id: setId, actor: sessionUser.email }); 
-                showToast("Eliminada"); 
-                openWorkspace(currentGallery); 
-            } catch(e) { 
-                alert("Error."); 
-            } 
-        }
-
-        function triggerUpload(galleryId) { 
-            const setFolderId = document.getElementById('ws-sel-folder').value; 
-            if(!setFolderId) return alert("Crea un set primero."); 
-            
-            const input = document.createElement('input'); 
-            input.type = 'file'; 
-            input.multiple = true; 
-            input.accept = "image/*,video/mp4,video/quicktime"; 
-            
-            input.onchange = async e => { 
-                const btn = document.getElementById('btn-ws-upload'); 
-                const files = e.target.files; 
-                if(files.length === 0) return; 
-                
-                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Procesando...`; 
-                btn.disabled = true; 
-                
-                for(let i=0; i<files.length; i++) { 
-                    let file = files[i]; 
-                    let isVideo = file.type.startsWith('video/'); 
-                    if (!isVideo) { 
-                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> OPTIMIZANDO ${i+1}/${files.length}`; 
-                        try { file = await compressFile(file); } catch(err) {} 
-                    } 
-                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> SUBIENDO ${i+1}/${files.length}`; 
-                    const reader = new FileReader(); 
-                    const b64 = await new Promise(res => { 
-                        reader.onload = () => res(reader.result.split(',')[1]); 
-                        reader.readAsDataURL(file); 
-                    }); 
-                    
-                    const uploadResult = await gasRequest("uploadPhoto", { folder_id: setFolderId, gallery_id: galleryId, filename: files[i].name, mimeType: file.type, base64Data: b64, actor: sessionUser.email }); 
-                    if (uploadResult.error) { 
-                        alert(uploadResult.error); 
-                        break; 
-                    } 
-                } 
-                
-                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ¡LISTO!`; 
-                showToast("Archivos publicados"); 
-                setTimeout(() => { 
-                    btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR MEDIOS`; 
-                    btn.disabled = false; 
-                    openWorkspace(currentGallery); 
-                }, 2000); 
-            }; 
-            input.click(); 
-        }
-
-        function compressFile(file) { 
-            const tW = window.systemSettings ? window.systemSettings.max_resolution : 3000; 
-            const tQ = window.systemSettings ? (window.systemSettings.jpeg_quality / 100) : 0.82; 
-            return new Promise((res, rej) => { 
-                new Compressor(file, { quality: tQ, maxWidth: tW, maxHeight: tW, mimeType: 'image/jpeg', success(r) { res(r); }, error(e) { rej(e); } }); 
-            }); 
-        }
-
-        async function triggerReplace(oldFid) { 
-            const input = document.createElement('input'); 
-            input.type = 'file'; 
-            input.accept = "image/*,video/mp4,video/quicktime"; 
-            input.onchange = async e => { 
-                const file = e.target.files[0]; 
-                if(!file) return; 
-                
-                let finalFile = file; 
-                let isVideo = file.type.startsWith('video/'); 
-                if(!isVideo) { 
-                    showToast("Optimizando reemplazo..."); 
-                    finalFile = await compressFile(file); 
-                } 
-                showToast("Sustituyendo..."); 
-                
-                const reader = new FileReader(); 
-                const b64 = await new Promise(res => { 
-                    reader.onload = () => res(reader.result.split(',')[1]); 
-                    reader.readAsDataURL(finalFile); 
-                }); 
-                
-                const res = await gasRequest("replacePhoto", { old_file_id: oldFid, filename: file.name, mimeType: file.type, base64Data: b64, actor: sessionUser.email }); 
-                if (res.error) { 
-                    alert("Error: " + res.error); 
-                } else { 
-                    showToast("Sustituido"); 
-                    openWorkspace(currentGallery); 
-                } 
-            }; 
-            input.click(); 
-        }
-
-        async function deletePhoto(fileId) { 
-            if(!confirm("¿Borrar este archivo de Google Drive definitivamente?")) return; 
-            document.getElementById(`card-${fileId}`).style.opacity = '0.3'; 
-            await gasRequest("deletePhoto", { file_id: fileId, actor: sessionUser.email }); 
-            document.getElementById(`card-${fileId}`).remove(); showToast("Archivo Eliminado"); updateStorageProgressBar(); 
-        }
-
+        async function updateStorageProgressBar() { if (sessionRole === 'admin' || sessionRole === 'photographer') { try { const d = await gasRequest("getPhotographer", null, sessionUser.id); if (d && d.length > 0) { const p = d[0]; Object.assign(sessionUser, p); const used = p.storage_used || 0; const limit = p.storage_limit || 53687091200; const pct = Math.min(100, (used / limit) * 100); document.getElementById('storage-lbl').innerText = `${(used / 1073741824).toFixed(2)} GB / ${(limit / 1073741824).toFixed(0)} GB`; document.getElementById('storage-bar').style.width = `${pct}%`; document.getElementById('nav-storage-container').classList.remove('hidden'); if (pct >= 95) document.getElementById('storage-bar').className = "h-full bg-red-500 transition-all duration-500"; else document.getElementById('storage-bar').className = "h-full bg-cyan-lf transition-all duration-500"; } } catch(e) {} } else document.getElementById('nav-storage-container').classList.add('hidden'); }
+        
+        async function openGalleryModal() { if (sessionRole === 'admin') { document.getElementById('staff-select-container').classList.remove('hidden'); if (allStaffCache.length === 0) { document.getElementById('sel-staff').innerHTML = '<option value="">Cargando fotógrafos...</option>'; try { const d = await gasRequest("getStaff"); allStaffCache = Array.isArray(d) ? d : []; } catch(e) { console.error("Error cargando staff"); } } document.getElementById('sel-staff').innerHTML = '<option value="">Selecciona Fotógrafo...</option>' + allStaffCache.map(s => `<option value="${s.id}">${s.full_name}</option>`).join(''); } document.getElementById('m-g').classList.remove('hidden'); }
+        async function apiG() { let s_id = sessionRole === 'admin' ? document.getElementById('sel-staff').value : sessionUser.id; const cN = document.getElementById('cN').value; const sl = document.getElementById('sl').value; const isPort = document.getElementById('chk-portfolio').checked; const desc = document.getElementById('gDesc').value; const sound = document.getElementById('gSound').value; if(!s_id || !cN || !sl) return alert("Llena los campos obligatorios."); const btn = document.getElementById('btn-create-vault'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; btn.disabled = true; try { const res = await gasRequest("createGallery", { photographer_id: s_id, client_name: cN, slug: sl, is_portfolio: isPort, can_download: true, description: desc, soundtrack_url: sound }); if (res.error) alert("Error: " + res.error); else { document.getElementById('m-g').classList.add('hidden'); ['cN','sl','gDesc','gSound'].forEach(id => document.getElementById(id).value = ''); fetchG(); setTimeout(() => { if(!isPort) { openAccessManager(); showToast("Contenedor listo. Asígnale un cliente."); } else showToast("Portafolio creado."); }, 1000); } } catch (e) { alert("Falló conexión: " + e.message); } btn.innerHTML = "CREAR CONTENEDOR"; btn.disabled = false; }
+        function openEditModal(galleryObj) { activeEditGalleryId = galleryObj.id; document.getElementById('edit-cN').value = galleryObj.client_name; document.getElementById('edit-gDesc').value = galleryObj.description || ""; document.getElementById('edit-gSound').value = galleryObj.soundtrack_url || ""; document.getElementById('edit-chk-wm').checked = galleryObj.watermark_enabled !== false; document.getElementById('m-edit-g').classList.remove('hidden'); }
+        async function updateGallery() { const newName = document.getElementById('edit-cN').value; const newDesc = document.getElementById('edit-gDesc').value; const newSound = document.getElementById('edit-gSound').value; const newWm = document.getElementById('edit-chk-wm').checked; if(!newName) return alert("Nombre vacío"); const btn = document.getElementById('btn-update-vault'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> GUARDANDO...`; btn.disabled = true; try { await gasRequest("updateGallery", { gallery_id: activeEditGalleryId, client_name: newName, description: newDesc, soundtrack_url: newSound, watermark_enabled: newWm, actor: sessionUser.email }); showToast("Bóveda Actualizada"); document.getElementById('m-edit-g').classList.add('hidden'); fetchG(); } catch(e) { alert("Error"); } btn.innerHTML = "GUARDAR CAMBIOS"; btn.disabled = false; }
+        async function deleteGallery(galleryId) { if(!confirm("PELIGRO: ¿Eliminar esta bóveda completa?")) return; showToast("Eliminando..."); try { await gasRequest("deleteGallery", { gallery_id: galleryId, actor: sessionUser.email }); showToast("Eliminada con éxito"); fetchG(); } catch(e) { alert("Error eliminando"); } }
+        async function createSet() { const name = document.getElementById('set-name').value.trim(); if(!name) return alert("Escribe un nombre."); const btn = document.getElementById('btn-save-set'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; btn.disabled = true; try { await gasRequest("createSet", { parent_folder_id: currentGallery.drive_folder_id, set_name: name, actor: sessionUser.email }); document.getElementById('m-set').classList.add('hidden'); showToast("Categoría creada"); openWorkspace(currentGallery); } catch(e) { alert("Error."); } btn.innerHTML = "CREAR CATEGORÍA"; btn.disabled = false; }
+        async function renameSet(setId, oldName) { const newN = prompt("Nuevo nombre:", oldName); if (!newN || newN.trim() === "" || newN === oldName) return; showToast("Renombrando..."); try { await gasRequest("renameSet", { set_id: setId, new_name: newN, actor: sessionUser.email }); showToast("Actualizada"); openWorkspace(currentGallery); } catch(e) { alert("Error."); } }
+        async function deleteSet(setId) { if(!confirm("¿Eliminar categoría completa?")) return; showToast("Eliminando..."); try { await gasRequest("deleteSet", { set_id: setId, actor: sessionUser.email }); showToast("Eliminada"); openWorkspace(currentGallery); } catch(e) { alert("Error."); } }
+        
+        function triggerUpload(galleryId) { const setFolderId = document.getElementById('ws-sel-folder').value; if(!setFolderId) return alert("Crea un set primero."); const input = document.createElement('input'); input.type = 'file'; input.multiple = true; input.accept = "image/*,video/mp4,video/quicktime"; input.onchange = async e => { const btn = document.getElementById('btn-ws-upload'); const files = e.target.files; if(files.length === 0) return; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Procesando...`; btn.disabled = true; for(let i=0; i<files.length; i++) { let file = files[i]; let isVideo = file.type.startsWith('video/'); if (!isVideo) { btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> OPTIMIZANDO ${i+1}/${files.length}`; try { file = await compressFile(file); } catch(err) {} } btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> SUBIENDO ${i+1}/${files.length}`; const reader = new FileReader(); const b64 = await new Promise(res => { reader.onload = () => res(reader.result.split(',')[1]); reader.readAsDataURL(file); }); const uploadResult = await gasRequest("uploadPhoto", { folder_id: setFolderId, gallery_id: galleryId, filename: files[i].name, mimeType: file.type, base64Data: b64, actor: sessionUser.email }); if (uploadResult.error) { alert(uploadResult.error); break; } } btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> ¡LISTO!`; showToast("Archivos publicados"); setTimeout(() => { btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> SUBIR MEDIOS`; btn.disabled = false; openWorkspace(currentGallery); }, 2000); }; input.click(); }
+        function compressFile(file) { const tW = window.systemSettings ? window.systemSettings.max_resolution : 3000; const tQ = window.systemSettings ? (window.systemSettings.jpeg_quality / 100) : 0.82; return new Promise((res, rej) => { new Compressor(file, { quality: tQ, maxWidth: tW, maxHeight: tW, mimeType: 'image/jpeg', success(r) { res(r); }, error(e) { rej(e); } }); }); }
+        async function triggerReplace(oldFid) { const input = document.createElement('input'); input.type = 'file'; input.accept = "image/*,video/mp4,video/quicktime"; input.onchange = async e => { const file = e.target.files[0]; if(!file) return; let finalFile = file; let isVideo = file.type.startsWith('video/'); if(!isVideo) { showToast("Optimizando reemplazo..."); finalFile = await compressFile(file); } showToast("Sustituyendo..."); const reader = new FileReader(); const b64 = await new Promise(res => { reader.onload = () => res(reader.result.split(',')[1]); reader.readAsDataURL(finalFile); }); const res = await gasRequest("replacePhoto", { old_file_id: oldFid, filename: file.name, mimeType: file.type, base64Data: b64, actor: sessionUser.email }); if (res.error) alert("Error: " + res.error); else { showToast("Sustituido"); openWorkspace(currentGallery); } }; input.click(); }
+        async function deletePhoto(fileId) { if(!confirm("¿Borrar definitivamente?")) return; document.getElementById(`card-${fileId}`).style.opacity = '0.3'; await gasRequest("deletePhoto", { file_id: fileId, actor: sessionUser.email }); document.getElementById(`card-${fileId}`).remove(); showToast("Eliminado"); updateStorageProgressBar(); }
+        
         async function requestEmailDownload() { 
+            if (!sessionUser.email) return alert("No tienes un correo registrado. Ve a Mi Perfil para agregarlo antes de solicitar la descarga.");
             const photosToDownload = downloadSelectionCache.length > 0 ? photosCache.flatMap(s => s.photos).filter(p => downloadSelectionCache.includes(p.id)) : photosCache.flatMap(s => s.photos); 
             if (photosToDownload.length === 0) return alert("No hay fotos para descargar."); 
             if(!confirm(`Recibirás un correo con la descarga directa en breve.\n¿Continuar?`)) return; 
-            
-            const btn = document.getElementById('btn-download-zip'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PREPARANDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                await gasRequest("sendDownloadEmail", { email: sessionUser.email, client_name: sessionUser.full_name, photo_ids: photosToDownload.map(p => p.id) }); 
-                btn.innerHTML = `<i class="fa-solid fa-check"></i> ¡ENVIADO!`; 
-                btn.classList.replace('bg-black', 'bg-green-500'); 
-                btn.classList.replace('bg-cyan-lf', 'bg-green-500'); 
-                showToast("Revisa tu bandeja de entrada."); 
-                
-                setTimeout(() => { 
-                    updateDownloadBtnText(); 
-                    btn.disabled = false; 
-                }, 4000); 
-            } catch(e) { 
-                alert("Error."); 
-                updateDownloadBtnText(); 
-                btn.disabled = false; 
-            } 
+            const btn = document.getElementById('btn-download-zip'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> PREPARANDO...`; btn.disabled = true; 
+            try { await gasRequest("sendDownloadEmail", { email: sessionUser.email, client_name: sessionUser.full_name, photo_ids: photosToDownload.map(p => p.id) }); btn.innerHTML = `<i class="fa-solid fa-check"></i> ¡ENVIADO!`; btn.classList.replace('bg-black', 'bg-green-500'); btn.classList.replace('bg-cyan-lf', 'bg-green-500'); showToast("Revisa tu bandeja de entrada."); setTimeout(() => { updateDownloadBtnText(); btn.disabled = false; }, 4000); } catch(e) { alert("Error."); updateDownloadBtnText(); btn.disabled = false; } 
         }
 
-        async function toggleFavorite(fileId) { 
-            if (sessionUser.active_gallery.favorites_locked) return; 
-            const icon = document.getElementById(`fav-${fileId}`); 
-            if (favoritesCache.includes(fileId)) { 
-                favoritesCache = favoritesCache.filter(id => id !== fileId); 
-                icon.className = "fa-regular text-white fa-heart text-xl"; 
-            } else { 
-                favoritesCache.push(fileId); 
-                icon.className = "fa-solid text-red-500 fa-heart text-xl animate-bounce"; 
-                setTimeout(()=> icon.classList.remove('animate-bounce'), 1000); 
-            } 
-            if(filterFavoritesActive) renderClientGrid(sessionUser.active_gallery.is_portfolio); 
-            await gasRequest("toggleFavorite", { gallery_id: sessionUser.active_gallery.id, file_id: fileId }); 
-        }
+        async function toggleFavorite(fileId) { if (sessionUser.active_gallery.favorites_locked) return; const icon = document.getElementById(`fav-${fileId}`); if (favoritesCache.includes(fileId)) { favoritesCache = favoritesCache.filter(id => id !== fileId); icon.className = "fa-regular text-white fa-heart text-xl"; } else { favoritesCache.push(fileId); icon.className = "fa-solid text-red-500 fa-heart text-xl animate-bounce"; setTimeout(()=> icon.classList.remove('animate-bounce'), 1000); } if(filterFavoritesActive) renderClientGrid(sessionUser.active_gallery.is_portfolio); await gasRequest("toggleFavorite", { gallery_id: sessionUser.active_gallery.id, file_id: fileId }); }
+        async function lockFavorites() { if (sessionUser.active_gallery.favorites_locked) return; if (favoritesCache.length === 0) return alert("Selecciona al menos una (❤️)."); if (!confirm(`¿Enviar tu selección final?`)) return; const btn = document.getElementById('btn-lock-selection'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`; btn.disabled = true; try { await gasRequest("lockFavorites", { gallery_id: sessionUser.active_gallery.id, actor: sessionUser.full_name }); sessionUser.active_gallery.favorites_locked = true; localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole })); showToast("Enviado con éxito"); fetchClientPhotos(); } catch(e) { btn.innerHTML = `ENVIAR SELECCIÓN FINAL`; btn.disabled = false; } }
+        function updateDownloadBtnText() { const btn = document.getElementById('btn-download-zip'); if(!btn) return; btn.classList.remove('bg-green-500'); if(downloadSelectionCache.length > 0) { btn.innerHTML = `<i class="fa-solid fa-envelope"></i> RECIBIR DESCARGA POR CORREO (${downloadSelectionCache.length})`; btn.classList.add('bg-cyan-lf'); btn.classList.remove('bg-black'); } else { btn.innerHTML = `<i class="fa-solid fa-envelope"></i> RECIBIR TODAS POR CORREO`; btn.classList.add('bg-black'); btn.classList.remove('bg-cyan-lf'); } }
+        function toggleDownloadSelect(fileId) { const icon = document.getElementById(`dl-sel-${fileId}`); if (downloadSelectionCache.includes(fileId)) { downloadSelectionCache = downloadSelectionCache.filter(id => id !== fileId); icon.className = "fa-regular fa-square text-white text-2xl"; } else { downloadSelectionCache.push(fileId); icon.className = "fa-solid fa-square-check text-cyan-lf text-2xl animate-pulse"; setTimeout(()=> icon.classList.remove('animate-pulse'), 1000); } updateDownloadBtnText(); }
+        
+        async function fetchInbox() { document.getElementById('inbox-list').innerHTML = getInboxSkeleton(); try { const d = await gasRequest("getComments", null, sessionUser.id); const list = document.getElementById('inbox-list'); if(!Array.isArray(d) || d.length === 0) { list.innerHTML = `<p class="text-slate-400 font-bold text-center mt-10"><i class="fa-solid fa-check-double text-4xl mb-3 block text-slate-200"></i>Bandeja limpia.</p>`; return; } list.innerHTML = d.map(c => `<div id="comment-card-${c.id}" class="bg-white p-6 rounded-2xl border flex flex-col sm:flex-row gap-6 items-start shadow-sm"><img src="https://lh3.googleusercontent.com/d/${c.file_id}=s200" class="w-24 h-24 object-cover rounded-xl bg-slate-100"><div class="flex-1"><div class="flex gap-2 mb-2"><span class="bg-cyan-lf text-white text-[10px] px-3 py-1 rounded-full font-bold tracking-widest">${c.galleries.client_name}</span></div><p class="text-lg font-bold">"${c.comment_text}"</p></div><button onclick="resolveComment('${c.id}')" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl text-xs tracking-widest shadow-md flex items-center justify-center gap-2"><i class="fa-solid fa-check-double"></i> RESUELTO</button></div>`).join(''); } catch(e) { document.getElementById('inbox-list').innerHTML = `<p class="text-red-500 font-bold">Error.</p>`; } }
+        async function resolveComment(commentId) { const card = document.getElementById(`comment-card-${commentId}`); const btn = card.querySelector('button'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`; btn.disabled = true; try { await gasRequest("resolveComment", { comment_id: commentId }); card.style.opacity = '0'; card.style.transform = 'scale(0.95)'; setTimeout(() => { card.remove(); if(document.getElementById('inbox-list').children.length === 0) { document.getElementById('inbox-list').innerHTML = `<p class="text-slate-400 font-bold text-center mt-10"><i class="fa-solid fa-check-double text-4xl mb-3 block text-slate-200"></i>Bandeja limpia.</p>`; } }, 300); showToast("Marcado resuelto"); } catch(e) { btn.innerHTML = `<i class="fa-solid fa-check-double"></i> RESUELTO`; btn.disabled = false; alert("Error"); } }
+        async function openAccessManager() { document.getElementById('m-access').classList.remove('hidden'); const galSelect = document.getElementById('acc-gal-id'); galSelect.innerHTML = '<option value="">1. Selecciona la Galería / Sesión</option>' + globalGalleriesCache.map(g => `<option value="${g.id}">${g.client_name} (/${g.slug})</option>`).join(''); const clientSelect = document.getElementById('acc-client-id'); clientSelect.innerHTML = '<option value="">Cargando clientes...</option>'; try { const clients = await gasRequest("getClients"); if(clients && clients.length > 0) { clientSelect.innerHTML = '<option value="">2. Selecciona al Cliente</option>' + clients.map(c => `<option value="${c.id}">${c.full_name} (${c.username || c.email || c.phone})</option>`).join(''); } else { clientSelect.innerHTML = '<option value="">No hay clientes.</option>'; } } catch(e) { clientSelect.innerHTML = '<option value="">Error.</option>'; } }
+        async function createClient() { const user = document.getElementById('nc-username').value; const name = document.getElementById('nc-name').value; const email = document.getElementById('nc-email').value; const phone = document.getElementById('nc-phone').value; const pass = document.getElementById('nc-pass').value; if(!name || !user || !pass) return alert("Nombre, Usuario y Contraseña son obligatorios."); const btn = document.getElementById('btn-create-client'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; btn.disabled = true; try { const res = await gasRequest("createClient", { username: user, full_name: name, email: email, phone: phone, password: pass }); if (res.error) alert(res.error); else { showToast("Cliente registrado."); ['nc-username', 'nc-name', 'nc-email', 'nc-phone', 'nc-pass'].forEach(id => document.getElementById(id).value = ''); openAccessManager(); } } catch(e) { alert("Error de red"); } btn.innerHTML = "REGISTRAR EN DIRECTORIO"; btn.disabled = false; }
+        async function grantAccess() { const galId = document.getElementById('acc-gal-id').value; const clientId = document.getElementById('acc-client-id').value; const canDl = document.getElementById('acc-can-dl').checked; if(!galId || !clientId) return alert("Selecciona galería y cliente."); const btn = document.getElementById('btn-grant'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> OTORGANDO...`; btn.disabled = true; try { await gasRequest("grantAccess", { client_id: clientId, gallery_id: galId, can_download: canDl }); showToast("Acceso otorgado!"); document.getElementById('m-access').classList.add('hidden'); } catch(e) { alert("Error"); } btn.innerHTML = "OTORGAR ACCESO"; btn.disabled = false; }
+        async function executeHardReset() { const p = document.getElementById('reset-pass').value; if(!p) return alert("Ingresa contraseña"); const btn = document.getElementById('btn-execute-reset'); btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> PURGANDO...`; btn.disabled = true; try { const res = await gasRequest("hardReset", { admin_password: p }); if (res.error) { alert("Error: " + res.error); btn.innerHTML = "EJECUTAR PURGA"; btn.disabled = false; return; } alert("SISTEMA REINICIADO."); logout(); } catch (error) { alert("Error"); btn.innerHTML = "EJECUTAR PURGA"; btn.disabled = false; } }
+        
+        function togglePass(inputId, iconId) { const inp = document.getElementById(inputId); const icon = document.getElementById(iconId); if(inp.type === "password") { inp.type = "text"; icon.classList.replace('fa-eye', 'fa-eye-slash'); } else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); } }
 
-        async function lockFavorites() { 
-            if (sessionUser.active_gallery.favorites_locked) return; 
-            if (favoritesCache.length === 0) return alert("Selecciona al menos una (❤️)."); 
-            if (!confirm(`¿Enviar tu selección final?`)) return; 
-            
-            const btn = document.getElementById('btn-lock-selection'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ENVIANDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                await gasRequest("lockFavorites", { gallery_id: sessionUser.active_gallery.id, actor: sessionUser.full_name }); 
-                sessionUser.active_gallery.favorites_locked = true; 
-                localStorage.setItem('lf_session', JSON.stringify({ user: sessionUser, role: sessionRole })); 
-                showToast("Enviado con éxito"); 
-                fetchClientPhotos(); 
-            } catch(e) { 
-                btn.innerHTML = `ENVIAR SELECCIÓN FINAL`; 
-                btn.disabled = false; 
-            } 
-        }
-
-        function updateDownloadBtnText() { 
-            const btn = document.getElementById('btn-download-zip'); 
-            if(!btn) return; 
-            btn.classList.remove('bg-green-500'); 
-            if(downloadSelectionCache.length > 0) { 
-                btn.innerHTML = `<i class="fa-solid fa-envelope"></i> RECIBIR DESCARGA POR CORREO (${downloadSelectionCache.length})`; 
-                btn.classList.add('bg-cyan-lf'); 
-                btn.classList.remove('bg-black'); 
-            } else { 
-                btn.innerHTML = `<i class="fa-solid fa-envelope"></i> RECIBIR TODAS POR CORREO`; 
-                btn.classList.add('bg-black'); 
-                btn.classList.remove('bg-cyan-lf'); 
-            } 
-        }
-
-        function toggleDownloadSelect(fileId) { 
-            const icon = document.getElementById(`dl-sel-${fileId}`); 
-            if (downloadSelectionCache.includes(fileId)) { 
-                downloadSelectionCache = downloadSelectionCache.filter(id => id !== fileId); 
-                icon.className = "fa-regular fa-square text-white text-2xl"; 
-            } else { 
-                downloadSelectionCache.push(fileId); 
-                icon.className = "fa-solid fa-square-check text-cyan-lf text-2xl animate-pulse"; 
-                setTimeout(()=> icon.classList.remove('animate-pulse'), 1000); 
-            } 
-            updateDownloadBtnText(); 
-        }
-
-        async function fetchInbox() { 
-            document.getElementById('inbox-list').innerHTML = getInboxSkeleton(); 
-            try { 
-                const d = await gasRequest("getComments", null, sessionUser.id); 
-                const list = document.getElementById('inbox-list'); 
-                if(!Array.isArray(d) || d.length === 0) { 
-                    list.innerHTML = `<p class="text-slate-400 font-bold text-center mt-10"><i class="fa-solid fa-check-double text-4xl mb-3 block text-slate-200"></i>Bandeja limpia.</p>`; 
-                    return; 
-                } 
-                list.innerHTML = d.map(c => `
-                    <div id="comment-card-${c.id}" class="bg-white p-6 rounded-2xl border flex flex-col sm:flex-row gap-6 items-start shadow-sm">
-                        <img src="https://lh3.googleusercontent.com/d/${c.file_id}=s200" class="w-24 h-24 object-cover rounded-xl bg-slate-100">
-                        <div class="flex-1">
-                            <div class="flex gap-2 mb-2"><span class="bg-cyan-lf text-white text-[10px] px-3 py-1 rounded-full font-bold tracking-widest">${c.galleries.client_name}</span></div>
-                            <p class="text-lg font-bold">"${c.comment_text}"</p>
-                        </div>
-                        <button onclick="resolveComment('${c.id}')" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl text-xs tracking-widest shadow-md flex items-center justify-center gap-2"><i class="fa-solid fa-check-double"></i> RESUELTO</button>
-                    </div>`).join(''); 
-            } catch(e) { 
-                document.getElementById('inbox-list').innerHTML = `<p class="text-red-500 font-bold">Error.</p>`; 
-            } 
-        }
-
-        async function resolveComment(commentId) { 
-            const card = document.getElementById(`comment-card-${commentId}`); 
-            const btn = card.querySelector('button'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`; 
-            btn.disabled = true; 
-            try { 
-                await gasRequest("resolveComment", { comment_id: commentId }); 
-                card.style.opacity = '0'; 
-                card.style.transform = 'scale(0.95)'; 
-                setTimeout(() => { 
-                    card.remove(); 
-                    if(document.getElementById('inbox-list').children.length === 0) { 
-                        document.getElementById('inbox-list').innerHTML = `<p class="text-slate-400 font-bold text-center mt-10"><i class="fa-solid fa-check-double text-4xl mb-3 block text-slate-200"></i>Bandeja limpia.</p>`; 
-                    } 
-                }, 300); 
-                showToast("Marcado resuelto"); 
-            } catch(e) { 
-                btn.innerHTML = `<i class="fa-solid fa-check-double"></i> RESUELTO`; 
-                btn.disabled = false; 
-                alert("Error"); 
-            } 
-        }
-
-        async function openAccessManager() { 
-            document.getElementById('m-access').classList.remove('hidden'); 
-            const galSelect = document.getElementById('acc-gal-id'); 
-            galSelect.innerHTML = '<option value="">1. Selecciona la Galería / Sesión</option>' + globalGalleriesCache.map(g => `<option value="${g.id}">${g.client_name} (/${g.slug})</option>`).join(''); 
-            const clientSelect = document.getElementById('acc-client-id'); 
-            clientSelect.innerHTML = '<option value="">Cargando clientes...</option>'; 
-            try { 
-                const clients = await gasRequest("getClients"); 
-                if(clients && clients.length > 0) { 
-                    clientSelect.innerHTML = '<option value="">2. Selecciona al Cliente</option>' + clients.map(c => `<option value="${c.id}">${c.full_name} (${c.username || c.email || c.phone})</option>`).join(''); 
-                } else { 
-                    clientSelect.innerHTML = '<option value="">No hay clientes.</option>'; 
-                } 
-            } catch(e) { 
-                clientSelect.innerHTML = '<option value="">Error.</option>'; 
-            } 
-        }
-
-        async function createClient() { 
-            const user = document.getElementById('nc-username').value; 
-            const name = document.getElementById('nc-name').value; 
-            const email = document.getElementById('nc-email').value; 
-            const phone = document.getElementById('nc-phone').value; 
-            const pass = document.getElementById('nc-pass').value; 
-            
-            if(!name || !user || !pass) return alert("Nombre, Usuario y Contraseña son obligatorios."); 
-            
-            const btn = document.getElementById('btn-create-client'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> CREANDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                const res = await gasRequest("createClient", { username: user, full_name: name, email: email, phone: phone, password: pass }); 
-                if (res.error) {
-                    alert(res.error);
-                } else {
-                    showToast("Cliente registrado."); 
-                    ['nc-username', 'nc-name', 'nc-email', 'nc-phone', 'nc-pass'].forEach(id => document.getElementById(id).value = ''); 
-                    openAccessManager(); 
-                }
-            } catch(e) { 
-                alert("Error de red"); 
-            } 
-            btn.innerHTML = "REGISTRAR EN DIRECTORIO"; 
-            btn.disabled = false; 
-        }
-
-        async function grantAccess() { 
-            const galId = document.getElementById('acc-gal-id').value; 
-            const clientId = document.getElementById('acc-client-id').value; 
-            const canDl = document.getElementById('acc-can-dl').checked; 
-            
-            if(!galId || !clientId) return alert("Selecciona galería y cliente."); 
-            
-            const btn = document.getElementById('btn-grant'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> OTORGANDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                await gasRequest("grantAccess", { client_id: clientId, gallery_id: galId, can_download: canDl }); 
-                showToast("Acceso otorgado!"); 
-                document.getElementById('m-access').classList.add('hidden'); 
-            } catch(e) { 
-                alert("Error"); 
-            } 
-            btn.innerHTML = "OTORGAR ACCESO"; 
-            btn.disabled = false; 
-        }
-
-        async function executeHardReset() { 
-            const p = document.getElementById('reset-pass').value; 
-            if(!p) return alert("Ingresa contraseña"); 
-            
-            const btn = document.getElementById('btn-execute-reset'); 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> PURGANDO...`; 
-            btn.disabled = true; 
-            
-            try { 
-                const res = await gasRequest("hardReset", { admin_password: p }); 
-                if (res.error) { alert("Error: " + res.error); btn.innerHTML = "EJECUTAR PURGA"; btn.disabled = false; return; } 
-                alert("SISTEMA REINICIADO."); 
-                logout(); 
-            } catch (error) { 
-                alert("Error"); 
-                btn.innerHTML = "EJECUTAR PURGA"; 
-                btn.disabled = false; 
-            } 
-        }
-
-        function togglePass(inputId, iconId) { 
-            const inp = document.getElementById(inputId); 
-            const icon = document.getElementById(iconId); 
-            if(inp.type === "password") { inp.type = "text"; icon.classList.replace('fa-eye', 'fa-eye-slash'); } 
-            else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); 
-            }
-        }
-
-
-            // ==========================================
+        // ==========================================
         // SISTEMA DE GESTOS TÁCTILES (SWIPE) PARA MÓVILES
         // ==========================================
         let touchstartX = 0;
         let touchendX = 0;
-
         const carouselMedia = document.getElementById('carousel-media-container');
 
-        carouselMedia.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        carouselMedia.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            handleSwipeGesture();
-        }, { passive: true });
+        carouselMedia.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, { passive: true });
+        carouselMedia.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX; handleSwipeGesture(); }, { passive: true });
 
         function handleSwipeGesture() {
-            // Solo actuar si el carrusel está abierto
             if (!document.getElementById('m-carousel').classList.contains('hidden')) {
-                const swipeThreshold = 50; // Distancia mínima en píxeles para considerar que fue un "swipe"
-                
-                if (touchendX < touchstartX - swipeThreshold) {
-                    // El usuario deslizó el dedo hacia la izquierda (Siguiente foto)
-                    nextPhoto(); 
-                }
-                if (touchendX > touchstartX + swipeThreshold) {
-                    // El usuario deslizó el dedo hacia la derecha (Foto anterior)
-                    prevPhoto(); 
-                }
+                const swipeThreshold = 50; 
+                if (touchendX < touchstartX - swipeThreshold) nextPhoto(); 
+                if (touchendX > touchstartX + swipeThreshold) prevPhoto(); 
             }
         }
-        
     </script>
 </body>
 </html>
