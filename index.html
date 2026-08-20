@@ -2258,7 +2258,41 @@
             const inp = document.getElementById(inputId); 
             const icon = document.getElementById(iconId); 
             if(inp.type === "password") { inp.type = "text"; icon.classList.replace('fa-eye', 'fa-eye-slash'); } 
-            else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); } 
+            else { inp.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
+
+
+            // ==========================================
+        // SISTEMA DE GESTOS TÁCTILES (SWIPE) PARA MÓVILES
+        // ==========================================
+        let touchstartX = 0;
+        let touchendX = 0;
+
+        const carouselMedia = document.getElementById('carousel-media-container');
+
+        carouselMedia.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        carouselMedia.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleSwipeGesture();
+        }, { passive: true });
+
+        function handleSwipeGesture() {
+            // Solo actuar si el carrusel está abierto
+            if (!document.getElementById('m-carousel').classList.contains('hidden')) {
+                const swipeThreshold = 50; // Distancia mínima en píxeles para considerar que fue un "swipe"
+                
+                if (touchendX < touchstartX - swipeThreshold) {
+                    // El usuario deslizó el dedo hacia la izquierda (Siguiente foto)
+                    nextPhoto(); 
+                }
+                if (touchendX > touchstartX + swipeThreshold) {
+                    // El usuario deslizó el dedo hacia la derecha (Foto anterior)
+                    prevPhoto(); 
+                }
+            }
+        }
         }
     </script>
 </body>
