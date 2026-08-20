@@ -84,7 +84,6 @@
         <span id="toast-msg">Mensaje</span>
     </div>
 
-    <!-- PANTALLA LOGIN -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center hidden opacity-0 transition-opacity duration-500">
         <div class="bg-white p-12 rounded-3xl w-full max-w-md shadow-2xl mx-4 fade-in">
             <h1 class="font-black text-4xl tracking-tighter text-center mb-8 brand-logo-container">LENTE<span class="text-cyan-lf">FRÍA</span></h1>
@@ -128,7 +127,7 @@
         </div>
     </div>
 
-    <!-- UI GLOBALES -->
+    <!-- UI FLOTANTES GLOBALES -->
     <a id="cta-hire-me" href="#" target="_blank" class="hidden fixed bottom-6 right-6 z-[200] bg-green-500 text-white px-6 py-4 rounded-full font-black tracking-widest shadow-2xl hover:scale-105 transition-transform flex items-center gap-3">
         <i class="fa-brands fa-whatsapp text-2xl animate-pulse"></i> CONTRÁTAME
     </a>
@@ -439,6 +438,15 @@
                 </div>
                 <button id="btn-create-client" onclick="createClient()" class="w-full border-2 border-black text-black font-bold p-4 rounded-xl hover:bg-black hover:text-white transition-all tracking-widest">REGISTRAR EN DIRECTORIO</button>
             </div>
+            
+            <!-- LISTA DE GESTIÓN Y BORRADO -->
+            <div class="border-t pt-6 mt-6">
+                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Gestión de Clientes Activos</h4>
+                <div id="active-clients-list" class="max-h-48 overflow-y-auto flex flex-col gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <!-- Clientes renderizados aquí -->
+                </div>
+            </div>
+
             <button onclick="document.getElementById('m-access').classList.add('hidden')" class="w-full mt-6 text-slate-400 font-bold hover:text-black transition-colors">CERRAR PANTALLA</button>
         </div>
     </div>
@@ -1286,24 +1294,40 @@
             }); 
         }
 
+        // ==========================================
+        // GESTIÓN DE STAFF Y DIRECTORIO (ELIMINAR / REVOCAR)
+        // ==========================================
         async function fetchS() { 
             document.getElementById('staff-list').innerHTML = getStaffSkeleton(); 
             try { 
                 const d = await gasRequest("getStaff"); 
                 allStaffCache = Array.isArray(d) ? d : []; 
-                document.getElementById('staff-list').innerHTML = d.map(s => `
-                    <div class="bg-slate-50 p-6 rounded-3xl border shadow-sm fade-in">
-                        <h4 class="font-black text-xl">${s.full_name}</h4>
+                document.getElementById('staff-list').innerHTML = d.map(s => {
+                    const deleteBtn = s.id !== sessionUser.id ? `<button onclick="deleteStaff(${s.id})" class="absolute top-6 right-6 text-red-200 hover:text-red-500 transition-colors" title="Eliminar Fotógrafo"><i class="fa-solid fa-trash"></i></button>` : '';
+                    return `
+                    <div class="bg-slate-50 p-6 rounded-3xl border shadow-sm fade-in relative hover:shadow-md transition-shadow">
+                        ${deleteBtn}
+                        <h4 class="font-black text-xl pr-6">${s.full_name}</h4>
                         <p class="text-xs text-slate-400 font-bold mt-1">${s.email}</p>
                         <span class="text-[10px] bg-slate-200 px-2 py-1 rounded mt-2 inline-block uppercase">${s.role}</span>
-                    </div>
-                `).join(''); 
+                    </div>`;
+                }).join(''); 
                 document.getElementById('cfg-res').value = window.systemSettings.max_resolution.toString(); 
                 document.getElementById('cfg-qual').value = window.systemSettings.jpeg_quality; 
                 document.getElementById('cfg-qual-lbl').innerText = window.systemSettings.jpeg_quality; 
             } catch(e) { 
                 document.getElementById('staff-list').innerHTML = `<p class="text-red-500 font-bold">Error al cargar.</p>`; 
             } 
+        }
+
+        async function deleteStaff(staffId) {
+            if(!confirm("¿Estás seguro de eliminar a este fotógrafo de la plataforma? Perderá el acceso de inmediato.")) return;
+            showToast("Eliminando staff...");
+            try {
+                const res = await gasRequest("deleteStaff", { staff_id: staffId });
+                if (res.error) alert(res.error);
+                else { showToast("Fotógrafo eliminado"); fetchS(); }
+            } catch(e) { alert("Error de red"); }
         }
 
         async function apiS() { 
@@ -2378,17 +2402,48 @@
             document.getElementById('m-access').classList.remove('hidden'); 
             const galSelect = document.getElementById('acc-gal-id'); 
             galSelect.innerHTML = '<option value="">1. Selecciona la Galería / Sesión</option>' + globalGalleriesCache.map(g => `<option value="${g.id}">${g.client_name} (/${g.slug})</option>`).join(''); 
+            
             const clientSelect = document.getElementById('acc-client-id'); 
+            const activeList = document.getElementById('active-clients-list');
+            
             clientSelect.innerHTML = '<option value="">Cargando clientes...</option>'; 
+            activeList.innerHTML = '<p class="text-xs font-bold text-slate-400 text-center py-2">Cargando...</p>';
+
             try { 
-                const clients = await gasRequest("getClients"); 
+                const [clients, accesses] = await Promise.all([
+                    gasRequest("getClients"),
+                    gasRequest("getAllAccesses")
+                ]);
+
                 if(clients && clients.length > 0) { 
                     clientSelect.innerHTML = '<option value="">2. Selecciona al Cliente</option>' + clients.map(c => `<option value="${c.id}">${c.full_name} (${c.username || c.email || c.phone})</option>`).join(''); 
+                    
+                    activeList.innerHTML = clients.map(c => {
+                        const clientAccesses = accesses.filter(a => a.client_id === c.id);
+                        const accessHtml = clientAccesses.map(a => `
+                            <div class="flex justify-between items-center bg-white p-2 mt-1 rounded border border-slate-100">
+                                <span class="text-[10px] font-bold text-slate-500"><i class="fa-solid fa-folder-open text-cyan-lf mr-1"></i> ${a.galleries.client_name}</span>
+                                <button onclick="revokeAccess(${c.id}, ${a.gallery_id})" class="text-[10px] text-red-400 hover:text-red-600 font-bold">REVOCAR</button>
+                            </div>
+                        `).join('');
+
+                        return `
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-black text-sm text-slate-800">${c.full_name}</span>
+                                <button onclick="deleteClient(${c.id})" class="text-xs text-red-500 hover:text-red-700 bg-red-50 px-2 py-1 rounded font-bold"><i class="fa-solid fa-trash mr-1"></i> BORRAR CLIENTE</button>
+                            </div>
+                            <div class="text-[10px] text-slate-400 font-bold mb-2">${c.email || c.phone || c.username}</div>
+                            ${accessHtml || '<span class="text-[10px] italic text-slate-400">Sin galerías asignadas.</span>'}
+                        </div>`;
+                    }).join('');
                 } else { 
                     clientSelect.innerHTML = '<option value="">No hay clientes.</option>'; 
+                    activeList.innerHTML = '<p class="text-xs font-bold text-slate-400 text-center py-2">Directorio vacío.</p>';
                 } 
             } catch(e) { 
                 clientSelect.innerHTML = '<option value="">Error.</option>'; 
+                activeList.innerHTML = '<p class="text-xs text-red-500 text-center">Error al cargar datos.</p>';
             } 
         }
 
@@ -2435,12 +2490,32 @@
             try { 
                 await gasRequest("grantAccess", { client_id: clientId, gallery_id: galId, can_download: canDl }); 
                 showToast("Acceso otorgado!"); 
-                document.getElementById('m-access').classList.add('hidden'); 
+                openAccessManager();
             } catch(e) { 
                 alert("Error"); 
             } 
             btn.innerHTML = "OTORGAR ACCESO"; 
             btn.disabled = false; 
+        }
+
+        async function deleteClient(clientId) {
+            if(!confirm("¿Eliminar a este cliente por completo? Perderá acceso a todas sus galerías y no podrá iniciar sesión.")) return;
+            showToast("Borrando cliente...");
+            try {
+                await gasRequest("deleteClient", { client_id: clientId });
+                showToast("Cliente eliminado.");
+                openAccessManager(); 
+            } catch(e) { alert("Error al eliminar cliente."); }
+        }
+
+        async function revokeAccess(clientId, galleryId) {
+            if(!confirm("¿Quitarle a este cliente el acceso a esta galería?")) return;
+            showToast("Revocando...");
+            try {
+                await gasRequest("revokeAccess", { client_id: clientId, gallery_id: galleryId });
+                showToast("Acceso revocado.");
+                openAccessManager(); 
+            } catch(e) { alert("Error al revocar acceso."); }
         }
 
         async function executeHardReset() { 
